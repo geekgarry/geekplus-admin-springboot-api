@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.geekplus.webapp.system.mapper.SysDictDataMapper">
+    <resultMap id="BaseResultMap" type="com.geekplus.webapp.system.entity.SysDictData">
+            <result property="dictCode" column="dict_code" jdbcType="INTEGER" />
+            <result property="dictSort" column="dict_sort" jdbcType="INTEGER" />
+            <result property="dictLabel" column="dict_label" jdbcType="VARCHAR" />
+            <result property="dictValue" column="dict_value" jdbcType="VARCHAR" />
+            <result property="dictType" column="dict_type" jdbcType="VARCHAR" />
+            <result property="cssClass" column="css_class" jdbcType="VARCHAR" />
+            <result property="listClass" column="list_class" jdbcType="VARCHAR" />
+            <result property="isDefault" column="is_default" jdbcType="CHAR" />
+            <result property="status" column="status" jdbcType="CHAR" />
+            <result property="createBy" column="create_by" jdbcType="VARCHAR" />
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP" />
+            <result property="updateBy" column="update_by" jdbcType="VARCHAR" />
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP" />
+            <result property="remark" column="remark" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <!---->
+    <!--基础查询语句-->
+    <sql id="baseSelectVo">
+        select
+        dict_code,dict_sort,dict_label,dict_value,dict_type,css_class,list_class,is_default,status,create_by,create_time,update_by,update_time,remark
+         from sys_dict_data
+    </sql>
+
+    <!--基础查询语句2,用作联合查询使用-->
+    <sql id="selectSysDictDataVo">
+        select
+            sdd.dict_code,sdd.dict_sort,sdd.dict_label,sdd.dict_value,sdd.dict_type,sdd.css_class,sdd.list_class,sdd.is_default,sdd.status,sdd.create_by,sdd.create_time,sdd.update_by,sdd.update_time,sdd.remark
+         from sys_dict_data sdd
+    </sql>
+
+    <!--数据查询操作SQL(非联合查询)-->
+    <select id="selectSysDictDataList" parameterType="SysDictData" resultMap="BaseResultMap">
+        <include refid="baseSelectVo"/>
+        <where>
+                    <if test="dictCode !=null">
+                        AND dict_code = #{dictCode}
+                    </if>
+                    <if test="dictSort !=null">
+                        AND dict_sort = #{dictSort}
+                    </if>
+                    <if test="dictLabel !=null">
+                        AND dict_label = #{dictLabel}
+                    </if>
+                    <if test="dictValue !=null">
+                        AND dict_value = #{dictValue}
+                    </if>
+                    <if test="dictType !=null">
+                        AND dict_type = #{dictType}
+                    </if>
+                    <if test="cssClass !=null">
+                        AND css_class = #{cssClass}
+                    </if>
+                    <if test="listClass !=null">
+                        AND list_class = #{listClass}
+                    </if>
+                    <if test="isDefault !=null">
+                        AND is_default = #{isDefault}
+                    </if>
+                    <if test="status !=null">
+                        AND status = #{status}
+                    </if>
+                    <if test="createBy !=null">
+                        AND create_by = #{createBy}
+                    </if>
+                    <if test="createTime !=null">
+                        AND create_time = #{createTime}
+                    </if>
+                    <if test="updateBy !=null">
+                        AND update_by = #{updateBy}
+                    </if>
+                    <if test="updateTime !=null">
+                        AND update_time = #{updateTime}
+                    </if>
+                    <if test="remark !=null">
+                        AND remark = #{remark}
+                    </if>
+        </where>
+    </select>
+
+    <!--数据联合查询操作SQL(联合查询)-->
+    <select id="selectUnionSysDictDataList" parameterType="SysDictData" resultMap="BaseResultMap">
+        <include refid="selectSysDictDataVo"/>
+        <where>
+                    <if test="dictCode !=null">
+                        AND sdd.dict_code = #{dictCode}
+                    </if>
+                    <if test="dictSort !=null">
+                        AND sdd.dict_sort = #{dictSort}
+                    </if>
+                    <if test="dictLabel !=null">
+                        AND sdd.dict_label = #{dictLabel}
+                    </if>
+                    <if test="dictValue !=null">
+                        AND sdd.dict_value = #{dictValue}
+                    </if>
+                    <if test="dictType !=null">
+                        AND sdd.dict_type = #{dictType}
+                    </if>
+                    <if test="cssClass !=null">
+                        AND sdd.css_class = #{cssClass}
+                    </if>
+                    <if test="listClass !=null">
+                        AND sdd.list_class = #{listClass}
+                    </if>
+                    <if test="isDefault !=null">
+                        AND sdd.is_default = #{isDefault}
+                    </if>
+                    <if test="status !=null">
+                        AND sdd.status = #{status}
+                    </if>
+                    <if test="createBy !=null">
+                        AND sdd.create_by = #{createBy}
+                    </if>
+                    <if test="createTime !=null">
+                        AND sdd.create_time = #{createTime}
+                    </if>
+                    <if test="updateBy !=null">
+                        AND sdd.update_by = #{updateBy}
+                    </if>
+                    <if test="updateTime !=null">
+                        AND sdd.update_time = #{updateTime}
+                    </if>
+                    <if test="remark !=null">
+                        AND sdd.remark = #{remark}
+                    </if>
+        </where>
+    </select>
+
+    <!--单条数据或详情查询操作SQL-->
+    <select id="selectSysDictDataById" parameterType="Long" resultMap="BaseResultMap">
+        <include refid="baseSelectVo"/>
+        where
+                dict_code = #{dictCode}
+    </select>
+
+    <!--添加操作SQL-->
+    <insert id="insertSysDictData" parameterType="SysDictData"  useGeneratedKeys="true" keyProperty="dictCode">
+        insert into sys_dict_data
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+                        <if test="dictSort != null ">dict_sort,</if>
+                        <if test="dictLabel != null  and dictLabel != ''">dict_label,</if>
+                        <if test="dictValue != null  and dictValue != ''">dict_value,</if>
+                        <if test="dictType != null  and dictType != ''">dict_type,</if>
+                        <if test="cssClass != null  and cssClass != ''">css_class,</if>
+                        <if test="listClass != null  and listClass != ''">list_class,</if>
+                        <if test="isDefault != null  and isDefault != ''">is_default,</if>
+                        <if test="status != null  and status != ''">status,</if>
+                        <if test="createBy != null  and createBy != ''">create_by,</if>
+                        <if test="createTime != null ">create_time,</if>
+                        <if test="updateBy != null  and updateBy != ''">update_by,</if>
+                        <if test="updateTime != null ">update_time,</if>
+                        <if test="remark != null  and remark != ''">remark,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                        <if test="dictSort != null ">#{dictSort},</if>
+                        <if test="dictLabel != null  and dictLabel != ''">#{dictLabel},</if>
+                        <if test="dictValue != null  and dictValue != ''">#{dictValue},</if>
+                        <if test="dictType != null  and dictType != ''">#{dictType},</if>
+                        <if test="cssClass != null  and cssClass != ''">#{cssClass},</if>
+                        <if test="listClass != null  and listClass != ''">#{listClass},</if>
+                        <if test="isDefault != null  and isDefault != ''">#{isDefault},</if>
+                        <if test="status != null  and status != ''">#{status},</if>
+                        <if test="createBy != null  and createBy != ''">#{createBy},</if>
+                        <if test="createTime != null ">#{createTime},</if>
+                        <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+                        <if test="updateTime != null ">#{updateTime},</if>
+                        <if test="remark != null  and remark != ''">#{remark},</if>
+        </trim>
+    </insert>
+
+    <!--批量添加操作SQL-->
+    <insert id="batchInsertSysDictDataList" parameterType="java.util.List">
+        insert into sys_dict_data
+        (
+         dict_sort,dict_label,dict_value,dict_type,css_class,list_class,is_default,status,create_by,create_time,update_by,update_time,remark
+        )
+         values
+        <foreach collection="list" item="item" index="index" separator=",">
+        (
+         #{item.dictSort},#{item.dictLabel},#{item.dictValue},#{item.dictType},#{item.cssClass},#{item.listClass},#{item.isDefault},#{item.status},#{item.createBy},#{item.createTime},#{item.updateBy},#{item.updateTime},#{item.remark}
+        )
+        </foreach>
+    </insert>
+
+    <!--删除操作SQL-->
+    <delete id="deleteSysDictDataById" parameterType="Long">
+        delete FROM sys_dict_data where dict_code = #{dictCode}
+    </delete>
+
+    <!--逻辑删除-->
+    <delete id="deleteSysDictDataById2" parameterType="Long">
+        update sys_dict_data set del_flag='2' where dict_code = #{dictCode}
+    </delete>
+
+    <!--删除操作SQL-->
+    <delete id="deleteSysDictDataByIds" parameterType="Long">
+        delete FROM sys_dict_data where dict_code in
+        <foreach item="dictCode" collection="array" open="(" separator="," close=")">
+             #{dictCode}
+        </foreach>
+    </delete>
+
+    <!--逻辑批量删除-->
+    <delete id="deleteSysDictDataByIds2" parameterType="Long">
+        update sys_dict_data set del_flag='2' where dict_code in
+        <foreach item="dictCode" collection="array" open="(" separator="," close=")">
+            #{dictCode}
+        </foreach>
+    </delete>
+
+    <!--更新操作SQL-->
+    <update id="updateSysDictData" parameterType="SysDictData">
+        update sys_dict_data
+        <trim prefix="SET" suffixOverrides=",">
+                    <if test="dictSort != null ">dict_sort = #{dictSort},</if>
+                    <if test="dictLabel != null  and dictLabel != ''">dict_label = #{dictLabel},</if>
+                    <if test="dictValue != null  and dictValue != ''">dict_value = #{dictValue},</if>
+                    <if test="dictType != null  and dictType != ''">dict_type = #{dictType},</if>
+                    <if test="cssClass != null  and cssClass != ''">css_class = #{cssClass},</if>
+                    <if test="listClass != null  and listClass != ''">list_class = #{listClass},</if>
+                    <if test="isDefault != null  and isDefault != ''">is_default = #{isDefault},</if>
+                    <if test="status != null  and status != ''">status = #{status},</if>
+                    <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+                    <if test="createTime != null ">create_time = #{createTime},</if>
+                    <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+                    <if test="updateTime != null ">update_time = #{updateTime},</if>
+                    <if test="remark != null  and remark != ''">remark = #{remark},</if>
+        </trim>
+         where dict_code = #{dictCode}
+    </update>
+
+    <!--批量更新某个字段-->
+    <update id="batchUpdateSysDictDataList" >
+        update sys_dict_data set
+            dict_code='',dict_sort='',dict_label='',dict_value='',dict_type='',css_class='',list_class='',is_default='',status='',create_by='',create_time='',update_by='',update_time='',remark=''
+         where dict_code in
+        <foreach collection="array" item="item"  open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </update>
+</mapper>

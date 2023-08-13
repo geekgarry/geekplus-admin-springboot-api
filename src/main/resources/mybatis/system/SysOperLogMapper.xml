@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.geekplus.webapp.system.mapper.SysOperLogMapper">
+    <resultMap id="BaseResultMap" type="com.geekplus.webapp.system.entity.SysOperLog">
+            <result property="operId" column="oper_id" jdbcType="INTEGER" />
+            <result property="title" column="title" jdbcType="VARCHAR" />
+            <result property="businessType" column="business_type" jdbcType="INTEGER" />
+            <result property="method" column="method" jdbcType="VARCHAR" />
+            <result property="requestMethod" column="request_method" jdbcType="VARCHAR" />
+            <result property="operatorType" column="operator_type" jdbcType="INTEGER" />
+            <result property="operName" column="oper_name" jdbcType="VARCHAR" />
+            <result property="groupName" column="group_name" jdbcType="VARCHAR" />
+            <result property="operUrl" column="oper_url" jdbcType="VARCHAR" />
+            <result property="operIp" column="oper_ip" jdbcType="VARCHAR" />
+            <result property="operBrowser" column="oper_browser" jdbcType="VARCHAR" />
+            <result property="operOs" column="oper_os" jdbcType="VARCHAR" />
+            <result property="operLocation" column="oper_location" jdbcType="VARCHAR" />
+            <result property="operParam" column="oper_param" jdbcType="VARCHAR" />
+            <result property="jsonResult" column="json_result" jdbcType="VARCHAR" />
+            <result property="status" column="status" jdbcType="INTEGER" />
+            <result property="errorMsg" column="error_msg" jdbcType="VARCHAR" />
+            <result property="operTime" column="oper_time" jdbcType="TIMESTAMP" />
+    </resultMap>
+
+    <!--系统操作日志-->
+    <!--基础查询语句-->
+    <sql id="baseSelectVo">
+        select
+        oper_id,title,business_type,method,request_method,operator_type,oper_name,group_name,oper_url,oper_ip,oper_browser,oper_os,oper_location,oper_param,json_result,status,error_msg,oper_time
+         from sys_oper_log
+    </sql>
+
+    <!--基础查询语句2,用作联合查询使用-->
+    <sql id="selectSysOperLogVo">
+        select
+            sol.oper_id,sol.title,sol.business_type,sol.method,sol.request_method,sol.operator_type,sol.oper_name,sol.group_name,sol.oper_url,sol.oper_ip,sol.oper_browser,sol.oper_os,sol.oper_location,sol.oper_param,sol.json_result,sol.status,sol.error_msg,sol.oper_time
+         from sys_oper_log sol
+    </sql>
+
+    <!--数据查询操作SQL(非联合查询)-->
+    <select id="selectSysOperLogList" parameterType="SysOperLog" resultMap="BaseResultMap">
+        <include refid="baseSelectVo"/>
+        <where>
+                    <if test="operId !=null">
+                        AND oper_id = #{operId}
+                    </if>
+                    <if test="title !=null">
+                        AND title = #{title}
+                    </if>
+                    <if test="businessType !=null">
+                        AND business_type = #{businessType}
+                    </if>
+                    <if test="method !=null">
+                        AND method = #{method}
+                    </if>
+                    <if test="requestMethod !=null">
+                        AND request_method = #{requestMethod}
+                    </if>
+                    <if test="operatorType !=null">
+                        AND operator_type = #{operatorType}
+                    </if>
+                    <if test="operName !=null">
+                        AND oper_name = #{operName}
+                    </if>
+                    <if test="groupName !=null">
+                        AND group_name = #{groupName}
+                    </if>
+                    <if test="operUrl !=null">
+                        AND oper_url = #{operUrl}
+                    </if>
+                    <if test="operIp !=null">
+                        AND oper_ip = #{operIp}
+                    </if>
+                    <if test="operBrowser !=null and operBrowser !=''">
+                        AND oper_browser = #{operBrowser}
+                    </if>
+                    <if test="operOs !=null and operOs !=''">
+                        AND oper_os = #{operOs}
+                    </if>
+                    <if test="operLocation !=null">
+                        AND oper_location = #{operLocation}
+                    </if>
+                    <if test="operParam !=null">
+                        AND oper_param = #{operParam}
+                    </if>
+                    <if test="jsonResult !=null">
+                        AND json_result = #{jsonResult}
+                    </if>
+                    <if test="status !=null">
+                        AND status = #{status}
+                    </if>
+                    <if test="errorMsg !=null">
+                        AND error_msg = #{errorMsg}
+                    </if>
+                    <if test="operTime !=null">
+                        AND oper_time = #{operTime}
+                    </if>
+        </where>
+        order by oper_time desc
+    </select>
+
+    <!--数据联合查询操作SQL(联合查询)-->
+    <select id="selectUnionSysOperLogList" parameterType="SysOperLog" resultMap="BaseResultMap">
+        <include refid="selectSysOperLogVo"/>
+        <where>
+            <if test="operId !=null">
+                AND sol.oper_id = #{operId}
+            </if>
+            <if test="title !=null">
+                AND sol.title = #{title}
+            </if>
+            <if test="businessType !=null">
+                AND sol.business_type = #{businessType}
+            </if>
+            <if test="method !=null">
+                AND sol.method = #{method}
+            </if>
+            <if test="requestMethod !=null">
+                AND sol.request_method = #{requestMethod}
+            </if>
+            <if test="operatorType !=null">
+                AND sol.operator_type = #{operatorType}
+            </if>
+            <if test="operName !=null">
+                AND sol.oper_name = #{operName}
+            </if>
+            <if test="groupName !=null">
+                AND sol.group_name = #{groupName}
+            </if>
+            <if test="operUrl !=null">
+                AND sol.oper_url = #{operUrl}
+            </if>
+            <if test="operIp !=null">
+                AND sol.oper_ip = #{operIp}
+            </if>
+            <if test="operBrowser !=null and operBrowser !=''">
+                AND sol.oper_browser = #{operBrowser}
+            </if>
+            <if test="operOs !=null and operOs !=''">
+                AND sol.oper_os = #{operOs}
+            </if>
+            <if test="operLocation !=null">
+                AND sol.oper_location = #{operLocation}
+            </if>
+            <if test="operParam !=null">
+                AND sol.oper_param = #{operParam}
+            </if>
+            <if test="jsonResult !=null">
+                AND sol.json_result = #{jsonResult}
+            </if>
+            <if test="status !=null">
+                AND sol.status = #{status}
+            </if>
+            <if test="errorMsg !=null">
+                AND sol.error_msg = #{errorMsg}
+            </if>
+            <if test="operTime !=null">
+                AND sol.oper_time = #{operTime}
+            </if>
+        </where>
+        order by sol.oper_time desc
+    </select>
+
+    <!--单条数据或详情查询操作SQL-->
+    <select id="selectSysOperLogById" parameterType="Long" resultMap="BaseResultMap">
+        <include refid="baseSelectVo"/>
+        where
+                oper_id = #{operId}
+    </select>
+
+    <!--添加操作SQL-->
+    <insert id="insertSysOperLog" parameterType="SysOperLog"  useGeneratedKeys="true" keyProperty="operId">
+        insert into sys_oper_log
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+                        <if test="title != null  and title != ''">title,</if>
+                        <if test="businessType != null ">business_type,</if>
+                        <if test="method != null  and method != ''">method,</if>
+                        <if test="requestMethod != null  and requestMethod != ''">request_method,</if>
+                        <if test="operatorType != null ">operator_type,</if>
+                        <if test="operName != null  and operName != ''">oper_name,</if>
+                        <if test="groupName != null  and groupName != ''">group_name,</if>
+                        <if test="operUrl != null  and operUrl != ''">oper_url,</if>
+                        <if test="operIp != null  and operIp != ''">oper_ip,</if>
+                        <if test="operBrowser !=null and operBrowser !=''">oper_browser,</if>
+                        <if test="operOs !=null and operOs !=''">oper_os,</if>
+                        <if test="operLocation != null  and operLocation != ''">oper_location,</if>
+                        <if test="operParam != null  and operParam != ''">oper_param,</if>
+                        <if test="jsonResult != null  and jsonResult != ''">json_result,</if>
+                        <if test="status != null ">status,</if>
+                        <if test="errorMsg != null  and errorMsg != ''">error_msg,</if>
+                        oper_time
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                        <if test="title != null  and title != ''">#{title},</if>
+                        <if test="businessType != null ">#{businessType},</if>
+                        <if test="method != null  and method != ''">#{method},</if>
+                        <if test="requestMethod != null  and requestMethod != ''">#{requestMethod},</if>
+                        <if test="operatorType != null ">#{operatorType},</if>
+                        <if test="operName != null  and operName != ''">#{operName},</if>
+                        <if test="groupName != null  and groupName != ''">#{groupName},</if>
+                        <if test="operUrl != null  and operUrl != ''">#{operUrl},</if>
+                        <if test="operIp != null  and operIp != ''">#{operIp},</if>
+                        <if test="operBrowser !=null and operBrowser !=''">#{operBrowser},</if>
+                        <if test="operOs !=null and operOs !=''">#{operOs},</if>
+                        <if test="operLocation != null  and operLocation != ''">#{operLocation},</if>
+                        <if test="operParam != null  and operParam != ''">#{operParam},</if>
+                        <if test="jsonResult != null  and jsonResult != ''">#{jsonResult},</if>
+                        <if test="status != null ">#{status},</if>
+                        <if test="errorMsg != null  and errorMsg != ''">#{errorMsg},</if>
+                        sysdate()
+        </trim>
+    </insert>
+
+    <!--批量添加操作SQL-->
+    <insert id="batchInsertSysOperLogList" parameterType="java.util.List">
+        insert into sys_oper_log
+        (
+         title,business_type,method,request_method,operator_type,oper_name,group_name,oper_url,oper_ip,oper_browser,oper_os,oper_location,oper_param,json_result,status,error_msg,oper_time
+        )
+         values
+        <foreach collection="list" item="item" index="index" separator=",">
+        (
+         #{item.title},#{item.businessType},#{item.method},#{item.requestMethod},#{item.operatorType},#{item.operName},#{item.groupName},#{item.operUrl},#{item.operIp},#{item.operBrowser},#{item.operOs},#{item.operLocation},#{item.operParam},#{item.jsonResult},#{item.status},#{item.errorMsg},sysdate()
+        )
+        </foreach>
+    </insert>
+
+    <!--删除操作SQL-->
+    <delete id="deleteSysOperLogById" parameterType="Long">
+        delete FROM sys_oper_log where oper_id = #{operId}
+    </delete>
+
+    <!--逻辑删除-->
+    <delete id="deleteSysOperLogById2" parameterType="Long">
+        update sys_oper_log set del_flag='2' where oper_id = #{operId}
+    </delete>
+
+    <!--删除操作SQL-->
+    <delete id="deleteSysOperLogByIds" parameterType="Long">
+        delete FROM sys_oper_log where oper_id in
+        <foreach item="operId" collection="array" open="(" separator="," close=")">
+             #{operId}
+        </foreach>
+    </delete>
+
+    <!--逻辑批量删除-->
+    <delete id="deleteSysOperLogByIds2" parameterType="Long">
+        update sys_oper_log set del_flag='2' where oper_id in
+        <foreach item="operId" collection="array" open="(" separator="," close=")">
+            #{operId}
+        </foreach>
+    </delete>
+
+    <!--更新操作SQL-->
+    <update id="updateSysOperLog" parameterType="SysOperLog">
+        update sys_oper_log
+        <trim prefix="SET" suffixOverrides=",">
+                    <if test="title != null  and title != ''">title = #{title},</if>
+                    <if test="businessType != null ">business_type = #{businessType},</if>
+                    <if test="method != null  and method != ''">method = #{method},</if>
+                    <if test="requestMethod != null  and requestMethod != ''">request_method = #{requestMethod},</if>
+                    <if test="operatorType != null ">operator_type = #{operatorType},</if>
+                    <if test="operName != null  and operName != ''">oper_name = #{operName},</if>
+                    <if test="groupName != null  and groupName != ''">group_name = #{groupName},</if>
+                    <if test="operUrl != null  and operUrl != ''">oper_url = #{operUrl},</if>
+                    <if test="operIp != null  and operIp != ''">oper_ip = #{operIp},</if>
+                    <if test="operBrowser !=null and operBrowser !=''">oper_browser = #{operBrowser},</if>
+                    <if test="operOs !=null and operOs !=''">oper_os = #{operOs},</if>
+                    <if test="operLocation != null  and operLocation != ''">oper_location = #{operLocation},</if>
+                    <if test="operParam != null  and operParam != ''">oper_param = #{operParam},</if>
+                    <if test="jsonResult != null  and jsonResult != ''">json_result = #{jsonResult},</if>
+                    <if test="status != null ">status = #{status},</if>
+                    <if test="errorMsg != null  and errorMsg != ''">error_msg = #{errorMsg},</if>
+                    <if test="operTime != null ">oper_time = #{operTime},</if>
+        </trim>
+         where oper_id = #{operId}
+    </update>
+
+    <!--批量更新某个字段-->
+    <update id="batchUpdateSysOperLogList" >
+        update sys_oper_log set
+            oper_id='',title='',business_type='',method='',request_method='',operator_type='',oper_name='',group_name='',oper_url='',oper_ip='',oper_browser='',oper_os='',oper_location='',oper_param='',json_result='',status='',error_msg='',oper_time=''
+         where oper_id in
+        <foreach collection="array" item="item"  open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </update>
+
+    <update id="cleanTable">
+        truncate table sys_oper_log
+    </update>
+</mapper>

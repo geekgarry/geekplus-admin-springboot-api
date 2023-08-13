@@ -1,0 +1,519 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.geekplus.webapp.system.mapper.SysUserMapper">
+    <resultMap id="BaseResultMap" type="com.geekplus.webapp.system.entity.SysUser">
+            <result property="userId" column="user_id" jdbcType="INTEGER" />
+            <result property="deptId" column="dept_id" jdbcType="INTEGER" />
+            <result property="userName" column="user_name" jdbcType="VARCHAR" />
+            <result property="nickName" column="nick_name" jdbcType="VARCHAR" />
+            <result property="userType" column="user_type" jdbcType="VARCHAR" />
+            <result property="email" column="email" jdbcType="VARCHAR" />
+            <result property="phoneunmber" column="phoneunmber" jdbcType="VARCHAR" />
+            <result property="gender" column="gender" jdbcType="CHAR" />
+            <result property="avatar" column="avatar" jdbcType="VARCHAR" />
+            <result property="password" column="password" jdbcType="VARCHAR" />
+            <result property="status" column="status" jdbcType="CHAR" />
+            <result property="delFlag" column="del_flag" jdbcType="CHAR" />
+            <result property="loginIp" column="login_ip" jdbcType="VARCHAR" />
+            <result property="loginTime" column="login_time" jdbcType="TIMESTAMP" />
+            <result property="createBy" column="create_by" jdbcType="VARCHAR" />
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP" />
+            <result property="updateBy" column="update_by" jdbcType="VARCHAR" />
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP" />
+            <result property="remark" column="remark" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <resultMap id="UserLoginInfo" type="com.geekplus.common.domain.LoginUser">
+        <id column="user_id" jdbcType="BIGINT" property="userId" />
+        <result column="dept_id" jdbcType="INTEGER" property="deptId" />
+        <result column="dept_name" jdbcType="INTEGER" property="deptName" />
+        <result column="user_name" jdbcType="VARCHAR" property="userName" />
+        <result column="nick_name" jdbcType="VARCHAR" property="nickName" />
+        <result column="user_type" jdbcType="VARCHAR" property="userType" />
+<!--        <result column="email" jdbcType="VARCHAR" property="email" />-->
+<!--        <result column="phoneunmber" jdbcType="VARCHAR" property="phoneunmber" />-->
+<!--        <result column="gender" jdbcType="CHAR" property="gender" />-->
+        <result column="avatar" jdbcType="VARCHAR" property="avatar" />
+        <result column="password" jdbcType="VARCHAR" property="password" />
+        <result column="status" jdbcType="CHAR" property="status" />
+<!--        <result column="del_flag" jdbcType="CHAR" property="delFlag" />-->
+        <result column="login_ip" jdbcType="VARCHAR" property="loginIp" />
+        <result column="login_time" jdbcType="TIMESTAMP" property="loginTime" />
+<!--        <result column="create_by" jdbcType="VARCHAR" property="createBy" />-->
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+<!--        <result column="update_by" jdbcType="VARCHAR" property="updateBy" />-->
+<!--        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />-->
+<!--        <result column="remark" jdbcType="VARCHAR" property="remark" />-->
+    </resultMap>
+
+    <resultMap id="UserLoginInfoResultMap" type="com.geekplus.common.domain.LoginUser">
+        <id column="user_id" jdbcType="BIGINT" property="userId" />
+        <result column="dept_id" jdbcType="INTEGER" property="deptId" />
+        <result column="dept_name" jdbcType="VARCHAR" property="deptName" />
+        <result column="user_name" jdbcType="VARCHAR" property="userName" />
+<!--        <result column="nick_name" jdbcType="VARCHAR" property="nickName" />-->
+<!--        <result column="user_type" jdbcType="VARCHAR" property="userType" />-->
+<!--        <result column="email" jdbcType="VARCHAR" property="email" />-->
+<!--        <result column="phoneunmber" jdbcType="VARCHAR" property="phoneunmber" />-->
+<!--        <result column="gender" jdbcType="CHAR" property="gender" />-->
+<!--        <result column="avatar" jdbcType="VARCHAR" property="avatar" />-->
+        <result column="password" jdbcType="VARCHAR" property="password" />
+        <result column="status" jdbcType="CHAR" property="status" />
+<!--        <result column="del_flag" jdbcType="CHAR" property="delFlag" />-->
+        <result column="login_ip" jdbcType="VARCHAR" property="loginIp" />
+        <result column="login_time" jdbcType="TIMESTAMP" property="loginTime" />
+<!--        <result column="create_by" jdbcType="VARCHAR" property="createBy" />-->
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+<!--        <result column="update_by" jdbcType="VARCHAR" property="updateBy" />-->
+<!--        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />-->
+<!--        <result column="remark" jdbcType="VARCHAR" property="remark" />-->
+        <collection property="sysRoleList" javaType="java.util.ArrayList"
+                    ofType="SysRole"
+                    select="selectUserRoles" column="{userId=user_id}" />
+        <collection property="sysMenuList" javaType="java.util.ArrayList"
+                    ofType="SysMenu"
+                    select="selectUserMenus" column="{userId=user_id}" />
+    </resultMap>
+
+    <resultMap id="roleResultMap" type="com.geekplus.webapp.system.entity.SysRole" >
+<!--        <id column="role_id" jdbcType="BIGINT" property="roleId" />-->
+<!--        <result column="role_name" jdbcType="VARCHAR" property="roleName" />-->
+        <result column="role_key" jdbcType="VARCHAR" property="roleKey" />
+<!--        <result column="role_sort" jdbcType="INTEGER" property="roleSort" />-->
+<!--        <result column="data_scope" jdbcType="CHAR" property="dataScope" />-->
+<!--        <result column="menu_check_strictly" jdbcType="BIT" property="menuCheckStrictly" />-->
+<!--        <result column="dept_check_strictly" jdbcType="BIT" property="deptCheckStrictly" />-->
+<!--        <result column="status" jdbcType="CHAR" property="status" />-->
+<!--        <result column="remark" jdbcType="VARCHAR" property="remark" />-->
+    </resultMap>
+
+    <resultMap id="menuResultMap" type="com.geekplus.webapp.system.entity.SysMenu" >
+<!--        <id column="menu_id" jdbcType="BIGINT" property="menuId" />-->
+<!--        <result column="menu_name" jdbcType="VARCHAR" property="menuName" />-->
+<!--        <result column="parent_id" jdbcType="BIGINT" property="parentId" />-->
+<!--        <result column="order_num" jdbcType="INTEGER" property="orderNum" />-->
+<!--        <result column="path" jdbcType="VARCHAR" property="path" />-->
+<!--        <result column="component" jdbcType="VARCHAR" property="component" />-->
+<!--        <result column="is_frame" jdbcType="INTEGER" property="isFrame" />-->
+<!--        <result column="is_cache" jdbcType="INTEGER" property="isCache" />-->
+<!--        <result column="menu_type" jdbcType="CHAR" property="menuType" />-->
+<!--        <result column="visible" jdbcType="CHAR" property="visible" />-->
+<!--        <result column="status" jdbcType="CHAR" property="status" />-->
+        <result column="perms" jdbcType="VARCHAR" property="perms" />
+<!--        <result column="icon" jdbcType="VARCHAR" property="icon" />-->
+<!--        <result column="remark" jdbcType="VARCHAR" property="remark" />-->
+    </resultMap>
+
+    <!--系统用户表-->
+    <!--基础查询语句-->
+    <sql id="baseSelectVo">
+        select
+        user_id,dept_id,user_name,nick_name,user_type,email,phoneunmber,gender,avatar,password,status,del_flag,login_ip,login_time,create_by,create_time,update_by,update_time,remark
+         from sys_user
+    </sql>
+
+    <!--基础查询语句2,用作联合查询使用-->
+    <sql id="selectSysUserVo">
+        select
+            su.user_id,su.dept_id,su.user_name,su.nick_name,su.user_type,su.email,su.phoneunmber,su.gender,su.avatar,su.password,su.status,su.del_flag,su.login_ip,su.login_time,su.create_by,su.create_time,su.update_by,su.update_time,su.remark
+         from sys_user su
+    </sql>
+
+    <!--数据查询操作SQL(非联合查询)-->
+    <select id="selectSysUserList" parameterType="SysUser" resultMap="BaseResultMap">
+        <include refid="baseSelectVo"/>
+        <where>
+                    <if test="userId !=null">
+                        AND user_id = #{userId}
+                    </if>
+                    <if test="deptId !=null">
+                        AND dept_id = #{deptId}
+                    </if>
+                    <if test="userName !=null and userName != ''">
+                        AND user_name = #{userName}
+                    </if>
+                    <if test="nickName !=null">
+                        AND nick_name = #{nickName}
+                    </if>
+                    <if test="userType !=null">
+                        AND user_type = #{userType}
+                    </if>
+                    <if test="email !=null and email != ''">
+                        AND email = #{email}
+                    </if>
+                    <if test="phoneunmber !=null and phoneunmber != ''">
+                        AND phoneunmber = #{phoneunmber}
+                    </if>
+                    <if test="gender !=null">
+                        AND gender = #{gender}
+                    </if>
+                    <if test="avatar !=null">
+                        AND avatar = #{avatar}
+                    </if>
+                    <if test="password !=null">
+                        AND password = #{password}
+                    </if>
+                    <if test="status !=null and status != ''">
+                        AND status = #{status}
+                    </if>
+                    <if test="delFlag !=null">
+                        AND del_flag = #{delFlag}
+                    </if>
+                    <if test="loginIp !=null">
+                        AND login_ip = #{loginIp}
+                    </if>
+                    <if test="loginTime !=null">
+                        AND login_time = #{loginTime}
+                    </if>
+                    <if test="createBy !=null">
+                        AND create_by = #{createBy}
+                    </if>
+                    <if test="createTime !=null">
+                        AND create_time = #{createTime}
+                    </if>
+                    <if test="updateBy !=null">
+                        AND update_by = #{updateBy}
+                    </if>
+                    <if test="updateTime !=null">
+                        AND update_time = #{updateTime}
+                    </if>
+                    <if test="remark !=null">
+                        AND remark = #{remark}
+                    </if>
+        </where>
+    </select>
+
+    <!--通过用户密码和用户id查询是否存在-->
+    <select id="selectSysUserByPassword" parameterType="SysUser" resultMap="BaseResultMap">
+        <include refid="baseSelectVo"/>
+        <where>
+            <if test="userId !=null">
+                AND user_id = #{userId}
+            </if>
+            <if test="deptId !=null">
+                AND dept_id = #{deptId}
+            </if>
+            <if test="userName !=null and userName != ''">
+                AND user_name = #{userName}
+            </if>
+            <if test="nickName !=null">
+                AND nick_name = #{nickName}
+            </if>
+            <if test="userType !=null">
+                AND user_type = #{userType}
+            </if>
+            <if test="email !=null and email != ''">
+                AND email = #{email}
+            </if>
+            <if test="phoneunmber !=null and phoneunmber != ''">
+                AND phoneunmber = #{phoneunmber}
+            </if>
+            <if test="gender !=null">
+                AND gender = #{gender}
+            </if>
+            <if test="password !=null">
+                AND password = #{password}
+            </if>
+            <if test="status !=null and status != ''">
+                AND status = #{status}
+            </if>
+            <if test="delFlag !=null">
+                AND del_flag = #{delFlag}
+            </if>
+            <if test="loginIp !=null">
+                AND login_ip = #{loginIp}
+            </if>
+            <if test="loginTime !=null">
+                AND login_time = #{loginTime}
+            </if>
+            <if test="createBy !=null">
+                AND create_by = #{createBy}
+            </if>
+            <if test="createTime !=null">
+                AND create_time = #{createTime}
+            </if>
+            <if test="updateBy !=null">
+                AND update_by = #{updateBy}
+            </if>
+            <if test="updateTime !=null">
+                AND update_time = #{updateTime}
+            </if>
+            <if test="remark !=null">
+                AND remark = #{remark}
+            </if>
+        </where>
+    </select>
+
+    <!--数据联合查询操作SQL(联合查询)-->
+    <select id="selectUnionSysUserList" parameterType="SysUser" resultMap="BaseResultMap">
+        <include refid="selectSysUserVo"/>
+        <where>
+                    <if test="userId !=null">
+                        AND su.user_id = #{userId}
+                    </if>
+                    <if test="deptId !=null">
+                        AND su.dept_id = #{deptId}
+                    </if>
+                    <if test="userName !=null">
+                        AND su.user_name = #{userName}
+                    </if>
+                    <if test="nickName !=null">
+                        AND su.nick_name = #{nickName}
+                    </if>
+                    <if test="userType !=null">
+                        AND su.user_type = #{userType}
+                    </if>
+                    <if test="email !=null">
+                        AND su.email = #{email}
+                    </if>
+                    <if test="phoneunmber !=null">
+                        AND su.phoneunmber = #{phoneunmber}
+                    </if>
+                    <if test="gender !=null">
+                        AND su.gender = #{gender}
+                    </if>
+                    <if test="avatar !=null">
+                        AND su.avatar = #{avatar}
+                    </if>
+                    <if test="password !=null">
+                        AND su.password = #{password}
+                    </if>
+                    <if test="status !=null">
+                        AND su.status = #{status}
+                    </if>
+                    <if test="delFlag !=null">
+                        AND su.del_flag = #{delFlag}
+                    </if>
+                    <if test="loginIp !=null">
+                        AND su.login_ip = #{loginIp}
+                    </if>
+                    <if test="loginTime !=null">
+                        AND su.login_time = #{loginTime}
+                    </if>
+                    <if test="createBy !=null">
+                        AND su.create_by = #{createBy}
+                    </if>
+                    <if test="createTime !=null">
+                        AND su.create_time = #{createTime}
+                    </if>
+                    <if test="updateBy !=null">
+                        AND su.update_by = #{updateBy}
+                    </if>
+                    <if test="updateTime !=null">
+                        AND su.update_time = #{updateTime}
+                    </if>
+                    <if test="remark !=null">
+                        AND su.remark = #{remark}
+                    </if>
+        </where>
+    </select>
+
+    <!--单条数据或详情查询操作SQL-->
+    <select id="selectSysUserById" parameterType="Long" resultMap="BaseResultMap">
+        <include refid="baseSelectVo"/>
+        where
+                user_id = #{userId}
+    </select>
+
+    <!--添加操作SQL-->
+    <insert id="insertSysUser" parameterType="SysUser" useGeneratedKeys="true" keyProperty="userId">
+        insert into sys_user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+                        <if test="deptId != null ">dept_id,</if>
+                        <if test="userName != null  and userName != ''">user_name,</if>
+                        <if test="nickName != null  and nickName != ''">nick_name,</if>
+                        <if test="userType != null  and userType != ''">user_type,</if>
+                        <if test="email != null  and email != ''">email,</if>
+                        <if test="phoneunmber != null  and phoneunmber != ''">phoneunmber,</if>
+                        <if test="gender != null  and gender != ''">gender,</if>
+                        <if test="avatar != null  and avatar != ''">avatar,</if>
+                        <if test="password != null  and password != ''">password,</if>
+                        <if test="status != null  and status != ''">status,</if>
+                        <if test="delFlag != null  and delFlag != ''">del_flag,</if>
+                        <if test="loginIp != null  and loginIp != ''">login_ip,</if>
+                        <if test="loginTime != null ">login_time,</if>
+                        <if test="createBy != null  and createBy != ''">create_by,</if>
+                        <if test="updateBy != null  and updateBy != ''">update_by,</if>
+                        <if test="updateTime != null ">update_time,</if>
+                        <if test="remark != null  and remark != ''">remark,</if>
+                        create_time
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                        <if test="deptId != null ">#{deptId},</if>
+                        <if test="userName != null  and userName != ''">#{userName},</if>
+                        <if test="nickName != null  and nickName != ''">#{nickName},</if>
+                        <if test="userType != null  and userType != ''">#{userType},</if>
+                        <if test="email != null  and email != ''">#{email},</if>
+                        <if test="phoneunmber != null  and phoneunmber != ''">#{phoneunmber},</if>
+                        <if test="gender != null  and gender != ''">#{gender},</if>
+                        <if test="avatar != null  and avatar != ''">#{avatar},</if>
+                        <if test="password != null  and password != ''">#{password},</if>
+                        <if test="status != null  and status != ''">#{status},</if>
+                        <if test="delFlag != null  and delFlag != ''">#{delFlag},</if>
+                        <if test="loginIp != null  and loginIp != ''">#{loginIp},</if>
+                        <if test="loginTime != null ">#{loginTime},</if>
+                        <if test="createBy != null  and createBy != ''">#{createBy},</if>
+                        <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+                        <if test="updateTime != null ">#{updateTime},</if>
+                        <if test="remark != null  and remark != ''">#{remark},</if>
+                        sysdate()
+        </trim>
+    </insert>
+
+    <!--批量添加操作SQL-->
+    <insert id="batchInsertSysUserList" parameterType="java.util.List">
+        insert into sys_user
+        (
+         dept_id,user_name,nick_name,user_type,email,phoneunmber,gender,avatar,password,status,del_flag,login_ip,login_time,create_by,create_time,update_by,update_time,remark
+        )
+         values
+        <foreach collection="list" item="item" index="index" separator=",">
+        (
+         #{item.deptId},#{item.userName},#{item.nickName},#{item.userType},#{item.email},#{item.phoneunmber},#{item.gender},#{item.avatar},#{item.password},#{item.status},#{item.delFlag},#{item.loginIp},#{item.loginTime},#{item.createBy},sysdate(),#{item.updateBy},#{item.updateTime},#{item.remark}
+        )
+        </foreach>
+    </insert>
+
+    <!--删除操作SQL-->
+    <delete id="deleteSysUserById" parameterType="Long">
+        delete FROM sys_user where user_id = #{userId}
+    </delete>
+
+    <!--逻辑删除-->
+    <delete id="deleteSysUserById2" parameterType="Long">
+        update sys_user set del_flag='2' where user_id = #{userId}
+    </delete>
+
+    <!--删除操作SQL-->
+    <delete id="deleteSysUserByIds" parameterType="Long">
+        delete FROM sys_user where user_id in
+        <foreach item="userId" collection="array" open="(" separator="," close=")">
+             #{userId}
+        </foreach>
+    </delete>
+
+    <!--逻辑批量删除-->
+    <delete id="deleteSysUserByIds2" parameterType="Long">
+        update sys_user set del_flag='2' where user_id in
+        <foreach item="userId" collection="array" open="(" separator="," close=")">
+            #{userId}
+        </foreach>
+    </delete>
+
+    <!--更新操作SQL-->
+    <update id="updateSysUser" parameterType="SysUser">
+        update sys_user
+        <trim prefix="SET" suffixOverrides=",">
+                    <if test="deptId != null ">dept_id = #{deptId},</if>
+                    <if test="userName != null  and userName != ''">user_name = #{userName},</if>
+                    <if test="nickName != null  and nickName != ''">nick_name = #{nickName},</if>
+                    <if test="userType != null  and userType != ''">user_type = #{userType},</if>
+                    <if test="email != null  and email != ''">email = #{email},</if>
+                    <if test="phoneunmber != null  and phoneunmber != ''">phoneunmber = #{phoneunmber},</if>
+                    <if test="gender != null  and gender != ''">gender = #{gender},</if>
+                    <if test="avatar != null  and avatar != ''">avatar = #{avatar},</if>
+                    <if test="password != null  and password != ''">password = #{password},</if>
+                    <if test="status != null  and status != ''">status = #{status},</if>
+                    <if test="delFlag != null  and delFlag != ''">del_flag = #{delFlag},</if>
+                    <if test="loginIp != null  and loginIp != ''">login_ip = #{loginIp},</if>
+                    <if test="loginTime != null ">login_time = #{loginTime},</if>
+                    <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+                    <if test="createTime != null ">create_time = #{createTime},</if>
+                    <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+                    <if test="remark != null  and remark != ''">remark = #{remark},</if>
+                    update_time = sysdate()
+        </trim>
+         where user_id = #{userId}
+    </update>
+
+    <!--更新操作SQL-->
+    <update id="updateSysUserByUserName" parameterType="SysUser">
+        update sys_user
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="deptId != null ">dept_id = #{deptId},</if>
+            <if test="nickName != null  and nickName != ''">nick_name = #{nickName},</if>
+            <if test="userType != null  and userType != ''">user_type = #{userType},</if>
+            <if test="email != null  and email != ''">email = #{email},</if>
+            <if test="phoneunmber != null  and phoneunmber != ''">phoneunmber = #{phoneunmber},</if>
+            <if test="gender != null  and gender != ''">gender = #{gender},</if>
+            <if test="avatar != null  and avatar != ''">avatar = #{avatar},</if>
+            <if test="password != null  and password != ''">password = #{password},</if>
+            <if test="status != null  and status != ''">status = #{status},</if>
+            <if test="delFlag != null  and delFlag != ''">del_flag = #{delFlag},</if>
+            <if test="loginIp != null  and loginIp != ''">login_ip = #{loginIp},</if>
+            <if test="loginTime != null ">login_time = #{loginTime},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="remark != null  and remark != ''">remark = #{remark},</if>
+            update_time = sysdate()
+        </trim>
+        where user_name = #{userName}
+    </update>
+
+    <!--批量更新某个字段-->
+    <update id="batchUpdateSysUserList" >
+        update sys_user set
+            user_id='',dept_id='',user_name='',nick_name='',user_type='',email='',phoneunmber='',gender='',avatar='',password='',status='',del_flag='',login_ip='',login_time='',create_by='',create_time='',update_by='',update_time='',remark=''
+         where user_id in
+        <foreach collection="array" item="item"  open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </update>
+
+    <select id="getRoleMenuByUsername" resultType="Map" parameterType="SysUser" >
+    SELECT * from sys_user suser LEFT JOIN sys_user_role urole on suser.user_id=urole.user_id
+    LEFT JOIN sys_role srole on srole.role_id=urole.role_id
+    where suser.user_name=#{userName}
+    </select>
+
+    <!--用户实体信息下携带用户名查询用户信息-->
+    <select id="selectSysUser" parameterType="SysUser" resultMap="UserLoginInfo">
+        <!--
+          WARNING - @mbg.generated
+          This element is automatically generated by MyBatis Generator, do not modify.
+          This element was generated on Mon Apr 25 23:09:21 CST 2022.
+        -->
+    select su.user_id,su.dept_id,sd.dept_name,su.user_name,su.nick_name,su.user_type,su.email,su.phoneunmber,su.gender,su.avatar,
+        su.password,su.status,su.del_flag,su.login_ip,su.login_time,su.create_by,su.create_time,su.update_by,su.update_time,su.remark
+        from sys_user su left join sys_dept sd on su.dept_id=sd.dept_id
+        where su.user_name = #{userName}
+    </select>
+
+    <!--用户名查询用户信息-->
+    <select id="selectUserAllInfo" resultMap="UserLoginInfoResultMap" parameterType="String">
+    select su.user_id,su.dept_id,sd.dept_name,su.user_name,su.nick_name,su.user_type,su.email,su.phoneunmber,su.gender,su.avatar,
+        su.password,su.status,su.del_flag,su.login_ip,su.login_time,su.create_by,su.create_time,su.update_by,su.update_time,su.remark
+        from sys_user su left join sys_dept sd on su.dept_id=sd.dept_id
+    where su.user_name=#{userName}
+    </select>
+
+    <select id="selectUserRoles" resultMap="roleResultMap" >
+    SELECT srole.* from sys_role srole LEFT JOIN sys_user_role urole on srole.role_id=urole.role_id left join sys_user suser on suser.user_id=urole.user_id
+    where suser.user_id=#{userId} and srole.status=0
+    </select>
+
+    <select id="selectUserMenus" resultMap="menuResultMap" >
+    select distinct sm.menu_id, sm.parent_id, sm.menu_name, sm.path, sm.component, sm.visible, sm.status, ifnull(sm.perms,'') as perms, sm.is_frame, sm.is_cache, sm.menu_type, sm.icon, sm.order_num, sm.create_time
+        from sys_menu sm
+        left join sys_role_menu srm on sm.menu_id = srm.menu_id
+        left join sys_user_role sur on srm.role_id = sur.role_id
+        left join sys_role sr on sr.role_id = sur.role_id
+        left join sys_user su on sur.user_id = su.user_id
+        where
+        <if test="userId != null">
+            su.user_id = #{userId} and
+        </if>
+        sm.status = 0  AND sr.status = 0
+        order by sm.parent_id, sm.order_num
+    </select>
+
+    <update id="updateUserAvatar" parameterType="SysUser">
+ 		update sys_user set avatar = #{avatar} where user_name = #{userName}
+	</update>
+
+</mapper>

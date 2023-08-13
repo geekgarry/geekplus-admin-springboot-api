@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.geekplus.webapp.system.mapper.SysUserRoleMapper">
+    <resultMap id="BaseResultMap" type="com.geekplus.webapp.system.entity.SysUserRole">
+            <result property="userId" column="user_id" jdbcType="INTEGER" />
+            <result property="roleId" column="role_id" jdbcType="INTEGER" />
+    </resultMap>
+
+    <!--系统用户角色关系表-->
+    <!--基础查询语句-->
+    <sql id="baseSelectVo">
+        select
+        user_id,role_id
+         from sys_user_role
+    </sql>
+
+    <!--基础查询语句2,用作联合查询使用-->
+    <sql id="selectSysUserRoleVo">
+        select
+            sur.user_id,sur.role_id
+         from sys_user_role sur
+    </sql>
+
+    <!--数据查询操作SQL(非联合查询)-->
+    <select id="selectSysUserRoleList" parameterType="SysUserRole" resultMap="BaseResultMap">
+        <include refid="baseSelectVo"/>
+        <where>
+                    <if test="userId !=null">
+                        AND user_id = #{userId}
+                    </if>
+                    <if test="roleId !=null">
+                        AND role_id = #{roleId}
+                    </if>
+        </where>
+    </select>
+
+    <!--数据联合查询操作SQL(联合查询)-->
+    <select id="selectUnionSysUserRoleList" parameterType="SysUserRole" resultMap="BaseResultMap">
+        <include refid="selectSysUserRoleVo"/>
+        <where>
+                    <if test="userId !=null">
+                        AND sur.user_id = #{userId}
+                    </if>
+                    <if test="roleId !=null">
+                        AND sur.role_id = #{roleId}
+                    </if>
+        </where>
+    </select>
+
+    <!--单条数据或详情查询操作SQL-->
+    <select id="selectSysUserRoleById" parameterType="Long" resultMap="BaseResultMap">
+        <include refid="baseSelectVo"/>
+        where
+                user_id = #{userId}
+                role_id = #{roleId}
+    </select>
+
+    <!--添加操作SQL-->
+    <insert id="insertSysUserRole" parameterType="SysUserRole" >
+        insert into sys_user_role
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+                    <if test="userId != null ">user_id,</if>
+                    <if test="roleId != null ">role_id,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                    <if test="userId != null ">#{userId},</if>
+                    <if test="roleId != null ">#{roleId},</if>
+        </trim>
+    </insert>
+
+    <!--批量添加操作SQL-->
+    <insert id="batchInsertSysUserRoleList" parameterType="java.util.List">
+        insert into sys_user_role
+        (         user_id,role_id
+        )
+         values
+        <foreach collection="list" item="item" index="index" separator=",">
+        (         #{item.userId},#{item.roleId}
+        )
+        </foreach>
+    </insert>
+
+    <!--删除操作SQL-->
+    <delete id="deleteSysUserRoleById" parameterType="Long">
+        delete FROM sys_user_role where user_id = #{userId}
+    </delete>
+
+    <!--逻辑删除-->
+    <delete id="deleteSysUserRoleById2" parameterType="Long">
+        update sys_user_role set del_flag='2' where user_id = #{userId}
+    </delete>
+
+    <!--删除操作SQL-->
+    <delete id="deleteSysUserRoleByIds" parameterType="Long">
+        delete FROM sys_user_role where user_id in
+        <foreach item="userId" collection="array" open="(" separator="," close=")">
+             #{userId}
+        </foreach>
+    </delete>
+
+    <!--逻辑批量删除-->
+    <delete id="deleteSysUserRoleByIds2" parameterType="Long">
+        update sys_user_role set del_flag='2' where user_id in
+        <foreach item="userId" collection="array" open="(" separator="," close=")">
+            #{userId}
+        </foreach>
+    </delete>
+
+    <!--普通删除用户角色-->
+    <delete id="deleteSysUserRole" parameterType="SysUserRole">
+        delete FROM sys_user_role where user_id = #{userId} and role_id = #{roleId}
+    </delete>
+
+    <!--批量删除用户角色-->
+    <delete id="batchDeleteSysUserRole" parameterType="java.util.List">
+        delete FROM sys_user_role where
+        <foreach collection="list" item="item" index="index" separator=" or ">
+            (user_id = #{item.userId} and role_id = #{item.roleId})
+        </foreach>
+    </delete>
+
+    <!--更新操作SQL-->
+    <update id="updateSysUserRole" parameterType="SysUserRole">
+        update sys_user_role
+        <trim prefix="SET" suffixOverrides=",">
+        </trim>
+         where user_id = #{userId}
+    </update>
+
+    <!--批量更新某个字段-->
+    <update id="batchUpdateSysUserRoleList" >
+        update sys_user_role set
+            user_id='',role_id=''
+         where user_id in
+        <foreach collection="array" item="item"  open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </update>
+</mapper>

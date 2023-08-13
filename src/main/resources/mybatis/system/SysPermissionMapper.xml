@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.geekplus.webapp.system.mapper.SysPermissionMapper">
+    <resultMap id="BaseResultMap" type="com.geekplus.webapp.system.entity.SysPermission">
+            <result property="permissionId" column="permission_id" jdbcType="INTEGER" />
+            <result property="permissionName" column="permission_name" jdbcType="VARCHAR" />
+            <result property="remark" column="remark" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <!--系统权限表-->
+    <!--基础查询语句-->
+    <sql id="baseSelectVo">
+        select
+        permission_id,permission_name,remark
+         from sys_permission
+    </sql>
+
+    <!--基础查询语句2,用作联合查询使用-->
+    <sql id="selectSysPermissionVo">
+        select
+            sp.permission_id,sp.permission_name,sp.remark
+         from sys_permission sp
+    </sql>
+
+    <!--数据查询操作SQL(非联合查询)-->
+    <select id="selectSysPermissionList" parameterType="SysPermission" resultMap="BaseResultMap">
+        <include refid="baseSelectVo"/>
+        <where>
+                    <if test="permissionId !=null">
+                        AND permission_id = #{permissionId}
+                    </if>
+                    <if test="permissionName !=null">
+                        AND permission_name = #{permissionName}
+                    </if>
+                    <if test="remark !=null">
+                        AND remark = #{remark}
+                    </if>
+        </where>
+    </select>
+
+    <!--数据联合查询操作SQL(联合查询)-->
+    <select id="selectUnionSysPermissionList" parameterType="SysPermission" resultMap="BaseResultMap">
+        <include refid="selectSysPermissionVo"/>
+        <where>
+                    <if test="permissionId !=null">
+                        AND sp.permission_id = #{permissionId}
+                    </if>
+                    <if test="permissionName !=null">
+                        AND sp.permission_name = #{permissionName}
+                    </if>
+                    <if test="remark !=null">
+                        AND sp.remark = #{remark}
+                    </if>
+        </where>
+    </select>
+
+    <!--单条数据或详情查询操作SQL-->
+    <select id="selectSysPermissionById" parameterType="Long" resultMap="BaseResultMap">
+        <include refid="baseSelectVo"/>
+        where
+                permission_id = #{permissionId}
+    </select>
+
+    <!--添加操作SQL-->
+    <insert id="insertSysPermission" parameterType="SysPermission"  useGeneratedKeys="true" keyProperty="permissionId">
+        insert into sys_permission
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+                        <if test="permissionName != null  and permissionName != ''">permission_name,</if>
+                        <if test="remark != null  and remark != ''">remark,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                        <if test="permissionName != null  and permissionName != ''">#{permissionName},</if>
+                        <if test="remark != null  and remark != ''">#{remark},</if>
+        </trim>
+    </insert>
+
+    <!--批量添加操作SQL-->
+    <insert id="batchInsertSysPermissionList" parameterType="java.util.List">
+        insert into sys_permission
+        (
+         permission_name,remark
+        )
+         values
+        <foreach collection="list" item="item" index="index" separator=",">
+        (
+         #{item.permissionName},#{item.remark}
+        )
+        </foreach>
+    </insert>
+
+    <!--删除操作SQL-->
+    <delete id="deleteSysPermissionById" parameterType="Long">
+        delete FROM sys_permission where permission_id = #{permissionId}
+    </delete>
+
+    <!--逻辑删除-->
+    <delete id="deleteSysPermissionById2" parameterType="Long">
+        update sys_permission set del_flag='2' where permission_id = #{permissionId}
+    </delete>
+
+    <!--删除操作SQL-->
+    <delete id="deleteSysPermissionByIds" parameterType="Long">
+        delete FROM sys_permission where permission_id in
+        <foreach item="permissionId" collection="array" open="(" separator="," close=")">
+             #{permissionId}
+        </foreach>
+    </delete>
+
+    <!--逻辑批量删除-->
+    <delete id="deleteSysPermissionByIds2" parameterType="Long">
+        update sys_permission set del_flag='2' where permission_id in
+        <foreach item="permissionId" collection="array" open="(" separator="," close=")">
+            #{permissionId}
+        </foreach>
+    </delete>
+
+    <!--更新操作SQL-->
+    <update id="updateSysPermission" parameterType="SysPermission">
+        update sys_permission
+        <trim prefix="SET" suffixOverrides=",">
+                    <if test="permissionName != null  and permissionName != ''">permission_name = #{permissionName},</if>
+                    <if test="remark != null  and remark != ''">remark = #{remark},</if>
+        </trim>
+         where permission_id = #{permissionId}
+    </update>
+
+    <!--批量更新某个字段-->
+    <update id="batchUpdateSysPermissionList" >
+        update sys_permission set
+            permission_id='',permission_name='',remark=''
+         where permission_id in
+        <foreach collection="array" item="item"  open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </update>
+
+    <select id="getRolePermissionByUserName" resultType="map" parameterType="com.geekplus.webapp.system.entity.SysUser" >
+    SELECT srole.role_id as roleId,srole.role_name as roleName,srole.role_key as roleKey,sp.permission_name as permName,
+    sp.permission_id as permId,sp.remark from sys_user suser
+    LEFT JOIN sys_user_role urole on suser.user_id=urole.user_id
+    LEFT JOIN sys_role srole on srole.role_id=urole.role_id
+    LEFT JOIN sys_role_permission srp on srp.role_id=urole.role_id
+    LEFT JOIN sys_permission sp on sp.permission_id=srp.permission_id
+    where suser.user_name=#{userName}
+  </select>
+</mapper>

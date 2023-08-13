@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.geekplus.webapp.tool.generator.mapper.GenTableColumnMapper">
+    <resultMap id="BaseResultMap" type="com.geekplus.webapp.tool.generator.entity.TableColumnInfo">
+        <result property="columnId" column="column_id" jdbcType="INTEGER" />
+        <result property="columnName" column="column_name" jdbcType="VARCHAR" />
+        <result property="isPk" column="is_pk" jdbcType="INTEGER" />
+        <result property="isIncrement" column="is_increment" jdbcType="INTEGER" />
+        <result property="isRequired" column="is_required" jdbcType="INTEGER" />
+        <result property="columnComment" column="column_comment" jdbcType="VARCHAR" />
+        <result property="columnType" column="column_type" jdbcType="VARCHAR" />
+        <result property="sort" column="sort" jdbcType="INTEGER" />
+        <result property="tableId" column="table_id" jdbcType="INTEGER" />
+    </resultMap>
+
+    <!--生成表数据列表-->
+    <!--基础查询语句-->
+    <sql id="baseSelectVo">
+        select
+        column_id,column_name,is_pk,is_increment,is_required,column_comment,column_type,sort,table_id
+         from gen_table_column
+    </sql>
+
+    <!--基础查询语句2,用作联合查询使用-->
+    <sql id="selectGenTableColumnVo">
+        select
+            gtc.column_id,gtc.column_name,gtc.is_pk,gtc.is_increment,gtc.is_required,gtc.column_comment,gtc.column_type,gtc.sort,gtc.table_id
+         from gen_table_column gtc
+    </sql>
+
+    <!--数据查询操作SQL(非联合查询)-->
+    <select id="selectGenTableColumnList" parameterType="TableColumnInfo" resultMap="BaseResultMap">
+        <include refid="baseSelectVo"/>
+        <where>
+            <if test="columnId !=null ">
+                AND column_id = #{columnId,jdbcType=INTEGER}
+            </if>
+            <if test="columnName !=null  and columnName != ''">
+                AND column_name = #{columnName,jdbcType=VARCHAR}
+            </if>
+            <if test="isPk !=null ">
+                AND is_pk = #{isPk,jdbcType=INTEGER}
+            </if>
+            <if test="isIncrement !=null ">
+                AND is_increment = #{isIncrement,jdbcType=INTEGER}
+            </if>
+            <if test="isRequired !=null ">
+                AND is_required = #{isRequired,jdbcType=INTEGER}
+            </if>
+            <if test="columnComment !=null  and columnComment != ''">
+                AND column_comment = #{columnComment,jdbcType=VARCHAR}
+            </if>
+            <if test="columnType !=null  and columnType != ''">
+                AND column_type = #{columnType,jdbcType=VARCHAR}
+            </if>
+            <if test="sort !=null ">
+                AND sort = #{sort,jdbcType=INTEGER}
+            </if>
+            <if test="tableId !=null ">
+                AND table_id = #{tableId,jdbcType=INTEGER}
+            </if>
+        </where>
+    </select>
+
+    <!--数据联合查询操作SQL(联合查询) javaType-->
+    <select id="selectUnionGenTableColumnList" parameterType="TableColumnInfo" resultMap="BaseResultMap">
+        <include refid="selectGenTableColumnVo"/>
+        <where>
+            <if test="columnId !=null ">
+                AND gtc.column_id = #{columnId,jdbcType=INTEGER}
+            </if>
+            <if test="columnName !=null  and columnName != ''">
+                AND gtc.column_name = #{columnName,jdbcType=VARCHAR}
+            </if>
+            <if test="isPk !=null ">
+                AND gtc.is_pk = #{isPk,jdbcType=INTEGER}
+            </if>
+            <if test="isIncrement !=null ">
+                AND gtc.is_increment = #{isIncrement,jdbcType=INTEGER}
+            </if>
+            <if test="isRequired !=null ">
+                AND gtc.is_required = #{isRequired,jdbcType=INTEGER}
+            </if>
+            <if test="columnComment !=null  and columnComment != ''">
+                AND gtc.column_comment = #{columnComment,jdbcType=VARCHAR}
+            </if>
+            <if test="columnType !=null  and columnType != ''">
+                AND gtc.column_type = #{columnType,jdbcType=VARCHAR}
+            </if>
+            <if test="sort !=null ">
+                AND gtc.sort = #{sort,jdbcType=INTEGER}
+            </if>
+            <if test="tableId !=null ">
+                AND gtc.table_id = #{tableId,jdbcType=INTEGER}
+            </if>
+        </where>
+    </select>
+
+    <!--单条数据或详情查询操作SQL-->
+    <select id="selectGenTableColumnById" parameterType="Integer" resultMap="BaseResultMap">
+        <include refid="baseSelectVo"/>
+        where
+        column_id = #{columnId}
+    </select>
+
+    <!--添加操作SQL-->
+    <insert id="insertGenTableColumn" parameterType="TableColumnInfo"  useGeneratedKeys="true" keyProperty="columnId">
+        insert into gen_table_column
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="columnName != null  and columnName != ''">column_name,</if>
+            <if test="isPk != null ">is_pk,</if>
+            <if test="isIncrement != null ">is_increment,</if>
+            <if test="isRequired != null ">is_required,</if>
+            <if test="columnComment != null  and columnComment != ''">column_comment,</if>
+            <if test="columnType != null  and columnType != ''">column_type,</if>
+            <if test="sort != null ">sort,</if>
+            <if test="tableId != null ">table_id,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="columnName != null  and columnName != ''">#{columnName},</if>
+            <if test="isPk != null ">#{isPk},</if>
+            <if test="isIncrement != null ">#{isIncrement},</if>
+            <if test="isRequired != null ">#{isRequired},</if>
+            <if test="columnComment != null  and columnComment != ''">#{columnComment},</if>
+            <if test="columnType != null  and columnType != ''">#{columnType},</if>
+            <if test="sort != null ">#{sort},</if>
+            <if test="tableId != null ">#{tableId},</if>
+        </trim>
+    </insert>
+
+    <!--批量添加操作SQL-->
+    <insert id="batchInsertGenTableColumnList" parameterType="java.util.List"  useGeneratedKeys="true" keyProperty="columnId">
+        insert into gen_table_column
+        (
+        column_name,
+        is_pk,
+        is_increment,
+        is_required,
+        column_comment,
+        column_type,
+        sort,
+        table_id
+        )
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.columnName},
+            #{item.isPk},
+            #{item.isIncrement},
+            #{item.isRequired},
+            #{item.columnComment},
+            #{item.columnType},
+            #{item.sort},
+            #{item.tableId}
+            )
+        </foreach>
+    </insert>
+
+    <!--批量添加操作SQL-->
+    <insert id="batchInsertGenTableColumnList1" parameterType="java.util.List"  useGeneratedKeys="true" keyProperty="columnId">
+        insert into gen_table_column
+        (
+        <if test="columnName != null  and columnName != ''">column_name,</if>
+        <if test="isPk != null ">is_pk,</if>
+        <if test="isIncrement != null ">is_increment,</if>
+        <if test="isRequired != null ">is_required,</if>
+        <if test="columnComment != null  and columnComment != ''">column_comment,</if>
+        <if test="columnType != null  and columnType != ''">column_type,</if>
+        <if test="sort != null ">sort,</if>
+        <if test="tableId != null ">table_id</if>
+        )
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            <if test="columnName != null  and columnName != ''">#{item.columnName},</if>
+            <if test="isPk != null ">#{item.isPk},</if>
+            <if test="isIncrement != null ">#{item.isIncrement},</if>
+            <if test="isRequired != null ">#{item.isRequired},</if>
+            <if test="columnComment != null  and columnComment != ''">#{item.columnComment},</if>
+            <if test="columnType != null  and columnType != ''">#{item.columnType},</if>
+            <if test="sort != null ">#{item.sort},</if>
+            <if test="tableId != null ">#{item.tableId}</if>
+            )
+        </foreach>
+    </insert>
+
+    <!--删除操作SQL-->
+    <delete id="deleteGenTableColumnById" parameterType="Integer">
+        delete FROM gen_table_column where column_id = #{columnId}
+    </delete>
+
+    <!--逻辑删除-->
+    <delete id="deleteGenTableColumnById2" parameterType="Integer">
+        update gen_table_column set del_flag='2' where column_id = #{columnId}
+    </delete>
+
+    <!--删除操作SQL-->
+    <delete id="deleteGenTableColumnByIds" parameterType="Integer">
+        delete FROM gen_table_column where column_id in
+        <foreach item="columnId" collection="array" open="(" separator="," close=")">
+            #{columnId}
+        </foreach>
+    </delete>
+
+    <!--逻辑批量删除-->
+    <delete id="deleteGenTableColumnByIds2" parameterType="Integer">
+        update gen_table_column set del_flag='2' where column_id in
+        <foreach item="columnId" collection="array" open="(" separator="," close=")">
+            #{columnId}
+        </foreach>
+    </delete>
+
+    <!--更新操作SQL-->
+    <update id="updateGenTableColumn" parameterType="TableColumnInfo">
+        update gen_table_column
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="columnName != null  and columnName != ''">column_name = #{columnName},</if>
+            <if test="isPk != null ">is_pk = #{isPk},</if>
+            <if test="isIncrement != null ">is_increment = #{isIncrement},</if>
+            <if test="isRequired != null ">is_required = #{isRequired},</if>
+            <if test="columnComment != null  and columnComment != ''">column_comment = #{columnComment},</if>
+            <if test="columnType != null  and columnType != ''">column_type = #{columnType},</if>
+            <if test="sort != null ">sort = #{sort},</if>
+            <if test="tableId != null ">table_id = #{tableId},</if>
+        </trim>
+        where column_id = #{columnId}
+    </update>
+
+    <!--批量更新某个字段-->
+    <update id="batchUpdateGenTableColumnList" >
+        update gen_table_column set
+        column_id='',column_name='',is_pk='',is_increment='',is_required='',column_comment='',column_type='',sort='',table_id=''
+        where column_id in
+        <foreach collection="array" item="item"  open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </update>
+
+    <!--清空数据表-->
+    <update id="cleanTable">
+        truncate table gen_table_column
+    </update>
+</mapper>

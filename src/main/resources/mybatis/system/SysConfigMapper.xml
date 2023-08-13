@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.geekplus.webapp.system.mapper.SysConfigMapper">
+    <resultMap id="BaseResultMap" type="com.geekplus.webapp.system.entity.SysConfig">
+            <result property="configId" column="config_id" jdbcType="INTEGER" />
+            <result property="configName" column="config_name" jdbcType="VARCHAR" />
+            <result property="configKey" column="config_key" jdbcType="VARCHAR" />
+            <result property="configValue" column="config_value" jdbcType="VARCHAR" />
+            <result property="configType" column="config_type" jdbcType="CHAR" />
+            <result property="createBy" column="create_by" jdbcType="VARCHAR" />
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP" />
+            <result property="updateBy" column="update_by" jdbcType="VARCHAR" />
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP" />
+            <result property="remark" column="remark" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <!---->
+    <!--基础查询语句-->
+    <sql id="baseSelectVo">
+        select
+        config_id,config_name,config_key,config_value,config_type,create_by,create_time,update_by,update_time,remark
+         from sys_config
+    </sql>
+
+    <!--基础查询语句2,用作联合查询使用-->
+    <sql id="selectSysConfigVo">
+        select
+            sc.config_id,sc.config_name,sc.config_key,sc.config_value,sc.config_type,sc.create_by,sc.create_time,sc.update_by,sc.update_time,sc.remark
+         from sys_config sc
+    </sql>
+
+    <!--数据查询操作SQL(非联合查询)-->
+    <select id="selectSysConfigList" parameterType="SysConfig" resultMap="BaseResultMap">
+        <include refid="baseSelectVo"/>
+        <where>
+                    <if test="configId !=null">
+                        AND config_id = #{configId}
+                    </if>
+                    <if test="configName !=null">
+                        AND config_name = #{configName}
+                    </if>
+                    <if test="configKey !=null">
+                        AND config_key = #{configKey}
+                    </if>
+                    <if test="configValue !=null">
+                        AND config_value = #{configValue}
+                    </if>
+                    <if test="configType !=null">
+                        AND config_type = #{configType}
+                    </if>
+                    <if test="createBy !=null">
+                        AND create_by = #{createBy}
+                    </if>
+                    <if test="createTime !=null">
+                        AND create_time = #{createTime}
+                    </if>
+                    <if test="updateBy !=null">
+                        AND update_by = #{updateBy}
+                    </if>
+                    <if test="updateTime !=null">
+                        AND update_time = #{updateTime}
+                    </if>
+                    <if test="remark !=null">
+                        AND remark = #{remark}
+                    </if>
+        </where>
+    </select>
+
+    <!--数据联合查询操作SQL(联合查询)-->
+    <select id="selectUnionSysConfigList" parameterType="SysConfig" resultMap="BaseResultMap">
+        <include refid="selectSysConfigVo"/>
+        <where>
+                    <if test="configId !=null">
+                        AND sc.config_id = #{configId}
+                    </if>
+                    <if test="configName !=null">
+                        AND sc.config_name = #{configName}
+                    </if>
+                    <if test="configKey !=null">
+                        AND sc.config_key = #{configKey}
+                    </if>
+                    <if test="configValue !=null">
+                        AND sc.config_value = #{configValue}
+                    </if>
+                    <if test="configType !=null">
+                        AND sc.config_type = #{configType}
+                    </if>
+                    <if test="createBy !=null">
+                        AND sc.create_by = #{createBy}
+                    </if>
+                    <if test="createTime !=null">
+                        AND sc.create_time = #{createTime}
+                    </if>
+                    <if test="updateBy !=null">
+                        AND sc.update_by = #{updateBy}
+                    </if>
+                    <if test="updateTime !=null">
+                        AND sc.update_time = #{updateTime}
+                    </if>
+                    <if test="remark !=null">
+                        AND sc.remark = #{remark}
+                    </if>
+        </where>
+    </select>
+
+    <!--单条数据或详情查询操作SQL-->
+    <select id="selectSysConfigById" parameterType="Integer" resultMap="BaseResultMap">
+        <include refid="baseSelectVo"/>
+        where
+                config_id = #{configId}
+    </select>
+
+    <!--添加操作SQL-->
+    <insert id="insertSysConfig" parameterType="SysConfig"  useGeneratedKeys="true" keyProperty="configId">
+        insert into sys_config
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+                        <if test="configName != null  and configName != ''">config_name,</if>
+                        <if test="configKey != null  and configKey != ''">config_key,</if>
+                        <if test="configValue != null  and configValue != ''">config_value,</if>
+                        <if test="configType != null  and configType != ''">config_type,</if>
+                        <if test="createBy != null  and createBy != ''">create_by,</if>
+                        <if test="createTime != null ">create_time,</if>
+                        <if test="updateBy != null  and updateBy != ''">update_by,</if>
+                        <if test="updateTime != null ">update_time,</if>
+                        <if test="remark != null  and remark != ''">remark,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                        <if test="configName != null  and configName != ''">#{configName},</if>
+                        <if test="configKey != null  and configKey != ''">#{configKey},</if>
+                        <if test="configValue != null  and configValue != ''">#{configValue},</if>
+                        <if test="configType != null  and configType != ''">#{configType},</if>
+                        <if test="createBy != null  and createBy != ''">#{createBy},</if>
+                        <if test="createTime != null ">#{createTime},</if>
+                        <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+                        <if test="updateTime != null ">#{updateTime},</if>
+                        <if test="remark != null  and remark != ''">#{remark},</if>
+        </trim>
+    </insert>
+
+    <!--批量添加操作SQL-->
+    <insert id="batchInsertSysConfigList" parameterType="java.util.List">
+        insert into sys_config
+        (
+         config_name,config_key,config_value,config_type,create_by,create_time,update_by,update_time,remark
+        )
+         values
+        <foreach collection="list" item="item" index="index" separator=",">
+        (
+         #{item.configName},#{item.configKey},#{item.configValue},#{item.configType},#{item.createBy},#{item.createTime},#{item.updateBy},#{item.updateTime},#{item.remark}
+        )
+        </foreach>
+    </insert>
+
+    <!--删除操作SQL-->
+    <delete id="deleteSysConfigById" parameterType="Integer">
+        delete FROM sys_config where config_id = #{configId}
+    </delete>
+
+    <!--逻辑删除-->
+    <delete id="deleteSysConfigById2" parameterType="Integer">
+        update sys_config set del_flag='2' where config_id = #{configId}
+    </delete>
+
+    <!--删除操作SQL-->
+    <delete id="deleteSysConfigByIds" parameterType="Integer">
+        delete FROM sys_config where config_id in
+        <foreach item="configId" collection="array" open="(" separator="," close=")">
+             #{configId}
+        </foreach>
+    </delete>
+
+    <!--逻辑批量删除-->
+    <delete id="deleteSysConfigByIds2" parameterType="Integer">
+        update sys_config set del_flag='2' where config_id in
+        <foreach item="configId" collection="array" open="(" separator="," close=")">
+            #{configId}
+        </foreach>
+    </delete>
+
+    <!--更新操作SQL-->
+    <update id="updateSysConfig" parameterType="SysConfig">
+        update sys_config
+        <trim prefix="SET" suffixOverrides=",">
+                    <if test="configName != null  and configName != ''">config_name = #{configName},</if>
+                    <if test="configKey != null  and configKey != ''">config_key = #{configKey},</if>
+                    <if test="configValue != null  and configValue != ''">config_value = #{configValue},</if>
+                    <if test="configType != null  and configType != ''">config_type = #{configType},</if>
+                    <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+                    <if test="createTime != null ">create_time = #{createTime},</if>
+                    <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+                    <if test="updateTime != null ">update_time = #{updateTime},</if>
+                    <if test="remark != null  and remark != ''">remark = #{remark},</if>
+        </trim>
+         where config_id = #{configId}
+    </update>
+
+    <!--批量更新某个字段-->
+    <update id="batchUpdateSysConfigList" >
+        update sys_config set
+            config_id='',config_name='',config_key='',config_value='',config_type='',create_by='',create_time='',update_by='',update_time='',remark=''
+         where config_id in
+        <foreach collection="array" item="item"  open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </update>
+</mapper>

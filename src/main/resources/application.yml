@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: GeekPlusAdmin
+  profiles:
+    active: prod
+    #active: dev

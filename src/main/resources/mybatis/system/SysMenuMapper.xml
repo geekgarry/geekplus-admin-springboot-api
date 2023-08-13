@@ -1,0 +1,368 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.geekplus.webapp.system.mapper.SysMenuMapper">
+    <resultMap id="BaseResultMap" type="com.geekplus.webapp.system.entity.SysMenu">
+            <result property="menuId" column="menu_id" jdbcType="INTEGER" />
+            <result property="menuName" column="menu_name" jdbcType="VARCHAR" />
+            <result property="parentId" column="parent_id" jdbcType="INTEGER" />
+            <result property="orderNum" column="order_num" jdbcType="INTEGER" />
+            <result property="path" column="path" jdbcType="VARCHAR" />
+            <result property="component" column="component" jdbcType="VARCHAR" />
+            <result property="isFrame" column="is_frame" jdbcType="INTEGER" />
+            <result property="isCache" column="is_cache" jdbcType="INTEGER" />
+            <result property="menuType" column="menu_type" jdbcType="CHAR" />
+            <result property="visible" column="visible" jdbcType="CHAR" />
+            <result property="status" column="status" jdbcType="CHAR" />
+            <result property="perms" column="perms" jdbcType="VARCHAR" />
+            <result property="icon" column="icon" jdbcType="VARCHAR" />
+            <result property="createBy" column="create_by" jdbcType="VARCHAR" />
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP" />
+            <result property="updateBy" column="update_by" jdbcType="VARCHAR" />
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP" />
+            <result property="remark" column="remark" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <!--系统菜单权限-->
+    <!--基础查询语句-->
+    <sql id="baseSelectVo">
+        select
+        menu_id,menu_name,parent_id,order_num,path,component,is_frame,is_cache,menu_type,visible,status,perms,icon,create_by,create_time,update_by,update_time,remark
+         from sys_menu
+    </sql>
+
+    <!--基础查询语句2,用作联合查询使用-->
+    <sql id="selectSysMenuVo">
+        select
+            sm.menu_id,sm.menu_name,sm.parent_id,sm.order_num,sm.path,sm.component,sm.is_frame,sm.is_cache,sm.menu_type,sm.visible,sm.status,sm.perms,sm.icon,sm.create_by,sm.create_time,sm.update_by,sm.update_time,sm.remark
+         from sys_menu sm
+    </sql>
+
+    <!--数据查询操作SQL(非联合查询)-->
+    <select id="selectSysMenuList" parameterType="SysMenu" resultMap="BaseResultMap">
+        <include refid="baseSelectVo"/>
+        <where>
+                    <if test="menuId !=null">
+                        AND menu_id = #{menuId}
+                    </if>
+                    <if test="menuName !=null and menuName != ''">
+                        AND menu_name = #{menuName}
+                    </if>
+                    <if test="parentId !=null">
+                        AND parent_id = #{parentId}
+                    </if>
+                    <if test="orderNum !=null">
+                        AND order_num = #{orderNum}
+                    </if>
+                    <if test="path !=null">
+                        AND path = #{path}
+                    </if>
+                    <if test="component !=null">
+                        AND component = #{component}
+                    </if>
+                    <if test="isFrame !=null">
+                        AND is_frame = #{isFrame}
+                    </if>
+                    <if test="isCache !=null">
+                        AND is_cache = #{isCache}
+                    </if>
+                    <if test="menuType !=null">
+                        AND menu_type = #{menuType}
+                    </if>
+                    <if test="visible !=null">
+                        AND visible = #{visible}
+                    </if>
+                    <if test="status !=null">
+                        AND status = #{status}
+                    </if>
+                    <if test="perms !=null">
+                        AND perms = #{perms}
+                    </if>
+                    <if test="icon !=null">
+                        AND icon = #{icon}
+                    </if>
+                    <if test="createBy !=null">
+                        AND create_by = #{createBy}
+                    </if>
+                    <if test="createTime !=null">
+                        AND create_time = #{createTime}
+                    </if>
+                    <if test="updateBy !=null">
+                        AND update_by = #{updateBy}
+                    </if>
+                    <if test="updateTime !=null">
+                        AND update_time = #{updateTime}
+                    </if>
+                    <if test="remark !=null">
+                        AND remark = #{remark}
+                    </if>
+        </where>
+    </select>
+
+    <select id="selectSysMenuTreeList" resultMap="BaseResultMap">
+        <include refid="baseSelectVo"/>
+    </select>
+    <!--数据联合查询操作SQL(联合查询)-->
+    <select id="selectUnionSysMenuList" parameterType="SysMenu" resultMap="BaseResultMap">
+        <include refid="selectSysMenuVo"/>
+        <where>
+                    <if test="menuId !=null">
+                        AND sm.menu_id = #{menuId}
+                    </if>
+                    <if test="menuName !=null">
+                        AND sm.menu_name = #{menuName}
+                    </if>
+                    <if test="parentId !=null">
+                        AND sm.parent_id = #{parentId}
+                    </if>
+                    <if test="orderNum !=null">
+                        AND sm.order_num = #{orderNum}
+                    </if>
+                    <if test="path !=null">
+                        AND sm.path = #{path}
+                    </if>
+                    <if test="component !=null">
+                        AND sm.component = #{component}
+                    </if>
+                    <if test="isFrame !=null">
+                        AND sm.is_frame = #{isFrame}
+                    </if>
+                    <if test="isCache !=null">
+                        AND sm.is_cache = #{isCache}
+                    </if>
+                    <if test="menuType !=null">
+                        AND sm.menu_type = #{menuType}
+                    </if>
+                    <if test="visible !=null">
+                        AND sm.visible = #{visible}
+                    </if>
+                    <if test="status !=null">
+                        AND sm.status = #{status}
+                    </if>
+                    <if test="perms !=null">
+                        AND sm.perms = #{perms}
+                    </if>
+                    <if test="icon !=null">
+                        AND sm.icon = #{icon}
+                    </if>
+                    <if test="createBy !=null">
+                        AND sm.create_by = #{createBy}
+                    </if>
+                    <if test="createTime !=null">
+                        AND sm.create_time = #{createTime}
+                    </if>
+                    <if test="updateBy !=null">
+                        AND sm.update_by = #{updateBy}
+                    </if>
+                    <if test="updateTime !=null">
+                        AND sm.update_time = #{updateTime}
+                    </if>
+                    <if test="remark !=null">
+                        AND sm.remark = #{remark}
+                    </if>
+        </where>
+    </select>
+
+    <!--单条数据或详情查询操作SQL-->
+    <select id="selectSysMenuById" parameterType="Long" resultMap="BaseResultMap">
+        <include refid="baseSelectVo"/>
+        where
+                menu_id = #{menuId}
+    </select>
+
+    <!--添加操作SQL-->
+    <insert id="insertSysMenu" parameterType="SysMenu"  useGeneratedKeys="true" keyProperty="menuId">
+        insert into sys_menu
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+                        <if test="menuName != null  and menuName != ''">menu_name,</if>
+                        <if test="parentId != null ">parent_id,</if>
+                        <if test="orderNum != null ">order_num,</if>
+                        <if test="path != null  and path != ''">path,</if>
+                        <if test="component != null  and component != ''">component,</if>
+                        <if test="isFrame != null ">is_frame,</if>
+                        <if test="isCache != null ">is_cache,</if>
+                        <if test="menuType != null  and menuType != ''">menu_type,</if>
+                        <if test="visible != null  and visible != ''">visible,</if>
+                        <if test="status != null  and status != ''">status,</if>
+                        <if test="perms != null  and perms != ''">perms,</if>
+                        <if test="icon != null  and icon != ''">icon,</if>
+                        <if test="createBy != null  and createBy != ''">create_by,</if>
+                        <if test="updateBy != null  and updateBy != ''">update_by,</if>
+                        <if test="updateTime != null ">update_time,</if>
+                        <if test="remark != null  and remark != ''">remark,</if>
+                        create_time
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                        <if test="menuName != null  and menuName != ''">#{menuName},</if>
+                        <if test="parentId != null ">#{parentId},</if>
+                        <if test="orderNum != null ">#{orderNum},</if>
+                        <if test="path != null  and path != ''">#{path},</if>
+                        <if test="component != null  and component != ''">#{component},</if>
+                        <if test="isFrame != null ">#{isFrame},</if>
+                        <if test="isCache != null ">#{isCache},</if>
+                        <if test="menuType != null  and menuType != ''">#{menuType},</if>
+                        <if test="visible != null  and visible != ''">#{visible},</if>
+                        <if test="status != null  and status != ''">#{status},</if>
+                        <if test="perms != null  and perms != ''">#{perms},</if>
+                        <if test="icon != null  and icon != ''">#{icon},</if>
+                        <if test="createBy != null  and createBy != ''">#{createBy},</if>
+                        <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+                        <if test="updateTime != null ">#{updateTime},</if>
+                        <if test="remark != null  and remark != ''">#{remark},</if>
+                        sysdate()
+        </trim>
+    </insert>
+
+    <!--批量添加操作SQL-->
+    <insert id="batchInsertSysMenuList" parameterType="java.util.List">
+        insert into sys_menu
+        (
+         menu_name,parent_id,order_num,path,component,is_frame,is_cache,menu_type,visible,status,perms,icon,create_by,create_time,update_by,update_time,remark
+        )
+         values
+        <foreach collection="list" item="item" index="index" separator=",">
+        (
+         #{item.menuName},#{item.parentId},#{item.orderNum},#{item.path},#{item.component},#{item.isFrame},#{item.isCache},#{item.menuType},#{item.visible},#{item.status},#{item.perms},#{item.icon},#{item.createBy},sysdate(),#{item.updateBy},#{item.updateTime},#{item.remark}
+        )
+        </foreach>
+    </insert>
+
+    <!--删除操作SQL-->
+    <delete id="deleteSysMenuById" parameterType="Long">
+        delete FROM sys_menu where menu_id = #{menuId}
+    </delete>
+
+    <!--逻辑删除-->
+    <delete id="deleteSysMenuById2" parameterType="Long">
+        update sys_menu set del_flag='2' where menu_id = #{menuId}
+    </delete>
+
+    <!--删除操作SQL-->
+    <delete id="deleteSysMenuByIds" parameterType="Long">
+        delete FROM sys_menu where menu_id in
+        <foreach item="menuId" collection="array" open="(" separator="," close=")">
+             #{menuId}
+        </foreach>
+    </delete>
+
+    <!--逻辑批量删除-->
+    <delete id="deleteSysMenuByIds2" parameterType="Long">
+        update sys_menu set del_flag='2' where menu_id in
+        <foreach item="menuId" collection="array" open="(" separator="," close=")">
+            #{menuId}
+        </foreach>
+    </delete>
+
+    <!--更新操作SQL-->
+    <update id="updateSysMenu" parameterType="SysMenu">
+        update sys_menu
+        <trim prefix="SET" suffixOverrides=",">
+                    <if test="menuName != null  and menuName != ''">menu_name = #{menuName},</if>
+                    <if test="parentId != null ">parent_id = #{parentId},</if>
+                    <if test="orderNum != null ">order_num = #{orderNum},</if>
+                    <if test="path != null  and path != ''">path = #{path},</if>
+                    <if test="component != null  and component != ''">component = #{component},</if>
+                    <if test="isFrame != null ">is_frame = #{isFrame},</if>
+                    <if test="isCache != null ">is_cache = #{isCache},</if>
+                    <if test="menuType != null  and menuType != ''">menu_type = #{menuType},</if>
+                    <if test="visible != null  and visible != ''">visible = #{visible},</if>
+                    <if test="status != null  and status != ''">status = #{status},</if>
+                    <if test="perms != null  and perms != ''">perms = #{perms},</if>
+                    <if test="icon != null  and icon != ''">icon = #{icon},</if>
+                    <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+                    <if test="createTime != null ">create_time = #{createTime},</if>
+                    <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+                    <if test="remark != null  and remark != ''">remark = #{remark},</if>
+                    update_time = sysdate()
+        </trim>
+         where menu_id = #{menuId}
+    </update>
+
+    <!--批量更新某个字段-->
+    <update id="batchUpdateSysMenuList" >
+        update sys_menu set
+            menu_id='',menu_name='',parent_id='',order_num='',path='',component='',is_frame='',is_cache='',menu_type='',visible='',status='',perms='',icon='',create_by='',create_time='',update_by='',update_time='',remark=''
+         where menu_id in
+        <foreach collection="array" item="item"  open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </update>
+
+    <!--  判断字段是否为空IFNULL(sm.perms,'')-->
+    <select id="selectMenusByRoles" resultMap="BaseResultMap">
+        SELECT sm.menu_name, sm.menu_id, sm.path, sm.menu_type, sm.visible, sm.status, sm.remark, sm.perms
+        from sys_menu sm LEFT JOIN sys_role_menu srm on srm.menu_id=sm.menu_id
+        <where>
+            1=1
+            <if test="sysRoles.size()>0">
+                and srm.role_id IN
+                <foreach collection="sysRoles" item="item" index="index" open="(" close=")" separator="," >
+                    #{item.roleId}
+                </foreach>
+            </if>
+            and sm.perms!=''
+        </where>
+        order by sm.parent_id, sm.order_num
+    </select>
+
+    <!--根据用户名查询权限菜单-->
+    <select id="selectMenuTreeByUserName" parameterType="Long" resultMap="BaseResultMap">
+        select distinct sm.menu_id, sm.parent_id, sm.menu_name, sm.path, sm.component, sm.visible, sm.status, ifnull(sm.perms,'') as perms, sm.is_frame, sm.is_cache, sm.menu_type, sm.icon, sm.order_num, sm.create_time
+        from sys_menu sm
+        left join sys_role_menu srm on sm.menu_id = srm.menu_id
+        left join sys_user_role sur on srm.role_id = sur.role_id
+        left join sys_role sr on sr.role_id = sur.role_id
+        left join sys_user su on sur.user_id = su.user_id
+        where
+        <if test="userName != null">
+            su.user_name = #{userName} and
+        </if>
+        sm.menu_type in ('M', 'C') and sm.status = 0  AND sr.status = 0
+        order by sm.parent_id, sm.order_num
+    </select>
+
+    <!--根据用户ID查询权限菜单-->
+    <select id="selectMenuTreeByUserId" parameterType="Long" resultMap="BaseResultMap">
+	select distinct sm.menu_id, sm.parent_id, sm.menu_name, sm.path, sm.component, sm.visible, sm.status, ifnull(sm.perms,'') as perms, sm.is_frame, sm.is_cache, sm.menu_type, sm.icon, sm.order_num, sm.create_time
+	from sys_menu sm
+	    left join sys_role_menu srm on sm.menu_id = srm.menu_id
+		left join sys_user_role sur on srm.role_id = sur.role_id
+        left join sys_role sr on sr.role_id = sur.role_id
+		left join sys_user su on sur.user_id = su.user_id
+    where
+        <if test="userId != null">
+            su.user_id = #{userId} and
+        </if>
+        sm.menu_type in ('M', 'C') and sm.status = 0  AND sr.status = 0
+	order by sm.parent_id, sm.order_num
+    </select>
+    <!--根据角色ID查询权限菜单-->
+    <select id="selectMenuTreeByRoleId" parameterType="Long" resultMap="BaseResultMap">
+	select distinct sm.menu_id, sm.parent_id, sm.menu_name, sm.path, sm.component, sm.visible, sm.status, ifnull(sm.perms,'') as perms, sm.is_frame, sm.is_cache, sm.menu_type, sm.icon, sm.order_num, sm.create_time
+	from sys_menu sm
+	    left join sys_role_menu srm on sm.menu_id = srm.menu_id
+		left join sys_role sr on srm.role_id = sr.role_id
+    where
+        <if test="roleId != null">
+            sr.role_id in (#{roleId}) and
+        </if>
+        sm.menu_type in ('M', 'C') and sm.status = 0  AND sr.status = 0
+	order by sm.parent_id, sm.order_num
+    </select>
+    <select id="selectMenuIdListByRoleId" resultType="Integer">
+        select distinct sm.menu_id
+        from sys_menu sm
+        left join sys_role_menu srm on sm.menu_id = srm.menu_id
+        left join sys_role sr on srm.role_id = sr.role_id
+        where
+        <if test="roleId != null">
+            sr.role_id in (#{roleId}) and
+        </if>
+         sm.status = 0  AND sr.status = 0
+        order by sm.parent_id, sm.order_num
+    </select>
+
+</mapper>

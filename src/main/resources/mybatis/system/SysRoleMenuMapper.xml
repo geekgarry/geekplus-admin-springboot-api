@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.geekplus.webapp.system.mapper.SysRoleMenuMapper">
+    <resultMap id="BaseResultMap" type="com.geekplus.webapp.system.entity.SysRoleMenu">
+            <result property="roleId" column="role_id" jdbcType="INTEGER" />
+            <result property="menuId" column="menu_id" jdbcType="INTEGER" />
+    </resultMap>
+
+    <!---->
+    <!--基础查询语句-->
+    <sql id="baseSelectVo">
+        select
+        role_id,menu_id
+         from sys_role_menu
+    </sql>
+
+    <!--基础查询语句2,用作联合查询使用-->
+    <sql id="selectSysRoleMenuVo">
+        select
+            srm.role_id,srm.menu_id
+         from sys_role_menu srm
+    </sql>
+
+    <!--数据查询操作SQL(非联合查询)-->
+    <select id="selectSysRoleMenuList" parameterType="SysRoleMenu" resultMap="BaseResultMap">
+        <include refid="baseSelectVo"/>
+        <where>
+                    <if test="roleId !=null">
+                        AND role_id = #{roleId}
+                    </if>
+                    <if test="menuId !=null">
+                        AND menu_id = #{menuId}
+                    </if>
+        </where>
+    </select>
+
+    <!--数据联合查询操作SQL(联合查询)-->
+    <select id="selectUnionSysRoleMenuList" parameterType="SysRoleMenu" resultMap="BaseResultMap">
+        <include refid="selectSysRoleMenuVo"/>
+        <where>
+                    <if test="roleId !=null">
+                        AND srm.role_id = #{roleId}
+                    </if>
+                    <if test="menuId !=null">
+                        AND srm.menu_id = #{menuId}
+                    </if>
+        </where>
+    </select>
+
+    <!--单条数据或详情查询操作SQL-->
+    <select id="selectSysRoleMenuById" parameterType="Long" resultMap="BaseResultMap">
+        <include refid="baseSelectVo"/>
+        where
+                role_id = #{roleId}
+                menu_id = #{menuId}
+    </select>
+
+    <!--添加操作SQL-->
+    <insert id="insertSysRoleMenu" parameterType="SysRoleMenu" >
+        insert into sys_role_menu
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+                    <if test="roleId != null ">role_id,</if>
+                    <if test="menuId != null ">menu_id,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                    <if test="roleId != null ">#{roleId},</if>
+                    <if test="menuId != null ">#{menuId},</if>
+        </trim>
+    </insert>
+
+    <!--批量添加操作SQL-->
+    <insert id="batchInsertSysRoleMenuList" parameterType="java.util.List">
+        insert into sys_role_menu
+        (         role_id,menu_id
+        )
+         values
+        <foreach collection="list" item="item" index="index" separator=",">
+        (         #{item.roleId},#{item.menuId}
+        )
+        </foreach>
+    </insert>
+
+    <!--删除操作SQL-->
+    <delete id="deleteSysRoleMenuById" parameterType="Long">
+        delete FROM sys_role_menu where role_id = #{roleId}
+    </delete>
+
+    <!--逻辑删除-->
+    <delete id="deleteSysRoleMenuById2" parameterType="Long">
+        update sys_role_menu set del_flag='2' where role_id = #{roleId}
+    </delete>
+
+    <!--删除操作SQL-->
+    <delete id="deleteSysRoleMenuByIds" parameterType="Long">
+        delete FROM sys_role_menu where role_id in
+        <foreach item="roleId" collection="array" open="(" separator="," close=")">
+             #{roleId}
+        </foreach>
+    </delete>
+
+    <!--逻辑批量删除-->
+    <delete id="deleteSysRoleMenuByIds2" parameterType="Long">
+        update sys_role_menu set del_flag='2' where role_id in
+        <foreach item="roleId" collection="array" open="(" separator="," close=")">
+            #{roleId}
+        </foreach>
+    </delete>
+
+    <!--普通删除角色和菜单权限-->
+    <delete id="deleteSysRoleMenu" parameterType="SysRoleMenu">
+        delete FROM sys_role_menu where role_id = #{roleId} and menu_id = #{menuId}
+    </delete>
+
+    <!--批量删除角色和菜单权限-->
+    <delete id="batchDeleteSysRoleMenu" parameterType="java.util.List">
+        delete FROM sys_role_menu where
+        <foreach collection="list" item="item" index="index" separator=" or ">
+            (role_id = #{item.roleId} and menu_id = #{item.menuId})
+        </foreach>
+    </delete>
+
+    <!--更新操作SQL-->
+    <update id="updateSysRoleMenu" parameterType="SysRoleMenu">
+        update sys_role_menu
+        <trim prefix="SET" suffixOverrides=",">
+        </trim>
+         where role_id = #{roleId}
+    </update>
+
+    <!--批量更新某个字段-->
+    <update id="batchUpdateSysRoleMenuList" >
+        update sys_role_menu set
+            role_id='',menu_id=''
+         where role_id in
+        <foreach collection="array" item="item"  open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </update>
+</mapper>

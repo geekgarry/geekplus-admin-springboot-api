@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.geekplus.webapp.system.mapper.SysDeptMapper">
+    <resultMap id="BaseResultMap" type="com.geekplus.webapp.system.entity.SysDept">
+        <result property="deptId" column="dept_id" jdbcType="INTEGER" />
+        <result property="parentId" column="parent_id" jdbcType="INTEGER" />
+        <result property="ancestors" column="ancestors" jdbcType="VARCHAR" />
+        <result property="deptName" column="dept_name" jdbcType="VARCHAR" />
+        <result property="orderNum" column="order_num" jdbcType="INTEGER" />
+        <result property="leader" column="leader" jdbcType="VARCHAR" />
+        <result property="phone" column="phone" jdbcType="VARCHAR" />
+        <result property="email" column="email" jdbcType="VARCHAR" />
+        <result property="status" column="status" jdbcType="CHAR" />
+        <result property="delFlag" column="del_flag" jdbcType="CHAR" />
+        <result property="createBy" column="create_by" jdbcType="VARCHAR" />
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP" />
+        <result property="updateBy" column="update_by" jdbcType="VARCHAR" />
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP" />
+    </resultMap>
+
+    <!--部门表-->
+    <!--基础查询语句-->
+    <sql id="baseSelectVo">
+        select
+        dept_id,parent_id,ancestors,dept_name,order_num,leader,phone,email,status,del_flag,create_by,create_time,update_by,update_time
+         from sys_dept
+    </sql>
+
+    <!--基础查询语句2,用作联合查询使用-->
+    <sql id="selectSysDeptVo">
+        select
+            sd.dept_id,sd.parent_id,sd.ancestors,sd.dept_name,sd.order_num,sd.leader,sd.phone,sd.email,sd.status,sd.del_flag,sd.create_by,sd.create_time,sd.update_by,sd.update_time
+         from sys_dept sd
+    </sql>
+
+    <!--数据查询操作SQL(非联合查询)-->
+    <select id="selectSysDeptList" parameterType="SysDept" resultMap="BaseResultMap">
+        <include refid="baseSelectVo"/>
+        <where>
+            <if test="deptId !=null ">
+                AND dept_id = #{deptId,jdbcType=INTEGER}
+            </if>
+            <if test="parentId !=null ">
+                AND parent_id = #{parentId,jdbcType=INTEGER}
+            </if>
+            <if test="ancestors !=null  and ancestors != ''">
+                AND ancestors = #{ancestors,jdbcType=VARCHAR}
+            </if>
+            <if test="deptName !=null  and deptName != ''">
+                AND dept_name = #{deptName,jdbcType=VARCHAR}
+            </if>
+            <if test="orderNum !=null ">
+                AND order_num = #{orderNum,jdbcType=INTEGER}
+            </if>
+            <if test="leader !=null  and leader != ''">
+                AND leader = #{leader,jdbcType=VARCHAR}
+            </if>
+            <if test="phone !=null  and phone != ''">
+                AND phone = #{phone,jdbcType=VARCHAR}
+            </if>
+            <if test="email !=null  and email != ''">
+                AND email = #{email,jdbcType=VARCHAR}
+            </if>
+            <if test="status !=null  and status != ''">
+                AND status = #{status,jdbcType=CHAR}
+            </if>
+            <if test="delFlag !=null  and delFlag != ''">
+                AND del_flag = #{delFlag,jdbcType=CHAR}
+            </if>
+            <if test="createBy !=null  and createBy != ''">
+                AND create_by = #{createBy,jdbcType=VARCHAR}
+            </if>
+            <if test="createTime !=null ">
+                AND create_time = #{createTime,jdbcType=TIMESTAMP}
+            </if>
+            <if test="updateBy !=null  and updateBy != ''">
+                AND update_by = #{updateBy,jdbcType=VARCHAR}
+            </if>
+            <if test="updateTime !=null ">
+                AND update_time = #{updateTime,jdbcType=TIMESTAMP}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectChildrenDeptById" parameterType="Long" resultMap="BaseResultMap">
+		select * from sys_dept where find_in_set(#{deptId}, ancestors)
+	</select>
+
+    <!--部门树查询-->
+    <select id="selectSysDeptTreeList" resultMap="BaseResultMap">
+        <include refid="baseSelectVo"/>
+        order by parent_id, order_num
+    </select>
+
+    <!--数据联合查询操作SQL(联合查询) javaType-->
+    <select id="selectUnionSysDeptList" parameterType="SysDept" resultMap="BaseResultMap">
+        <include refid="selectSysDeptVo"/>
+        <where>
+            <if test="deptId !=null ">
+                AND sd.dept_id = #{deptId,jdbcType=INTEGER}
+            </if>
+            <if test="parentId !=null ">
+                AND sd.parent_id = #{parentId,jdbcType=INTEGER}
+            </if>
+            <if test="ancestors !=null  and ancestors != ''">
+                AND sd.ancestors = #{ancestors,jdbcType=VARCHAR}
+            </if>
+            <if test="deptName !=null  and deptName != ''">
+                AND sd.dept_name = #{deptName,jdbcType=VARCHAR}
+            </if>
+            <if test="orderNum !=null ">
+                AND sd.order_num = #{orderNum,jdbcType=INTEGER}
+            </if>
+            <if test="leader !=null  and leader != ''">
+                AND sd.leader = #{leader,jdbcType=VARCHAR}
+            </if>
+            <if test="phone !=null  and phone != ''">
+                AND sd.phone = #{phone,jdbcType=VARCHAR}
+            </if>
+            <if test="email !=null  and email != ''">
+                AND sd.email = #{email,jdbcType=VARCHAR}
+            </if>
+            <if test="status !=null  and status != ''">
+                AND sd.status = #{status,jdbcType=CHAR}
+            </if>
+            <if test="delFlag !=null  and delFlag != ''">
+                AND sd.del_flag = #{delFlag,jdbcType=CHAR}
+            </if>
+            <if test="createBy !=null  and createBy != ''">
+                AND sd.create_by = #{createBy,jdbcType=VARCHAR}
+            </if>
+            <if test="createTime !=null ">
+                AND sd.create_time = #{createTime,jdbcType=TIMESTAMP}
+            </if>
+            <if test="updateBy !=null  and updateBy != ''">
+                AND sd.update_by = #{updateBy,jdbcType=VARCHAR}
+            </if>
+            <if test="updateTime !=null ">
+                AND sd.update_time = #{updateTime,jdbcType=TIMESTAMP}
+            </if>
+        </where>
+    </select>
+
+    <!--单条数据或详情查询操作SQL-->
+    <select id="selectSysDeptById" parameterType="Long" resultMap="BaseResultMap">
+        <include refid="baseSelectVo"/>
+        where
+        dept_id = #{deptId}
+    </select>
+
+    <select id="checkDeptIsExistUser" parameterType="Long" resultType="int">
+		select count(1) from sys_user where dept_id = #{deptId} and del_flag = '0'
+	</select>
+
+    <select id="hasChildDeptByDeptId" parameterType="Long" resultType="int">
+		select count(1) from sys_dept
+		where del_flag = '0' and parent_id = #{deptId} limit 1
+	</select>
+
+    <select id="hasChildDeptByDeptId2" parameterType="Long" resultType="int">
+		select count(1) from sys_dept
+		where parent_id = #{deptId} limit 1
+	</select>
+
+    <!--添加操作SQL-->
+    <insert id="insertSysDept" parameterType="SysDept"  useGeneratedKeys="true" keyProperty="deptId">
+        insert into sys_dept
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="parentId != null ">parent_id,</if>
+            <if test="ancestors != null  and ancestors != ''">ancestors,</if>
+            <if test="deptName != null  and deptName != ''">dept_name,</if>
+            <if test="orderNum != null ">order_num,</if>
+            <if test="leader != null  and leader != ''">leader,</if>
+            <if test="phone != null  and phone != ''">phone,</if>
+            <if test="email != null  and email != ''">email,</if>
+            <if test="status != null  and status != ''">status,</if>
+            <if test="delFlag != null  and delFlag != ''">del_flag,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+            <if test="updateTime != null ">update_time,</if>
+            create_time
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="parentId != null ">#{parentId},</if>
+            <if test="ancestors != null  and ancestors != ''">#{ancestors},</if>
+            <if test="deptName != null  and deptName != ''">#{deptName},</if>
+            <if test="orderNum != null ">#{orderNum},</if>
+            <if test="leader != null  and leader != ''">#{leader},</if>
+            <if test="phone != null  and phone != ''">#{phone},</if>
+            <if test="email != null  and email != ''">#{email},</if>
+            <if test="status != null  and status != ''">#{status},</if>
+            <if test="delFlag != null  and delFlag != ''">#{delFlag},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+            SYSDATE()
+        </trim>
+    </insert>
+
+    <!--批量添加操作SQL-->
+    <insert id="batchInsertSysDeptList" parameterType="java.util.List">
+        insert into sys_dept
+        (
+        parent_id,ancestors,dept_name,order_num,leader,phone,email,status,del_flag,create_by,create_time,update_by,update_time
+        )
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.parentId},#{item.ancestors},#{item.deptName},#{item.orderNum},#{item.leader},#{item.phone},#{item.email},#{item.status},#{item.delFlag},#{item.createBy},SYSDATE(),#{item.updateBy},#{item.updateTime}
+            )
+        </foreach>
+    </insert>
+
+    <!--删除操作SQL-->
+    <delete id="deleteSysDeptById" parameterType="Long">
+        delete FROM sys_dept where dept_id = #{deptId}
+    </delete>
+
+    <!--逻辑删除-->
+    <delete id="deleteSysDeptById2" parameterType="Long">
+        update sys_dept set del_flag='2' where dept_id = #{deptId}
+    </delete>
+
+    <!--删除操作SQL-->
+    <delete id="deleteSysDeptByIds" parameterType="Long">
+        delete FROM sys_dept where dept_id in
+        <foreach item="deptId" collection="array" open="(" separator="," close=")">
+            #{deptId}
+        </foreach>
+    </delete>
+
+    <!--逻辑批量删除-->
+    <delete id="deleteSysDeptByIds2" parameterType="Long">
+        update sys_dept set del_flag='2' where dept_id in
+        <foreach item="deptId" collection="array" open="(" separator="," close=")">
+            #{deptId}
+        </foreach>
+    </delete>
+
+    <!--更新操作SQL-->
+    <update id="updateSysDept" parameterType="SysDept">
+        update sys_dept
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="parentId != null ">parent_id = #{parentId},</if>
+            <if test="ancestors != null  and ancestors != ''">ancestors = #{ancestors},</if>
+            <if test="deptName != null  and deptName != ''">dept_name = #{deptName},</if>
+            <if test="orderNum != null ">order_num = #{orderNum},</if>
+            <if test="leader != null  and leader != ''">leader = #{leader},</if>
+            <if test="phone != null  and phone != ''">phone = #{phone},</if>
+            <if test="email != null  and email != ''">email = #{email},</if>
+            <if test="status != null  and status != ''">status = #{status},</if>
+            <if test="delFlag != null  and delFlag != ''">del_flag = #{delFlag},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            update_time = SYSDATE()
+        </trim>
+        where dept_id = #{deptId}
+    </update>
+
+    <!--更新当前部门下所有部门的父子路径-->
+    <update id="updateDeptChildren" parameterType="java.util.List">
+        update sys_dept set ancestors =
+        <foreach collection="depts" item="item" index="index"
+                 separator=" " open="case dept_id" close="end">
+            when #{item.deptId} then #{item.ancestors}
+        </foreach>
+        where dept_id in
+        <foreach collection="depts" item="item" index="index"
+                 separator="," open="(" close=")">
+            #{item.deptId}
+        </foreach>
+    </update>
+
+    <!--更新当前部门父级的所有状态-->
+    <update id="updateDeptStatus" parameterType="SysDept">
+        update sys_dept
+        <set>
+            <if test="status != null and status != ''">status = #{status},</if>
+            <if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
+            update_time = sysdate()
+        </set>
+        where dept_id in (${ancestors})
+    </update>
+
+    <!--更新当前部门下所有部门的状态-->
+    <update id="updateChildDeptStatus" parameterType="SysDept">
+        update sys_dept
+        <set>
+            <if test="status != null and status != ''">status = #{status},</if>
+            <if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
+            update_time = sysdate()
+        </set>
+        where parent_id = #{deptId}
+    </update>
+
+    <!--批量更新某个字段-->
+    <update id="batchUpdateSysDeptList" >
+        update sys_dept set
+        dept_id='',parent_id='',ancestors='',dept_name='',order_num='',leader='',phone='',email='',status='',del_flag='',create_by='',create_time='',update_by='',update_time=''
+        where dept_id in
+        <foreach collection="array" item="item"  open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </update>
+</mapper>
