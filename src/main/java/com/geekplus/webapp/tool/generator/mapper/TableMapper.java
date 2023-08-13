@@ -20,11 +20,18 @@ public interface TableMapper {
 	  * @Description //查询所有数据表
 	  */
 	List<String> listTableName();
+
+	/**
+	 * @Author geekplus
+	 * @Description //查询所有数据表,非系统表等
+	 */
+	List<TableInfo> listTable();
+
 	/**
 	 * @Author geekplus
 	 * @Description //查询所有数据表
 	 */
-	List<TableInfo> listTable();
+	List<TableInfo> listAllTable();
 	/**
 	 * @Author geekplus
 	 * @Description //根据表明查询数据表信息

@@ -44,6 +44,18 @@ public class GenCodeServiceImpl implements GenCodeService {
     }
 
     /**
+     * @Author geekplus
+     * @Description //获取数据库所有数据表
+     * @Param
+     * @Throws
+     * @Return {@link }
+     */
+    @Override
+    public List<TableInfo> getAllListTable() {
+        return tableMapper.listAllTable();
+    }
+
+    /**
      * 根据表名查询数据表信息
      */
     @Override

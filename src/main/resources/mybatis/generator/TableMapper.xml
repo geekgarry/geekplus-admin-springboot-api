@@ -68,14 +68,21 @@
 <!--            &lt;!&ndash; 			</if> &ndash;&gt;-->
 <!--        </where>-->
 <!--    </select>-->
-
+    <!--查询数据库中所有的表名-->
     <select id="listTableName" resultType="string" >
         select TABLE_NAME from information_schema.TABLES
         where TABLE_SCHEMA=(select database()) and table_name NOT LIKE 'qrtz_%' AND table_name NOT LIKE 'gen_%' and table_name NOT LIKE 'tool_%' and table_name NOT LIKE 'sys_%'
     </select>
+    <!--查询数据库中所有的表，非系统表等-->
     <select id="listTable" resultMap="tableInfoResultMap" >
         select table_name as table_name,table_comment as table_comment, create_time as create_time, update_time from information_schema.TABLES
-        where TABLE_SCHEMA=(select database()) and table_name NOT LIKE 'qrtz_%' AND table_name NOT LIKE 'gen_%' and table_name NOT LIKE 'tool_%' and table_name NOT LIKE 'sys_%'
+        where TABLE_SCHEMA=(select database()) and table_name NOT LIKE 'qrtz_%' AND table_name NOT LIKE 'gen_%' and table_name NOT LIKE 'tool_%'
+        and table_name NOT LIKE 'sys_%' order by create_time asc
+    </select>
+    <!--查询数据库中所有的表-->
+    <select id="listAllTable" resultMap="tableInfoResultMap" >
+        select table_name as table_name,table_comment as table_comment, create_time as create_time, update_time from information_schema.TABLES
+        where TABLE_SCHEMA=(select database()) order by create_time asc
     </select>
 <!--    table_comment <![CDATA[ <> ]]> '' 表示该字段为空时不会显示-->
     <select id="selectTableByName" parameterType="String" resultMap="tableInfoResultMap">

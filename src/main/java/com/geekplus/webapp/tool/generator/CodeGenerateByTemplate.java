@@ -596,7 +596,7 @@ public class CodeGenerateByTemplate {
             outputStream.reset();
             writer.flush();
             // 9.菜单权限sql文件
-            String sqlFileName = sqlPath + File.separatorChar + vueJsFileName + ".js";
+            String sqlFileName = sqlPath + File.separatorChar + vueJsFileName + ".sql";
             /**
              * 加载模板
              */

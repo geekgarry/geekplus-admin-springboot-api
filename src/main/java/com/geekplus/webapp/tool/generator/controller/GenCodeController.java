@@ -42,8 +42,18 @@ public class GenCodeController extends BaseController {
      * 查询所有非系统核心数据表
      */
     @GetMapping("/getAllTable")
-    public Result getAllTable() {
-        return Result.success(genCodeService.getAllTable());
+    public PageDataInfo getAllTable() {
+        startPage();
+        return getDataTable(genCodeService.getAllTable());
+    }
+
+    /**
+     * 查询数据库所有数据表
+     */
+    @GetMapping("/getAllListTable")
+    public PageDataInfo getAllListTable() {
+        startPage();
+        return getDataTable(genCodeService.getAllListTable());
     }
 
     /**
