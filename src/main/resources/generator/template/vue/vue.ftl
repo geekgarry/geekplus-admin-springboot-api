@@ -1,9 +1,9 @@
 <template>
     <div class="app-container">
         <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
-        <#if allColumn?exists>
-        <#list allColumn as column>
-        <#if (column.columnType=='varchar'||column.columnType=='char') && column.isPk!='1' >
+            <#if allColumn?exists>
+            <#list allColumn as column>
+            <#if (column.columnDataType=='varchar'||column.columnDataType=='char') && column.isPk!='1' >
             <el-form-item label="${column.columnComment}" prop="${column.smallColumnName}">
                 <el-input
                     v-model="queryParams.${column.smallColumnName}"
@@ -13,7 +13,7 @@
                     @keyup.enter.native="handleQuery"
                 />
             </el-form-item>
-        <#elseif (column.columnType=='int'||column.columnType=='tinyint'||column.columnType=='smallint'||column.columnType=='bigint') && column.isPk!='1' >
+            <#elseif (column.columnDataType=='int'||column.columnDataType=='tinyint'||column.columnDataType=='smallint'||column.columnDataType=='bigint') && column.isPk!='1' >
             <el-form-item label="${column.columnComment}" prop="${column.smallColumnName}">
                 <el-input
                     v-model="queryParams.${column.smallColumnName}"
@@ -23,9 +23,9 @@
                     @keyup.enter.native="handleQuery"
                 />
             </el-form-item>
-        </#if>
-        </#list>
-        </#if>
+            </#if>
+            </#list>
+            </#if>
             <el-form-item>
                 <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
                 <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -117,13 +117,13 @@
                 <el-row>
                     <#if allColumn?exists>
                     <#list allColumn as column>
-                    <#if (column.columnType=='varchar'||column.columnType=='char') && column.isPk!='1' >
+                    <#if (column.columnDataType=='varchar'||column.columnDataType=='char') && column.isPk!='1' >
                     <el-col :span="12">
                         <el-form-item label="${column.columnComment}" prop="${column.smallColumnName}">
                             <el-input v-model="form.${column.smallColumnName}" placeholder="请输入${column.columnComment}" />
                         </el-form-item>
                     </el-col>
-                    <#elseif (column.columnType=='int'||column.columnType=='tinyint'||column.columnType=='smallint'||column.columnType=='bigint') && column.isPk!='1' >
+                    <#elseif (column.columnDataType=='int'||column.columnDataType=='tinyint'||column.columnDataType=='smallint'||column.columnDataType=='bigint') && column.isPk!='1' >
                     <el-col :span="12">
                         <el-form-item label="${column.columnComment}" prop="${column.smallColumnName}">
                             <el-select v-model="form.${column.smallColumnName}" placeholder="请选择">
@@ -132,7 +132,7 @@
                             </el-select>
                         </el-form-item>
                     </el-col>
-                    <#elseif (column.columnType=='text'||column.columnType=='tinytext'||column.columnType=='bigtext'||column.columnType=='longtext') && column.isPk!='1' >
+                    <#elseif (column.columnDataType=='text'||column.columnDataType=='tinytext'||column.columnDataType=='bigtext'||column.columnDataType=='longtext') && column.isPk!='1' >
                     <el-col :span="24">
                         <el-form-item label="${column.columnComment}" prop="${column.smallColumnName}">
                             <!--<editor v-model="form.${column.smallColumnName}" :min-height="186"/>-->

@@ -19,6 +19,8 @@ public class TableColumnInfo extends BaseEntity {
     private String columnName;
     /** 数据库字段类型 **/
     private String columnType;
+    /** 数据库字段类型 **/
+    private String columnDataType;
     /** 数据库字段首字母小写且去掉下划线字符串 **/
     private String smallColumnName;
     /** 数据库字段的属性名，去掉下划线每一段首字母全部都是大写 **/
@@ -82,6 +84,14 @@ public class TableColumnInfo extends BaseEntity {
         this.columnType = columnType;
     }
 
+    public String getColumnDataType() {
+        return GenUtil.getDbColumnType(getColumnType());
+    }
+
+    public void setColumnDataType(String columnDataType) {
+        this.columnDataType = columnDataType;
+    }
+
     public String getSmallColumnName() {
         //字段名驼峰开头小写
         return GenUtil.columnNameToVarName(getColumnName());
@@ -123,7 +133,7 @@ public class TableColumnInfo extends BaseEntity {
         /*
         getJavaType()中做一些字段处理的操作
          */
-        String dbColumnType= GenUtil.getDbColumnType(getColumnType());
+        String dbColumnType= getColumnDataType();
         return GenUtil.dbTypeToJavaType(dbColumnType);
     }
 
@@ -165,7 +175,7 @@ public class TableColumnInfo extends BaseEntity {
     }
 
     public String getDictType() {
-        String dbColumnType= GenUtil.getDbColumnType(getColumnType());
+        String dbColumnType= getColumnDataType();
         return GenUtil.mybatisType(dbColumnType);
     }
 
