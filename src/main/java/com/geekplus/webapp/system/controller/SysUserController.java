@@ -64,7 +64,9 @@ public class SysUserController extends BaseController {
     @Log(title = "系统添加用户信息",businessType = BusinessType.INSERT,operatorType = OperatorType.MANAGE)
     @PostMapping("/addEncodePwd")
     public Result addEncodePwd(@RequestBody SysUser sysUser) {
-        return toResult(sysUserService.insertSysUserEnCodePwd(sysUser));
+        Result result=toResult(sysUserService.insertSysUserEnCodePwd(sysUser));
+        result.put("userId",sysUser.getUserId());
+        return result;
     }
 
     /**
