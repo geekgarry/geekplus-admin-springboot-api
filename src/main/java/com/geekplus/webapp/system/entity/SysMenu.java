@@ -53,12 +53,12 @@ public class SysMenu extends BaseEntity
     /**
      * 系统菜单权限 系统菜单权限
      */
-    private Integer isFrame;
+    private String isFrame;
 
     /**
      * 系统菜单权限 系统菜单权限
      */
-    private Integer isCache;
+    private String isCache;
 
     /**
      * 系统菜单权限 系统菜单权限
@@ -194,27 +194,27 @@ public class SysMenu extends BaseEntity
 	/**
 	 *获取是否为外链（0是 1否）
 	 */
-	public Integer getIsFrame(){
+	public String getIsFrame(){
 		return isFrame;
 	}
 
 	/**
 	 *设置是否为外链（0是 1否）
 	 */
-	public void setIsFrame(Integer isFrame){
+	public void setIsFrame(String isFrame){
 		this.isFrame = isFrame;
 	}
 	/**
 	 *获取是否缓存（0缓存 1不缓存）
 	 */
-	public Integer getIsCache(){
+	public String getIsCache(){
 		return isCache;
 	}
 
 	/**
 	 *设置是否缓存（0缓存 1不缓存）
 	 */
-	public void setIsCache(Integer isCache){
+	public void setIsCache(String isCache){
 		this.isCache = isCache;
 	}
 	/**

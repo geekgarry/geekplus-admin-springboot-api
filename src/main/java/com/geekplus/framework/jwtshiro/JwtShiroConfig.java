@@ -83,7 +83,7 @@ public class JwtShiroConfig {
         map.put("/covid/**","anon");
         map.put("/openai/**","anon");
         map.put("/geekplusapp/**","anon");
-        //map.put("/geekplus/websocket/**","anon");
+        map.put("/websocket/**","anon");
         map.put("/profile/**","anon");
         map.put("/common/getQRCode**","anon");
         map.put("/common/download**","anon");
