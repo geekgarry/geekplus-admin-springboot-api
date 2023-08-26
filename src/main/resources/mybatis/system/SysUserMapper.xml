@@ -516,4 +516,14 @@
  		update sys_user set avatar = #{avatar} where user_name = #{userName}
 	</update>
 
+<!--    <select id="getRolePermissionByUserName" resultType="map" parameterType="com.geekplus.webapp.system.entity.SysUser" >-->
+<!--    SELECT srole.role_id as roleId,srole.role_name as roleName,srole.role_key as roleKey,sp.permission_name as permName,-->
+<!--    sp.permission_id as permId,sp.remark from sys_user suser-->
+<!--    LEFT JOIN sys_user_role urole on suser.user_id=urole.user_id-->
+<!--    LEFT JOIN sys_role srole on srole.role_id=urole.role_id-->
+<!--    LEFT JOIN sys_role_permission srp on srp.role_id=urole.role_id-->
+<!--    LEFT JOIN sys_permission sp on sp.permission_id=srp.permission_id-->
+<!--    where suser.user_name=#{userName}-->
+<!--    </select>-->
+
 </mapper>
