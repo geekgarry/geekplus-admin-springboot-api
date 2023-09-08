@@ -6,6 +6,7 @@
  */
 package com.geekplus.common.core.socket;
 
+import com.geekplus.webapp.tool.generator.utils.JSONObjectUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
@@ -47,7 +48,10 @@ public class WebSocketServer {
         //sid=sid+":"+System.currentTimeMillis();
         sessionPool.put(sid,session);
         log.info("连接成功！");
-        sendMessageAll("onlineCount:"+WebSocketServer.onlineCount);
+        HashMap<String,Object> map=new HashMap<>();
+        map.put("onlineCount",WebSocketServer.onlineCount);
+        map.put("type","onlineCount");
+        sendMessageAll(JSONObjectUtil.objectToJson(map));
 //        try {
 //            //sendMessage("连接成功:"+sysUser.getUserId()+":"+sysUser.getUserName()+":"+sysUser.getNickName());
 //            sendMessage("connect_success");
@@ -65,7 +69,10 @@ public class WebSocketServer {
         webSocketSet.remove(this);  //从set中删除
         sessionIdSet.remove(this.sid);
         subOnlineCount();           //在线数减1
-        sendMessageAll("onlineCount:"+WebSocketServer.onlineCount);
+        HashMap<String,Object> map=new HashMap<>();
+        map.put("onlineCount",WebSocketServer.onlineCount);
+        map.put("type","onlineCount");
+        sendMessageAll(JSONObjectUtil.objectToJson(map));
         Map<String,Session> webSocketServers = new HashMap<>();
 //        if (sessionPool.containsKey(this.sid)) {
 //            //webSocketServers.put(sid,sessionPool.get(sid));//.stream().filter(o -> o.session.getId().equals(session.getId())).collect(Collectors.toList());
@@ -100,13 +107,9 @@ public class WebSocketServer {
     public void onMessage(String message, Session session) {
         log.info("收到来自窗口" + sid + "的信息:" + message);
         //群发消息
-        for (WebSocketServer item : webSocketSet) {
-            try {
-                item.sendMessage(message);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+//        for (WebSocketServer item : webSocketSet) {
+//            item.sendMessage(message);
+//        }
     }
 
     /**
@@ -122,26 +125,27 @@ public class WebSocketServer {
     /**
      * 实现服务器主动推送
      */
-    public void sendMessage(Object message) throws IOException {
-        this.session.getBasicRemote().sendText(message.toString());
+    public void sendMessage(Object message) {
+        log.info("群发推送消息" + "，推送内容:" + message);
+        try {
+            this.session.getBasicRemote().sendText(message.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
      * 群发自定义消息
      */
-    public static void sendInfo(Object message, @PathParam("sid") String sid) throws IOException {
+    public static void sendInfo(Object message, String sid) throws IOException {
         log.info("推送消息到窗口" + sid + "，推送内容:" + message);
 
         for (WebSocketServer item : webSocketSet) {
-            try {
-                //这里可以设定只推送给这个sid的，为null则全部推送
-                if (sid == null) {
-                    item.sendMessage(message);
-                } else if (item.sid.equals(sid)) {
-                    item.sendMessage(message);
-                }
-            } catch (IOException e) {
-                continue;
+            //这里可以设定只推送给这个sid的，为null则全部推送
+            if (sid == null) {
+                item.sendMessage(message);
+            } else if (item.sid.equals(sid)) {
+                item.sendMessage(message);
             }
         }
     }

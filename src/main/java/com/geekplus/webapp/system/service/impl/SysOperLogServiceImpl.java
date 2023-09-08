@@ -1,12 +1,18 @@
 package com.geekplus.webapp.system.service.impl;
 
+import com.geekplus.common.core.socket.WebSocketServer;
 import com.geekplus.webapp.system.mapper.SysOperLogMapper;
 import com.geekplus.webapp.system.entity.SysOperLog;
 import com.geekplus.webapp.system.service.SysOperLogService;
 //import com.geekplus.core.AbstractService;
+import com.geekplus.webapp.tool.generator.utils.JSONObjectUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -20,12 +26,20 @@ public class SysOperLogServiceImpl implements SysOperLogService {
     @Resource
     private SysOperLogMapper sysOperLogMapper;
 
+    @Resource
+    private WebSocketServer webSocketServer;
+
     /**
     * 增加
     * @param sysOperLog
     * @return 系统操作日志
     */
-    public Integer insertSysOperLog(SysOperLog sysOperLog){
+    public Integer insertSysOperLog(SysOperLog sysOperLog) {
+        Map<String,Object> map=new HashMap<>();
+        map.put("notifyMsg","新增操作日志");
+        map.put("operationLog","add");
+        map.put("type","notifyMsg");
+        webSocketServer.sendMessageAll(JSONObjectUtil.objectToJson(map));
         return sysOperLogMapper.insertSysOperLog(sysOperLog);
     }
 

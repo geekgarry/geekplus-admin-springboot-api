@@ -3,6 +3,7 @@ package com.geekplus.webapp.system.controller;
 import com.geekplus.common.annotation.Log;
 import com.geekplus.common.constant.HttpStatusCode;
 import com.geekplus.common.core.controller.BaseController;
+import com.geekplus.common.core.socket.WebSocketServer;
 import com.geekplus.common.domain.Result;
 import com.geekplus.common.enums.BusinessType;
 import com.geekplus.common.page.PageDataInfo;
@@ -14,6 +15,7 @@ import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -25,12 +27,13 @@ import java.util.List;
 public class SysOperLogController extends BaseController {
     @Resource
     private SysOperLogService sysOperLogService;
-
+    @Resource
+    private WebSocketServer webSocketServer;
     /**
      * 增加 系统操作日志
      */
     @PostMapping("/add")
-    public Result add(@RequestBody SysOperLog sysOperLog) {
+    public Result add(@RequestBody SysOperLog sysOperLog) throws IOException {
         return toResult(sysOperLogService.insertSysOperLog(sysOperLog));
     }
 

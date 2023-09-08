@@ -1,10 +1,18 @@
 package com.geekplus;
 
+import org.apache.catalina.Context;
+import org.apache.catalina.connector.Connector;
+import org.apache.tomcat.util.descriptor.web.SecurityCollection;
+import org.apache.tomcat.util.descriptor.web.SecurityConstraint;
+import org.apache.tomcat.websocket.server.WsSci;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 //import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 //import org.springframework.cloud.client.loadbalancer.LoadBalanced;
+import org.springframework.boot.web.embedded.tomcat.TomcatContextCustomizer;
+import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
+import org.springframework.boot.web.servlet.server.ServletWebServerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.EnableAsync;
@@ -58,4 +66,52 @@ public class GeekPlusAdminApplication {
         return taskScheduler;
     }
 
+    //@Value("${myhttp.port}")
+    //private Integer httpPort;
+
+    //SpringBoot 2.x版本(以及更高版本) 使用下面的代码
+    @Bean
+    public ServletWebServerFactory servletContainer() {
+        TomcatServletWebServerFactory tomcat = new TomcatServletWebServerFactory();
+        //带域名ssl验证
+//        TomcatServletWebServerFactory tomcat = new TomcatServletWebServerFactory() {
+//            @Override
+//            protected void postProcessContext(Context context) {
+//                SecurityConstraint securityConstraint = new SecurityConstraint();
+//                securityConstraint.setUserConstraint("CONFIDENTIAL");
+//                SecurityCollection collection = new SecurityCollection();
+//                collection.addPattern("/*");
+//                securityConstraint.addCollection(collection);
+//                context.addConstraint(securityConstraint);
+//            }
+//        };
+        tomcat.addAdditionalTomcatConnectors(createHTTPConnector());
+        return tomcat;
+    }
+
+    private Connector createHTTPConnector() {
+        Connector connector = new Connector("org.apache.coyote.http11.Http11NioProtocol");
+        connector.setScheme("http");
+        connector.setSecure(false);
+        connector.setPort(9002);
+        //connector.setRedirectPort(8443);
+        return connector;
+    }
+
+    /**
+     * 创建wss协议接口
+     *
+     * @return
+     */
+    @Bean
+    public TomcatContextCustomizer tomcatContextCustomizer() {
+        System.out.println("websocket init");
+        return new TomcatContextCustomizer() {
+            @Override
+            public void customize(Context context) {
+                System.out.println("init customize");
+                context.addServletContainerInitializer(new WsSci(), null);
+            }
+        };
+    }
 }
