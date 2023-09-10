@@ -1,5 +1,6 @@
 package com.geekplus.common.util;
 
+import com.geekplus.common.util.json.JsonObjectUtil;
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
 
@@ -60,7 +61,7 @@ public class AliBankCheckUtil {
 	}
 
 	public static Map<String,Object> getResponObjec(String jsonString) {
-		Map<String,Object> backMap = (Map<String, Object>) JsonUtil.jsonToMap(jsonString);
+		Map<String,Object> backMap = (Map<String, Object>) JsonObjectUtil.jsonToMap(jsonString);
 		return backMap;
 	}
 	public static void main(String[] args) {

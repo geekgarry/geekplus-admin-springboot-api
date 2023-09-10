@@ -1,5 +1,6 @@
 package com.geekplus.webapp.system.service.impl;
 
+import com.geekplus.common.util.sysmenu.SysMenuUtil;
 import com.geekplus.webapp.system.mapper.SysMenuMapper;
 import com.geekplus.webapp.system.entity.SysMenu;
 import com.geekplus.webapp.system.service.SysMenuService;
@@ -86,7 +87,7 @@ public class SysMenuServiceImpl implements SysMenuService {
      * 查询全部
      */
     public List<SysMenu> selectSysMenuTreeList(){
-        return getParentMenuList(sysMenuMapper.selectSysMenuTreeList());
+        return SysMenuUtil.getParentMenuList(sysMenuMapper.selectSysMenuTreeList());
     }
 
     /**
@@ -103,25 +104,47 @@ public class SysMenuServiceImpl implements SysMenuService {
         return sysMenuMapper.selectSysMenuById(menuId);
     }
 
+    /**
+     * @Author geekplus
+     * @Description //根据用户角色sysRoles查询菜单权限permission列表
+     */
     @Override
-    public List<SysMenu> getSysMenuByRoles(List<SysRole> sysRoles) {
-        return sysMenuMapper.selectMenusByRoles(sysRoles);
+    public List<SysMenu> getSysMenuPermsByRoles(List<SysRole> sysRoles) {
+        return sysMenuMapper.selectMenuPermsByRoles(sysRoles);
+    }
+
+    /**
+     * @Author geekplus
+     * @Description //根据userName查询菜单权限permission列表
+     */
+    @Override
+    public List<SysMenu> getMenuTreeByUserName(String userName) {
+        return SysMenuUtil.getParentMenuList(sysMenuMapper.selectMenuTreeByUserName(userName));
+    }
+
+    /**
+     * @Author geekplus
+     * @Description //根据userId查询菜单权限permission列表
+     */
+    @Override
+    public List<SysMenu> getMenuPermsByUserName(String userName) {
+        return sysMenuMapper.selectMenuPermsByUserName(userName);
     }
 
     @Override
-    public List<SysMenu> getMenuTreeByUserName(String userName) {
-        return getParentMenuList(sysMenuMapper.selectMenuTreeByUserName(userName));
+    public List<SysMenu> getMenuPermsByUserId(Long userId) {
+        return sysMenuMapper.selectMenuPermsByUserId(userId);
     }
 
     @Override
     public List<SysMenu> getMenuTreeByUserId(Long userId) {
         List<SysMenu> sysMenuList=sysMenuMapper.selectMenuTreeByUserId(userId);
-        return getParentMenuList(sysMenuList);
+        return SysMenuUtil.getParentMenuList(sysMenuList);
     }
 
     @Override
     public List<SysMenu> getMenuTreeByRoleId(Long roleId) {
-        return getParentMenuList(sysMenuMapper.selectMenuTreeByRoleId(roleId));
+        return SysMenuUtil.getParentMenuList(sysMenuMapper.selectMenuTreeByRoleId(roleId));
     }
 
     @Override
@@ -134,103 +157,4 @@ public class SysMenuServiceImpl implements SysMenuService {
         return sysMenuMapper.selectMenuIdListByRoleId(roleId);
     }
 
-
-    /**
-     * 根据父节点的ID获取所有子节点
-     *
-     * @param list 分类表
-     * @param parentId 传入的父节点ID
-     * @return String
-     */
-    public List<SysMenu> getChildPerms(List<SysMenu> list, int parentId)
-    {
-        List<SysMenu> returnList = new ArrayList<SysMenu>();
-        for (Iterator<SysMenu> iterator = list.iterator(); iterator.hasNext();)
-        {
-            SysMenu menu = (SysMenu) iterator.next();
-            // 一、根据传入的某个父节点ID,遍历该父节点的所有子节点
-            if (menu.getParentId() == parentId)
-            {
-                recursionFn(list, menu);
-                returnList.add(menu);
-            }
-        }
-        return returnList;
-    }
-
-    /**
-     * 递归列表
-     *
-     * @param list
-     * @param item
-     */
-    private void recursionFn(List<SysMenu> list, SysMenu item)
-    {
-        // 得到子节点列表
-        List<SysMenu> childList = getChildList(list, item);
-        item.setChildren(childList);
-        for (SysMenu tChild : childList)
-        {
-            if (hasChild(list, tChild))
-            {
-                recursionFn(list, tChild);
-            }
-        }
-    }
-
-    /**
-     * 得到子节点列表
-     */
-    private List<SysMenu> getChildList(List<SysMenu> list, SysMenu item)
-    {
-        List<SysMenu> tlist = new ArrayList<SysMenu>();
-        Iterator<SysMenu> it = list.iterator();
-        while (it.hasNext())
-        {
-            SysMenu n = (SysMenu) it.next();
-            if (n.getParentId().longValue() == item.getMenuId().longValue())
-            {
-                tlist.add(n);
-            }
-        }
-        return tlist;
-    }
-
-    /**
-     * 判断是否有子节点
-     */
-    private boolean hasChild(List<SysMenu> list, SysMenu item)
-    {
-        return getChildList(list, item).size() > 0 ? true : false;
-    }
-
-    //递归方法，加载菜单为折叠形态
-    public List<SysMenu> getParentMenuList(List<SysMenu> list){
-        List<SysMenu> menuList=new ArrayList<>();
-        list.stream().forEach(menu ->{
-            //SysMenu menu = lt.next();
-            if (menu.getParentId() == 0) {
-                log.info("==========>数据"+menuList);
-                menu.setChildren(getChild(list, menu.getMenuId()));
-                menuList.add(menu);
-            }
-        });
-        return menuList;
-    }
-    public List<SysMenu> getChild(List<SysMenu> list, Long menuId){
-        List<SysMenu> childList=new ArrayList<>();
-        for (Iterator<SysMenu> iterator = list.iterator(); iterator.hasNext();){
-            SysMenu menu = iterator.next();
-            if (menu.getParentId().equals(menuId)){
-                log.info("==========>数据"+menu);
-                menu.setChildren(getChild(list, menu.getMenuId()));
-                childList.add(menu);
-                log.info("==========>数据"+childList);
-            }
-        }
-//        for (SysMenu menu:childList) {
-//            menu.setChildren(getChild(list, menu.getMenuId()));
-//        }
-        return childList;
-    }
 }

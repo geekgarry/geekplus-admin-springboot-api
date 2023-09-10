@@ -73,18 +73,27 @@ public interface SysMenuMapper {
     */
     SysMenu selectSysMenuById(Long menuId);
 
-    //根据用户的角色查询菜单权限
-    List<SysMenu> selectMenusByRoles(List<SysRole> sysRoles);
+    //根据用户的角色查询菜单权限permission列表
+    List<SysMenu> selectMenuPermsByRoles(List<SysRole> sysRoles);
 
-    //根据userName查询菜单权限
+    //根据用户名查询用户菜单权限permission列表
+    List<SysMenu> selectMenuPermsByUserName(String userName);
+
+    //根据用户ID查询用户菜单权限permission列表
+    List<SysMenu> selectMenuPermsByUserId(Long userId);
+
+    //根据userName查询权限菜单
     List<SysMenu> selectMenuTreeByUserName(String userName);
 
-    //这个是根据userId查询该用户的菜单权限，跟上面的比起来是把所有步骤都写在一个sql语句中
+    //这个是根据userId查询该用户的权限菜单列表，跟上面的比起来是把所有步骤都写在一个sql语句中
     List<SysMenu> selectMenuTreeByUserId(Long userId);
+
+    //根据角色关键字数组查询菜单列表
+    List<SysMenu> selectMenuTreeByRoleKeys(String[] roleKeys);
 
     //根据角色ID查询菜单列表
     List<SysMenu> selectMenuTreeByRoleId(Long roleId);
 
-    //根据角色ID查询菜单权限列表
+    //根据角色ID查询菜单权限permission列表
     List<Integer> selectMenuIdListByRoleId(Long roleId);
 }

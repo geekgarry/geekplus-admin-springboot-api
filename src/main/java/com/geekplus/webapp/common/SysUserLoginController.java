@@ -16,8 +16,10 @@ import com.geekplus.common.util.LogUtil;
 import com.geekplus.common.redis.RedisUtil;
 import com.geekplus.common.util.ServletUtil;
 import com.geekplus.common.util.ServletUtils;
+import com.geekplus.common.util.StringUtils;
 import com.geekplus.common.util.ip.IpUtils;
 import com.geekplus.common.util.shiro.ShiroEncrypt;
+import com.geekplus.common.util.sysmenu.SysMenuUtil;
 import com.geekplus.framework.jwtshiro.JwtTokenUtil;
 import com.geekplus.webapp.system.entity.SysMenu;
 import com.geekplus.webapp.system.entity.SysUser;
@@ -34,6 +36,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
@@ -141,13 +145,17 @@ public class SysUserLoginController extends BaseController {
         //String userName=JwtTokenUtil.verifyResult(token).getClaim("userName").asString();
         Map<String,Object> map=new HashMap<>();
         //log.info("=========================>"+sysUser.getUserId());
-        List<SysMenu> menuList=sysMenuService.getMenuTreeByUserName(userName);
+        //List<SysMenu> menuList=sysMenuService.getMenuTreeByUserName(userName);
+        List<SysMenu> allMenuList=sysMenuService.getMenuPermsByUserName(userName);
+        Set permsSet=allMenuList.stream().filter(sysMenu -> !StringUtils.isEmpty(sysMenu.getPerms())).map(SysMenu::getPerms).collect(Collectors.toSet());
+        List<SysMenu> menuList= SysMenuUtil.getParentMenuList(allMenuList.stream().filter(sysMenu -> !sysMenu.getMenuType().equals("B")).collect(Collectors.toList()));
         //List<SysMenu> menuList=sysMenuService.getMenuTreeByUserId(loginUser.getUserId());
         map.put("userName", userName);
         map.put("nickName", loginUser.getNickName());
         map.put("userId", loginUser.getUserId());
         map.put("avatar", loginUser.getAvatar());
         map.put("menuList", menuList);
+        map.put("permsSet",permsSet);
         return Result.success(map);
     }
 
@@ -162,6 +170,16 @@ public class SysUserLoginController extends BaseController {
         String token = tokenService.getToken(request);
         tokenService.delLoginUser(token);
         return Result.success();
+    }
+
+    /**
+      * @Author geekplus
+      * @Description //获取当前用户的权限菜单Menus
+      */
+    @PostMapping("/getRoutesMenu")
+    public Result getRoutesMenu() {
+        String userName = tokenService.getSysUserName();
+        return Result.success(sysMenuService.getMenuTreeByUserName(userName));
     }
 
     /**

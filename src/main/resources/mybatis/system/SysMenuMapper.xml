@@ -291,8 +291,8 @@
         </foreach>
     </update>
 
-    <!--  判断字段是否为空IFNULL(sm.perms,'')-->
-    <select id="selectMenusByRoles" resultMap="BaseResultMap">
+    <!--根据用户的角色查询菜单权限permission列表，判断字段是否为空IFNULL(sm.perms,'')-->
+    <select id="selectMenuPermsByRoles" resultMap="BaseResultMap">
         SELECT sm.menu_name, sm.menu_id, sm.path, sm.menu_type, sm.visible, sm.status, sm.remark, sm.perms
         from sys_menu sm LEFT JOIN sys_role_menu srm on srm.menu_id=sm.menu_id
         <where>
@@ -305,6 +305,38 @@
             </if>
             and sm.perms!=''
         </where>
+        order by sm.parent_id, sm.order_num
+    </select>
+
+    <!--根据用户名查询用户菜单权限permission列表,sm.menu_type in ('M', 'C', 'B') and -->
+    <select id="selectMenuPermsByUserName" parameterType="Long" resultMap="BaseResultMap">
+        select distinct sm.menu_id, sm.parent_id, sm.menu_name, sm.path, sm.component, sm.visible, sm.status, ifnull(sm.perms,'') as perms, sm.is_frame, sm.is_cache, sm.menu_type, sm.icon, sm.order_num, sm.create_time
+        from sys_menu sm
+        left join sys_role_menu srm on sm.menu_id = srm.menu_id
+        left join sys_user_role sur on srm.role_id = sur.role_id
+        left join sys_role sr on sr.role_id = sur.role_id
+        left join sys_user su on sur.user_id = su.user_id
+        where
+        <if test="userName != null">
+            su.user_name = #{userName} and
+        </if>
+        sm.status = 0  AND sr.status = 0
+        order by sm.parent_id, sm.order_num
+    </select>
+
+    <!--根据用户ID查询用户菜单权限permission列表,sm.menu_type in ('M', 'C', 'B') and -->
+    <select id="selectMenuPermsByUserId" parameterType="Long" resultMap="BaseResultMap">
+        select distinct sm.menu_id, sm.parent_id, sm.menu_name, sm.path, sm.component, sm.visible, sm.status, ifnull(sm.perms,'') as perms, sm.is_frame, sm.is_cache, sm.menu_type, sm.icon, sm.order_num, sm.create_time
+        from sys_menu sm
+        left join sys_role_menu srm on sm.menu_id = srm.menu_id
+        left join sys_user_role sur on srm.role_id = sur.role_id
+        left join sys_role sr on sr.role_id = sur.role_id
+        left join sys_user su on sur.user_id = su.user_id
+        where
+        <if test="userId != null">
+            su.user_id = #{userId} and
+        </if>
+        sm.status = 0  AND sr.status = 0
         order by sm.parent_id, sm.order_num
     </select>
 
@@ -339,6 +371,23 @@
         sm.menu_type in ('M', 'C') and sm.status = 0  AND sr.status = 0
 	order by sm.parent_id, sm.order_num
     </select>
+
+    <!--根据角色关键字数组查询权限菜单-->
+    <select id="selectMenuTreeByRoleKeys" parameterType="String" resultMap="BaseResultMap">
+        select distinct sm.menu_id, sm.parent_id, sm.menu_name, sm.path, sm.component, sm.visible, sm.status, ifnull(sm.perms,'') as perms, sm.is_frame, sm.is_cache, sm.menu_type, sm.icon, sm.order_num, sm.create_time
+        from sys_menu sm
+        left join sys_role_menu srm on sm.menu_id = srm.menu_id
+        left join sys_role sr on srm.role_id = sr.role_id
+        where
+        <if test="roleKeys.size()>0">
+            sr.role_key IN
+            <foreach collection="roleKeys" item="item" index="index" open="(" close=")" separator="," >
+                #{item}
+            </foreach> and
+        </if>
+        sm.menu_type in ('M', 'C') and sm.status = 0  AND sr.status = 0
+        order by sm.parent_id, sm.order_num
+    </select>
     <!--根据角色ID查询权限菜单-->
     <select id="selectMenuTreeByRoleId" parameterType="Long" resultMap="BaseResultMap">
 	select distinct sm.menu_id, sm.parent_id, sm.menu_name, sm.path, sm.component, sm.visible, sm.status, ifnull(sm.perms,'') as perms, sm.is_frame, sm.is_cache, sm.menu_type, sm.icon, sm.order_num, sm.create_time
@@ -352,6 +401,7 @@
         sm.menu_type in ('M', 'C') and sm.status = 0  AND sr.status = 0
 	order by sm.parent_id, sm.order_num
     </select>
+    <!--查询菜单权限的ID，是权限permission，不是菜单-->
     <select id="selectMenuIdListByRoleId" resultType="Integer">
         select distinct sm.menu_id
         from sys_menu sm

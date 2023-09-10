@@ -70,16 +70,25 @@ public interface SysMenuService {
     /**
      *查询菜单权限列表
      */
-    List<SysMenu> getSysMenuByRoles(List<SysRole> sysRoles);
+    List<SysMenu> getSysMenuPermsByRoles(List<SysRole> sysRoles);
+
+    /**
+     * @Author geekplus
+     * @Description //根据userName查询菜单权限
+     */
+    List<SysMenu> getMenuTreeByUserName(String userName);
+
+    /**
+     * @Author geekplus
+     * @Description //根据userName查询菜单权限permission列表
+     */
+    List<SysMenu> getMenuPermsByUserName(String userName);
 
     /**
       * @Author geekplus
-      * @Description //根据userName查询菜单权限
-      * @Param
-      * @Throws
-      * @Return {@link }
+      * @Description //根据userId查询菜单权限permission列表
       */
-    List<SysMenu> getMenuTreeByUserName(String userName);
+    List<SysMenu> getMenuPermsByUserId(Long userId);
 
     /**
     *查询菜单权限树

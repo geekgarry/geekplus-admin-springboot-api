@@ -6,16 +6,17 @@
  */
 package com.geekplus.common.core.socket;
 
-import com.geekplus.webapp.tool.generator.utils.JSONObjectUtil;
+import com.geekplus.common.util.json.JsonObjectUtil;
+import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 import javax.websocket.*;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 @Slf4j
@@ -24,15 +25,22 @@ import java.util.concurrent.CopyOnWriteArraySet;
 public class WebSocketServer {
     //静态变量，用来记录当前在线连接数。应该把它设计成线程安全的。
     private static int onlineCount = 0;
+
     //concurrent包的线程安全Set，用来存放每个客户端对应的MyWebSocket对象。
-    private static CopyOnWriteArraySet<WebSocketServer> webSocketSet = new CopyOnWriteArraySet<WebSocketServer>();
-    private static CopyOnWriteArraySet<String> sessionIdSet=new CopyOnWriteArraySet<>();
-    private static Map<String,Session> sessionPool = new HashMap<>();
+//    private static CopyOnWriteArraySet<WebSocketServer> webSocketSet = new CopyOnWriteArraySet<WebSocketServer>();
+//    private static CopyOnWriteArraySet<String> sessionIdSet=new CopyOnWriteArraySet<>();
+//    private static Map<String,Session> sessionPool = new HashMap<>();
+
+    /**
+     * 以用户的姓名为key，WebSocket为对象保存起来
+     */
+    private static Map<String, WebSocketServer> socketClients = new ConcurrentHashMap<String, WebSocketServer>();
+
     //与某个客户端的连接会话，需要通过它来给客户端发送数据
     private Session session;
 
     //接收sid
-    private String sid = "";
+    private String sid = null;
 
     /**
      * 连接建立成功调用的方法
@@ -41,17 +49,27 @@ public class WebSocketServer {
     public void onOpen(Session session, @PathParam("sid") String sid) {
         //SysUser sysUser=(SysUser) SecurityUtils.getSubject().getPrincipal();
         this.session = session;
-        webSocketSet.add(this);     //加入set中
         this.sid = sid;
-        sessionIdSet.add(this.sid);
+        //webSocketSet.add(this);     //加入set中
+        //sessionIdSet.add(this.sid);
+        //sessionPool.put(sid,session);
         addOnlineCount();           //在线数加1
+        socketClients.put(sid,this);
         //sid=sid+":"+System.currentTimeMillis();
-        sessionPool.put(sid,session);
         log.info("连接成功！");
         HashMap<String,Object> map=new HashMap<>();
         map.put("onlineCount",WebSocketServer.onlineCount);
-        map.put("type","onlineCount");
-        sendMessageAll(JSONObjectUtil.objectToJson(map));
+        map.put("type","online");
+        map.put("userId",sid);
+        sendMessageAll(JsonObjectUtil.objectToJson(map));
+
+//        HashMap<String,Object> mapToUser= Maps.newHashMap();
+//        //移除掉自己
+//        Set<String> set = socketClients.keySet();
+//        set.remove(sid);
+//        mapToUser.put("onlineUser",set);
+//        mapToUser.put("type","onlineUser");
+//        sendInfo(mapToUser,sid);
 //        try {
 //            //sendMessage("连接成功:"+sysUser.getUserId()+":"+sysUser.getUserName()+":"+sysUser.getNickName());
 //            sendMessage("connect_success");
@@ -65,15 +83,21 @@ public class WebSocketServer {
      * 连接关闭调用的方法
      */
     @OnClose
-    public void onClose(Session session) {
-        webSocketSet.remove(this);  //从set中删除
-        sessionIdSet.remove(this.sid);
+    public void onClose() {
+        //webSocketSet.remove(this);  //从set中删除
+        //sessionIdSet.remove(this.sid);
         subOnlineCount();           //在线数减1
+        socketClients.remove(this.sid);
+        //断开连接情况下，更新主板占用情况为释放
+        log.info("当前在线用户列表："+socketClients.keySet());
+        //这里写你 释放的时候，要处理的业务
+        log.info("有一连接关闭！当前在线人数为" + getOnlineCount());
         HashMap<String,Object> map=new HashMap<>();
         map.put("onlineCount",WebSocketServer.onlineCount);
-        map.put("type","onlineCount");
-        sendMessageAll(JSONObjectUtil.objectToJson(map));
-        Map<String,Session> webSocketServers = new HashMap<>();
+        map.put("type","offline");
+        map.put("userId",this.sid);
+        sendMessageAll(JsonObjectUtil.objectToJson(map));
+        //Map<String,Session> webSocketServers = new HashMap<>();
 //        if (sessionPool.containsKey(this.sid)) {
 //            //webSocketServers.put(sid,sessionPool.get(sid));//.stream().filter(o -> o.session.getId().equals(session.getId())).collect(Collectors.toList());
 //            sessionPool.remove(this.sid,this.session);
@@ -92,11 +116,6 @@ public class WebSocketServer {
 //            sessionPool.putAll(webSocketServers);
 //            log.info("用户【" + sid + "】sessionId:[" + session.getId() + "]断开连接" );
 //        }
-        //断开连接情况下，更新主板占用情况为释放
-        log.info("释放的sid为："+sid);
-        //这里写你 释放的时候，要处理的业务
-        log.info("有一连接关闭！当前在线人数为" + getOnlineCount());
-
     }
 
     /**
@@ -110,6 +129,23 @@ public class WebSocketServer {
 //        for (WebSocketServer item : webSocketSet) {
 //            item.sendMessage(message);
 //        }
+        Map jsonObject = JsonObjectUtil.jsonToMap(message);
+        String textMessage = jsonObject.get("message").toString();
+        String fromUser = jsonObject.get("fromUser").toString();
+        String toUser = jsonObject.get("toUser").toString();
+        //如果不是发给所有，那么就发给某一个人
+        //messageType 1代表上线 2代表下线 3代表在线名单  4代表普通消息
+        Map<String,Object> map1 = Maps.newHashMap();
+        map1.put("type","success");
+        map1.put("message",textMessage);
+        map1.put("fromUser",fromUser);
+        if(toUser.equals("All")){
+            map1.put("toUser","All");
+            sendMessageAll(JsonObjectUtil.objectToJson(map1));
+        }else{
+            map1.put("toUser",toUser);
+            sendInfo(JsonObjectUtil.objectToJson(map1),toUser);
+        }
     }
 
     /**
@@ -123,36 +159,28 @@ public class WebSocketServer {
     }
 
     /**
-     * 实现服务器主动推送
-     */
-    public void sendMessage(Object message) {
-        log.info("群发推送消息" + "，推送内容:" + message);
-        try {
-            this.session.getBasicRemote().sendText(message.toString());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
      * 群发自定义消息
      */
-    public static void sendInfo(Object message, String sid) throws IOException {
+    public static void sendInfo(Object message, String sid) {
         log.info("推送消息到窗口" + sid + "，推送内容:" + message);
 
-        for (WebSocketServer item : webSocketSet) {
+        for (WebSocketServer item : socketClients.values()) {
             //这里可以设定只推送给这个sid的，为null则全部推送
             if (sid == null) {
-                item.sendMessage(message);
+                item.sendMessageAll(message);
             } else if (item.sid.equals(sid)) {
-                item.sendMessage(message);
+                item.sendMessage(item.session,message);
             }
         }
     }
 
     //*****************************通过Session池类发送消息**********************************
-    // 单用户推送
+    /**
+     * 单用户推送
+     * 实现服务器主动推送
+     */
     public static void sendMessage(Session session, Object message) {
+        log.info("推送消息" + "，推送内容:" + message);
         if (session == null) {
             return;
         }
@@ -168,9 +196,14 @@ public class WebSocketServer {
         }
     }
 
-    // 全用户推送
+    /**
+     * 全用户推送
+     */
     public static void sendMessageAll(Object message) {
-        sessionPool.forEach((sid,session) -> sendMessage(session, message));
+//        for (WebSocketServer item : socketClients.values()) {
+//            item.session.getAsyncRemote().sendText(message.toString());
+//        }
+        socketClients.forEach((sid,socketItem) -> sendMessage(socketItem.session, message));
     }
 
     public static synchronized int getOnlineCount() {
@@ -185,10 +218,13 @@ public class WebSocketServer {
         WebSocketServer.onlineCount--;
     }
 
-    public static CopyOnWriteArraySet<WebSocketServer> getWebSocketSet() {
-        return webSocketSet;
+    public static Map<String,WebSocketServer> getWebSocketPool(){
+        return socketClients;
     }
 
-    public static CopyOnWriteArraySet<String> getSessionIdSet(){ return sessionIdSet; }
-    public static Map<String,Session> getSessionPool(){return sessionPool;}
+//    public static CopyOnWriteArraySet<WebSocketServer> getWebSocketSet() { return webSocketSet; }
+//
+//    public static CopyOnWriteArraySet<String> getSessionIdSet(){ return sessionIdSet; }
+//
+//    public static Map<String,Session> getSessionPool(){return sessionPool;}
 }

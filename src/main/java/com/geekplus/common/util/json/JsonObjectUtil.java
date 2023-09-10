@@ -1,4 +1,4 @@
-package com.geekplus.common.util;
+package com.geekplus.common.util.json;
 
 import com.alibaba.druid.util.StringUtils;
 import com.alibaba.fastjson.JSON;
@@ -12,7 +12,7 @@ import java.util.Map;
 /**
  * @Description: 自定义响应结构, 转换类
  */
-public class JsonUtil {
+public class JsonObjectUtil {
 
     // 定义jackson对象
     private static final ObjectMapper MAPPER = new ObjectMapper();

@@ -46,7 +46,7 @@ public class UserOnlineController extends BaseController {
 //        }
 //        Set set2=WebSocketServer.getWebSocketSet();
 //        log.info("在线用户：{}",set2);
-        Set onlineSet= WebSocketServer.getSessionPool().keySet();
+        Set onlineSet= WebSocketServer.getWebSocketPool().keySet();
         //Set onlineSet=shiroSessionListener.getAtomSession();
         log.info("在线用户数：{},在线用户：{}",onlineSet.size(),onlineSet);
         Set<Map<String,Object>> onlineUser=new HashSet<>();

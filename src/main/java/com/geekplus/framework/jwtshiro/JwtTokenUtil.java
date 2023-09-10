@@ -82,6 +82,7 @@ public class JwtTokenUtil {
                     .withClaim("userName",sysUser.getUserName())
                     .withClaim("email",sysUser.getEmail())
                     .withClaim("tokenId",sysUser.getTokenId())
+                    //.withClaim("userId",sysUser.getUserId())
                     //.withArrayClaim("roles", (String[]) sysUser.getSysRoleList().stream().map(SysRole::getRoleKey).toArray())
                     //.withIssuedAt(new Date())
                     .withExpiresAt(date)
