@@ -87,6 +87,13 @@ public class WebSocketServer {
         //webSocketSet.remove(this);  //从set中删除
         //sessionIdSet.remove(this.sid);
         subOnlineCount();           //在线数减1
+        //循环移除
+//        socketClients.forEach((sid,webSocket) -> {
+//            if(sid==this.sid || sid.equals(this.sid)){
+//                socketClients.remove(sid,webSocket);
+//            }
+//        });
+        //单个移除，可能会出现遗留多个没有移除完
         socketClients.remove(this.sid);
         //断开连接情况下，更新主板占用情况为释放
         log.info("当前在线用户列表："+socketClients.keySet());
@@ -207,7 +214,7 @@ public class WebSocketServer {
     }
 
     public static synchronized int getOnlineCount() {
-        return onlineCount;
+        return WebSocketServer.onlineCount;
     }
 
     public static synchronized void addOnlineCount() {
