@@ -221,10 +221,6 @@ INSERT INTO `sys_menu` VALUES (125, '用户添加', 101, 2, '', NULL, 1, 0, 'B',
 INSERT INTO `sys_menu` VALUES (126, '用户删除', 101, 3, '', NULL, 1, 0, 'B', '0', '0', 'system:user:delete', '#', '', '2023-08-03 06:20:35', '', NULL, '');
 INSERT INTO `sys_menu` VALUES (127, '用户更新', 101, 4, '', NULL, 1, 0, 'B', '0', '0', 'system:user:update', '#', '', '2023-08-03 06:20:35', '', NULL, '');
 INSERT INTO `sys_menu` VALUES (128, '用户信息', 101, 5, '', NULL, 1, 0, 'B', '0', '0', 'system:user:detail', '#', '', '2023-08-03 06:20:35', '', NULL, '');
-INSERT INTO `sys_menu` VALUES (129, '个人信息', 101, 6, '', NULL, 1, 0, 'B', '0', '0', 'system:user:profile', '#', '', '2023-08-03 06:20:35', '', NULL, '');
-INSERT INTO `sys_menu` VALUES (130, '用户头像', 101, 7, '', NULL, 1, 0, 'B', '0', '0', 'system:user:avatar', '#', '', '2023-08-03 06:20:35', '', NULL, '');
-INSERT INTO `sys_menu` VALUES (131, '用户上传头像', 101, 8, '', NULL, 1, 0, 'B', '0', '0', 'system:user:upAvatar', '#', '', '2023-08-03 06:20:35', '', NULL, '');
-INSERT INTO `sys_menu` VALUES (132, '用户头像列表', 101, 9, '', NULL, 1, 0, 'B', '0', '0', 'system:user:avatarList', '#', '', '2023-08-03 06:20:35', '', NULL, '');
 INSERT INTO `sys_menu` VALUES (133, '所有用户列表', 101, 10, '', NULL, 1, 0, 'B', '0', '0', 'system:user:listAll', '#', '', '2023-08-03 06:20:35', '', NULL, '');
 INSERT INTO `sys_menu` VALUES (134, '用户信息导出', 101, 11, '', NULL, 1, 0, 'B', '0', '0', 'system:user:export', '#', '', '2023-08-03 06:20:35', '', NULL, '');
 INSERT INTO `sys_menu` VALUES (135, '角色添加', 102, 1, '', NULL, 1, 0, 'B', '0', '0', 'system:role:add', '#', '', '2023-08-03 06:20:35', '', NULL, '');

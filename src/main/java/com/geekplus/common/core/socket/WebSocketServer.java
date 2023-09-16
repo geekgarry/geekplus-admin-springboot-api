@@ -18,14 +18,15 @@ import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Slf4j
-@ServerEndpoint("/websocket/{sid}")
+@ServerEndpoint(value = "/websocket/{sid}", subprotocols = {"protocol"})
 @Component
 public class WebSocketServer {
     //静态变量，用来记录当前在线连接数。应该把它设计成线程安全的。
     private static int onlineCount = 0;
-
+    private static final AtomicInteger OnlineCount = new AtomicInteger(0);
     //concurrent包的线程安全Set，用来存放每个客户端对应的MyWebSocket对象。
 //    private static CopyOnWriteArraySet<WebSocketServer> webSocketSet = new CopyOnWriteArraySet<WebSocketServer>();
 //    private static CopyOnWriteArraySet<String> sessionIdSet=new CopyOnWriteArraySet<>();
@@ -34,7 +35,7 @@ public class WebSocketServer {
     /**
      * 以用户的姓名为key，WebSocket为对象保存起来
      */
-    private static Map<String, WebSocketServer> socketClients = new ConcurrentHashMap<String, WebSocketServer>();
+    private static ConcurrentHashMap<String, WebSocketServer> socketClients = new ConcurrentHashMap<String, WebSocketServer>();
 
     //与某个客户端的连接会话，需要通过它来给客户端发送数据
     private Session session;
@@ -53,10 +54,21 @@ public class WebSocketServer {
         //webSocketSet.add(this);     //加入set中
         //sessionIdSet.add(this.sid);
         //sessionPool.put(sid,session);
-        addOnlineCount();           //在线数加1
+        if(socketClients.containsKey(sid)){
+            //必须显示关闭，否则Map里没有了但是sesseion还能连接
+            try {
+                socketClients.get(sid).session.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            socketClients.remove(sid);
+            socketClients.put(sid,this);
+        }
         socketClients.put(sid,this);
+        addOnlineCount();           //在线数加1
+        OnlineCount.incrementAndGet(); //原子加一
         //sid=sid+":"+System.currentTimeMillis();
-        log.info("连接成功！");
+        log.info("用户连接:"+sid+",当前在线人数为:" + getOnlineCount());
         HashMap<String,Object> map=new HashMap<>();
         map.put("onlineCount",WebSocketServer.onlineCount);
         map.put("type","online");
@@ -86,15 +98,23 @@ public class WebSocketServer {
     public void onClose() {
         //webSocketSet.remove(this);  //从set中删除
         //sessionIdSet.remove(this.sid);
-        subOnlineCount();           //在线数减1
         //循环移除
-//        socketClients.forEach((sid,webSocket) -> {
-//            if(sid==this.sid || sid.equals(this.sid)){
-//                socketClients.remove(sid,webSocket);
-//            }
-//        });
+        //socketClients.forEach((sid,webSocket) -> {});
+        if(socketClients.containsKey(this.sid)){
+            try {
+                this.session.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            socketClients.remove(this.sid);
+            //从set中删除
+            subOnlineCount();
+            OnlineCount.decrementAndGet(); //原子减一
+        }
+        //subOnlineCount();           //在线数减1
+        //OnlineCount.decrementAndGet(); //原子减一
         //单个移除，可能会出现遗留多个没有移除完
-        socketClients.remove(this.sid);
+        //socketClients.remove(this.sid);
         //断开连接情况下，更新主板占用情况为释放
         log.info("当前在线用户列表："+socketClients.keySet());
         //这里写你 释放的时候，要处理的业务
@@ -129,7 +149,7 @@ public class WebSocketServer {
      * 收到客户端消息后调用的方法
      * @ Param message 客户端发送过来的消息
      */
-    @OnMessage
+    @OnMessage(maxMessageSize = 1048576)
     public void onMessage(String message, Session session) {
         log.info("收到来自窗口" + sid + "的信息:" + message);
         //群发消息

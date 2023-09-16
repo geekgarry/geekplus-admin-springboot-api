@@ -144,7 +144,6 @@ public class SysUserController extends BaseController {
     /**
      * 系统用户信息
      */
-    @RequiresPermissions("system:user:profile")
     @GetMapping("/userProfile")
     public Result userProfile() {
         LoginUser sysUser=new LoginUser();
@@ -160,7 +159,6 @@ public class SysUserController extends BaseController {
     /**
      * 更新当前用户头像 系统用户表
      */
-    @RequiresPermissions("system:user:avatar")
     @GetMapping("/updateAvatar")
     public Result updateAvatar(String avatar) {
         String userName=userTokenService.getSysUserName();
@@ -171,7 +169,6 @@ public class SysUserController extends BaseController {
     /**
      * 头像上传
      */
-    @RequiresPermissions("system:user:upAvatar")
     @Log(title = "用户头像", businessType = BusinessType.UPDATE)
     @PostMapping("/avatar")
     public Result avatar(@RequestParam("avatarfile") MultipartFile file) throws IOException
@@ -196,7 +193,6 @@ public class SysUserController extends BaseController {
     /**
      * 在线浏览所有用户头像
      */
-    @RequiresPermissions("system:user:avatarList")
     @GetMapping("/getAvatarList")
     public Result getAvatarList(String fileFolder)
     {

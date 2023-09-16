@@ -97,7 +97,6 @@ public class SysNoticeController extends BaseController {
     /**
     * 条件查询所有
     */
-    @RequiresPermissions("system:notice:list")
     @GetMapping("/list")
     public PageDataInfo list(SysNotice sysNotice) {
         startPage();
