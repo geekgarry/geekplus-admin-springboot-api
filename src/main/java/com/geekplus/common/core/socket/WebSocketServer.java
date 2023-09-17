@@ -158,20 +158,21 @@ public class WebSocketServer {
 //        }
         Map jsonObject = JsonObjectUtil.jsonToMap(message);
         String textMessage = jsonObject.get("message").toString();
+        String msgType = jsonObject.get("type").toString();
         String fromUser = jsonObject.get("fromUser").toString();
         String toUser = jsonObject.get("toUser").toString();
         //如果不是发给所有，那么就发给某一个人
         //messageType 1代表上线 2代表下线 3代表在线名单  4代表普通消息
         Map<String,Object> map1 = Maps.newHashMap();
-        map1.put("type","success");
+        map1.put("type",msgType);
         map1.put("message",textMessage);
-        map1.put("fromUser",fromUser);
-        if(toUser.equals("All")){
-            map1.put("toUser","All");
-            sendMessageAll(JsonObjectUtil.objectToJson(map1));
-        }else{
-            map1.put("toUser",toUser);
+        map1.put("fromUser",toUser);
+        if(msgType.equals("heartBeat")){
+            //map1.put("toUser",toUser);
             sendInfo(JsonObjectUtil.objectToJson(map1),toUser);
+        }else{
+            map1.put("toUser","all");
+            sendMessageAll(JsonObjectUtil.objectToJson(map1));
         }
     }
 
