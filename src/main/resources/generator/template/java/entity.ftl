@@ -1,4 +1,4 @@
-package ${basePackage}.webapp.system.entity;
+package ${basePackage}.webapp.${moduleName}.entity;
 
 import com.geekplus.common.domain.BaseEntity;
 import org.apache.commons.lang3.builder.ToStringBuilder;

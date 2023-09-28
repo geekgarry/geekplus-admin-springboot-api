@@ -1,6 +1,6 @@
-package ${basePackage}.webapp.system.service;
+package ${basePackage}.webapp.${moduleName}.service;
 
-import ${basePackage}.webapp.system.entity.${modelNameUpperCamel};
+import ${basePackage}.webapp.${moduleName}.entity.${modelNameUpperCamel};
 //import ${basePackage}.core.Service;
 import java.util.List;
 

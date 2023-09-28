@@ -4,8 +4,8 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="${basePackage}.webapp.system.mapper.${modelNameUpperCamel}Mapper">
-    <resultMap id="BaseResultMap" type="${basePackage}.webapp.system.entity.${modelNameUpperCamel}">
+<mapper namespace="${basePackage}.webapp.${moduleName}.mapper.${modelNameUpperCamel}Mapper">
+    <resultMap id="BaseResultMap" type="${basePackage}.webapp.${moduleName}.entity.${modelNameUpperCamel}">
         <#list allColumn as column>
         <result property="${column.smallColumnName}" column="${column.columnName}" jdbcType="${column.dictType}" />
         <#--jdbcType="${column.dictType}"-->

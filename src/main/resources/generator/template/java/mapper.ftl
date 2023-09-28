@@ -1,6 +1,6 @@
-package ${basePackage}.webapp.system.mapper;
+package ${basePackage}.webapp.${moduleName}.mapper;
 
-import ${basePackage}.webapp.system.entity.${modelNameUpperCamel};
+import ${basePackage}.webapp.${moduleName}.entity.${modelNameUpperCamel};
 import java.util.List;
 
 /**
