@@ -1,7 +1,7 @@
 package com.geekplus.webapp.tool.generator.entity;
 
 import com.geekplus.common.domain.BaseEntity;
-import com.geekplus.common.util.StringUtils;
+import com.geekplus.common.util.string.StringUtils;
 import com.geekplus.common.util.translate.TranslatorUtil;
 import com.geekplus.webapp.tool.generator.utils.GenUtil;
 

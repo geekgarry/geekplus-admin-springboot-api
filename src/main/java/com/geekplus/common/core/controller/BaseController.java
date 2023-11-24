@@ -11,7 +11,7 @@ import com.geekplus.common.domain.Result;
 import com.geekplus.common.page.PageData;
 import com.geekplus.common.page.PageDataInfo;
 import com.geekplus.common.page.TableDataSupport;
-import com.geekplus.common.util.StringUtil;
+import com.geekplus.common.util.string.StringUtil;
 import com.geekplus.webapp.system.entity.SysMenu;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;

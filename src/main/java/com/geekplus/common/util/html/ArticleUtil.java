@@ -6,10 +6,9 @@
  */
 package com.geekplus.common.util.html;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import com.geekplus.common.util.image.ThumbnailUtils;
+
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -39,6 +38,20 @@ public class ArticleUtil {
             }
         }
         return pics;
+    }
+
+    public static String getOneThumbnail(String articleContent){
+        String thumbnailImage="";
+        Set<String> fp = ArticleUtil.getImgStr(articleContent);
+        String[] fps = fp.toArray(new String[0]);
+        if (!fp.isEmpty()) {
+            Random random=new Random();
+            int imgIndex=random.nextInt(fps.length);
+            //System.out.println("文章第一张图片image："+fp.iterator().next());//获取第一张
+            thumbnailImage = ThumbnailUtils.getThumbnailImage(fps[imgIndex]);
+            //thumbnailImage = ThumbnailUtils.getThumbnailBase64Image(fp.iterator().next());
+        }
+        return thumbnailImage;
     }
 
     /**

@@ -2,11 +2,9 @@ package com.geekplus.webapp.common.monitor.service.impl;
 
 import com.geekplus.common.domain.LoginUser;
 import com.geekplus.common.util.AddressUtil;
-import com.geekplus.common.util.ServletUtil;
-import com.geekplus.common.util.StringUtils;
+import com.geekplus.common.util.string.StringUtils;
 import com.geekplus.webapp.common.monitor.entity.SysUserOnline;
 import com.geekplus.webapp.common.monitor.service.ISysUserOnlineService;
-import eu.bitwalker.useragentutils.UserAgent;
 import org.springframework.stereotype.Service;
 
 /**

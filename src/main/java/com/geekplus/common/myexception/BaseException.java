@@ -1,7 +1,7 @@
 package com.geekplus.common.myexception;
 
 import com.geekplus.common.util.MessageUtils;
-import com.geekplus.common.util.StringUtils;
+import com.geekplus.common.util.string.StringUtils;
 
 /**
  * 基础异常

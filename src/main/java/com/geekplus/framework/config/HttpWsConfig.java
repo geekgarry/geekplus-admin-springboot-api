@@ -25,6 +25,7 @@ public class HttpWsConfig {
     //SpringBoot 2.x版本(以及更高版本) 使用下面的代码
     @Bean
     public ServletWebServerFactory servletContainer() {
+        //创建Tomcat服务器工厂实例
         TomcatServletWebServerFactory tomcat = new TomcatServletWebServerFactory();
         //域名ssl验证,将http请求转换为https请求
 //        TomcatServletWebServerFactory tomcat = new TomcatServletWebServerFactory() {
@@ -38,16 +39,24 @@ public class HttpWsConfig {
 //                context.addConstraint(securityConstraint);
 //            }
 //        };
+        //添加此tomcat实例其它连接参数
         tomcat.addAdditionalTomcatConnectors(createHTTPConnector());
         return tomcat;
     }
 
     private Connector createHTTPConnector() {
+        //Connector port有两种运行模式(NIO和APR)，选择NIO模式：protocol="org.apache.coyote.http11.Http11NioProtocol"
         Connector connector = new Connector("org.apache.coyote.http11.Http11NioProtocol");
+        //启用http（80）端口
         connector.setScheme("http");
+        //设置安全连接标志，该标志将被分配给通过该连接接收的请求
+        //secure新的安全连接标志
+        //如果connector.setSecure(true)，则http使用http, https使用https; 分离状态，因此设置false
         connector.setSecure(false);
+        //http默认端口
         connector.setPort(myHttpPort);
         //http重定向为https
+        //重定向证书端口443，便于http自动跳转https
         //connector.setRedirectPort(8443);
         return connector;
     }

@@ -1,6 +1,7 @@
 package com.geekplus.common.util;
 
 import com.geekplus.common.domain.FileEntity;
+import com.geekplus.common.util.string.StringUtil;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;

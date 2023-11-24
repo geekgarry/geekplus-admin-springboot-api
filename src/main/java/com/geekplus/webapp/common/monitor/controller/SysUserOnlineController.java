@@ -8,7 +8,7 @@ import com.geekplus.common.domain.Result;
 import com.geekplus.common.enums.BusinessType;
 import com.geekplus.common.page.PageDataInfo;
 import com.geekplus.common.redis.RedisUtil;
-import com.geekplus.common.util.StringUtils;
+import com.geekplus.common.util.string.StringUtils;
 import com.geekplus.webapp.common.monitor.entity.SysUserOnline;
 import com.geekplus.webapp.common.monitor.service.ISysUserOnlineService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;

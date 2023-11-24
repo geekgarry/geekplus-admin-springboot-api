@@ -3,7 +3,7 @@ package com.geekplus.common.util.ip;
 import com.alibaba.fastjson.JSONObject;
 import com.geekplus.common.config.WebAppConfig;
 import com.geekplus.common.constant.Constant;
-import com.geekplus.common.util.StringUtils;
+import com.geekplus.common.util.string.StringUtils;
 import com.geekplus.common.util.http.HttpUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

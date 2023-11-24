@@ -1,6 +1,6 @@
 package com.geekplus.common.core.text;
 
-import com.geekplus.common.util.StringUtils;
+import com.geekplus.common.util.string.StringUtils;
 
 /**
  * 字符串格式化

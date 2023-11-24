@@ -1,15 +1,11 @@
 package com.geekplus.framework.jwtshiro;
 
-import com.geekplus.common.constant.Constant;
 import com.geekplus.common.domain.LoginUser;
-import com.geekplus.common.redis.RedisUtil;
-import com.geekplus.common.util.ServletUtil;
-import com.geekplus.common.util.StringUtils;
+import com.geekplus.common.util.string.StringUtils;
 import com.geekplus.webapp.system.entity.SysMenu;
 import com.geekplus.webapp.system.entity.SysRole;
 import com.geekplus.webapp.system.service.*;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
@@ -18,14 +14,9 @@ import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.util.ByteSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.redis.core.RedisTemplate;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 @Slf4j

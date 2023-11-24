@@ -1,4 +1,4 @@
-package com.geekplus.common.util;
+package com.geekplus.common.util.email;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

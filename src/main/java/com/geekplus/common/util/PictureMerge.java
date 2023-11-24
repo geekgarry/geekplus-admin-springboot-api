@@ -1,6 +1,7 @@
 package com.geekplus.common.util;
 
 import com.geekplus.common.domain.FontText;
+import com.geekplus.common.util.string.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

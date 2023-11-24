@@ -9,16 +9,13 @@ package com.geekplus.webapp.system.service;
 import com.geekplus.common.constant.Constant;
 import com.geekplus.common.domain.LoginUser;
 import com.geekplus.common.redis.RedisUtil;
-import com.geekplus.common.util.AddressUtil;
 import com.geekplus.common.util.ServletUtil;
-import com.geekplus.common.util.StringUtils;
+import com.geekplus.common.util.string.StringUtils;
 import com.geekplus.common.util.uuid.IdUtils;
-import com.geekplus.framework.jwtshiro.JwtToken;
 import com.geekplus.framework.jwtshiro.JwtTokenUtil;
 import com.geekplus.webapp.system.entity.SysRole;
 import com.geekplus.webapp.system.entity.SysUser;
 import eu.bitwalker.useragentutils.UserAgent;
-import io.jsonwebtoken.Claims;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authc.AuthenticationException;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,7 +27,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.TimeUnit;
 
 @Component
 @Slf4j

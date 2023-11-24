@@ -1,7 +1,7 @@
 package com.geekplus.common.util.html;
 
 import cn.hutool.http.HTMLFilter;
-import com.geekplus.common.util.StringUtils;
+import com.geekplus.common.util.string.StringUtils;
 
 /**
  * 转义和反转义工具类

@@ -1,6 +1,6 @@
 package com.geekplus.common.util.ip;
 
-import com.geekplus.common.util.StringUtils;
+import com.geekplus.common.util.string.StringUtils;
 import com.geekplus.common.util.html.EscapeUtil;
 
 import javax.servlet.http.HttpServletRequest;

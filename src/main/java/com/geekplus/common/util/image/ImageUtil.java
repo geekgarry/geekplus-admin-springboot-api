@@ -7,6 +7,7 @@
 package com.geekplus.common.util.image;
 
 import cn.hutool.core.codec.Base64;
+import com.geekplus.common.config.WebAppConfig;
 import com.geekplus.common.constant.Constant;
 import com.geekplus.common.util.MatrixToImageWriter;
 import com.google.zxing.BarcodeFormat;
@@ -17,9 +18,14 @@ import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 
+import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Hashtable;
 
 public class ImageUtil {
@@ -72,5 +78,45 @@ public class ImageUtil {
             e.printStackTrace();
         }
         return Base64ImageStr;
+    }
+
+    /**
+      * @Author geekplus
+      * @Description //计算图片清晰度
+      * @Param [image]
+      * @Throws
+      * @Return {@link double}
+      */
+    public static double calculateSharpness(BufferedImage image) {
+        double sum = 0;
+        double count = 0;
+        for (int y = 0; y < image.getHeight(); y++) {
+            for (int x = 0; x < image.getWidth(); x++) {
+                int pixel = image.getRGB(x, y);
+                int alpha = (pixel >> 24) & 0xff;
+                int red = (pixel >> 16) & 0xff;
+                int green = (pixel >> 8) & 0xff;
+                int blue = pixel & 0xff;
+                int gray = (red + green + blue) / 3;
+                sum += gray;
+                count++;
+            }
+        }
+        double mean = sum / count;
+        double variance = 0;
+        for (int y = 0; y < image.getHeight(); y++) {
+            for (int x = 0; x < image.getWidth(); x++) {
+                int pixel = image.getRGB(x, y);
+                int alpha = (pixel >> 24) & 0xff;
+                int red = (pixel >> 16) & 0xff;
+                int green = (pixel >> 8) & 0xff;
+                int blue = pixel & 0xff;
+                int gray = (red + green + blue) / 3;
+                variance += Math.pow(gray - mean, 2);
+            }
+        }
+        variance /= count;
+        double sharpness = Math.sqrt(variance);
+        return sharpness;
     }
 }

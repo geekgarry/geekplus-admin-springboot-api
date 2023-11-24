@@ -2,7 +2,7 @@ package com.geekplus.webapp.system.service.impl;
 
 import com.geekplus.common.constant.UserConstants;
 import com.geekplus.common.myexception.BusinessException;
-import com.geekplus.common.util.StringUtils;
+import com.geekplus.common.util.string.StringUtils;
 import com.geekplus.webapp.system.mapper.SysDeptMapper;
 import com.geekplus.webapp.system.entity.SysDept;
 import com.geekplus.webapp.system.service.SysDeptService;

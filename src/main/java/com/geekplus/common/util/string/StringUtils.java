@@ -1,4 +1,4 @@
-package com.geekplus.common.util;
+package com.geekplus.common.util.string;
 
 import com.geekplus.common.core.text.StrFormatter;
 
@@ -26,6 +26,15 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils
     public static <T> T nvl(T value, T defaultValue)
     {
         return value != null ? value : defaultValue;
+    }
+
+    public static boolean isBlank(String ...strings){
+        for(String str:strings){
+            if (str == null || str.trim().length() == 0){
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

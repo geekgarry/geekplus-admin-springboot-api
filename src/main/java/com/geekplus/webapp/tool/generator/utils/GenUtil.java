@@ -1,9 +1,8 @@
 package com.geekplus.webapp.tool.generator.utils;
 
 import com.geekplus.common.constant.ProjectConstant;
-import com.geekplus.common.util.StringUtils;
+import com.geekplus.common.util.string.StringUtils;
 import com.geekplus.webapp.tool.generator.entity.TableColumnInfo;
-import com.geekplus.webapp.tool.generator.entity.TableInfo;
 
 import java.util.HashSet;
 import java.util.List;

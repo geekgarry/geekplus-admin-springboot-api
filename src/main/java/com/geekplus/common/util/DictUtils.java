@@ -3,6 +3,7 @@ package com.geekplus.common.util;
 import com.geekplus.common.constant.Constant;
 import com.geekplus.common.redis.RedisUtil;
 import com.geekplus.common.util.spring.SpringUtils;
+import com.geekplus.common.util.string.StringUtils;
 import com.geekplus.webapp.system.entity.SysDictData;
 
 import java.util.Collection;

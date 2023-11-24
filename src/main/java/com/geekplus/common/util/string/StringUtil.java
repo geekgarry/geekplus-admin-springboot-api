@@ -1,6 +1,7 @@
-package com.geekplus.common.util;
+package com.geekplus.common.util.string;
 
 import com.geekplus.common.constant.Constant;
+import com.geekplus.common.util.SHAUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import java.security.MessageDigest;

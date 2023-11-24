@@ -6,7 +6,7 @@ import com.geekplus.common.myexception.file.FileNameLengthLimitExceededException
 import com.geekplus.common.myexception.file.FileSizeLimitExceededException;
 import com.geekplus.common.myexception.file.InvalidExtensionException;
 import com.geekplus.common.util.DateUtils;
-import com.geekplus.common.util.StringUtils;
+import com.geekplus.common.util.string.StringUtils;
 import com.geekplus.common.util.uuid.IdUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -129,7 +129,7 @@ public class FileUploadUtils
     }
 
     //两层嵌套路径目录判断
-    private static final File getAbsoluteFile(String uploadDir, String fileName) throws IOException
+    public static final File getAbsoluteFile(String uploadDir, String fileName) throws IOException
     {
         File desc = new File(uploadDir + File.separator + fileName);
 

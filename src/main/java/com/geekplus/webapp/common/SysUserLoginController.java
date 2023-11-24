@@ -16,7 +16,7 @@ import com.geekplus.common.util.LogUtil;
 import com.geekplus.common.redis.RedisUtil;
 import com.geekplus.common.util.ServletUtil;
 import com.geekplus.common.util.ServletUtils;
-import com.geekplus.common.util.StringUtils;
+import com.geekplus.common.util.string.StringUtils;
 import com.geekplus.common.util.ip.IpUtils;
 import com.geekplus.common.util.shiro.ShiroEncrypt;
 import com.geekplus.common.util.sysmenu.SysMenuUtil;

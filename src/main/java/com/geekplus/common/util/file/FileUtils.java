@@ -3,7 +3,7 @@ package com.geekplus.common.util.file;
 import com.geekplus.common.config.WebAppConfig;
 import com.geekplus.common.constant.Constant;
 import com.geekplus.common.util.ServletUtils;
-import com.geekplus.common.util.StringUtils;
+import com.geekplus.common.util.string.StringUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.web.multipart.MultipartFile;
 

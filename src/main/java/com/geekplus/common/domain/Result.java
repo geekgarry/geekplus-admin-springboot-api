@@ -9,7 +9,7 @@ package com.geekplus.common.domain;
 import com.geekplus.common.constant.HttpStatusCode;
 import com.geekplus.common.enums.ApiExceptionEnum;
 import com.geekplus.common.myexception.BusinessException;
-import com.geekplus.common.util.StringUtils;
+import com.geekplus.common.util.string.StringUtils;
 import lombok.Data;
 
 import java.util.HashMap;
