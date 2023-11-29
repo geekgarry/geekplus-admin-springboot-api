@@ -27,7 +27,7 @@ import java.util.Map;
  * description: 做什么的？
  */
 @RestController
-@RequestMapping()
+@RequestMapping("/sysFile")
 public class SysFileController {
 
     @Resource

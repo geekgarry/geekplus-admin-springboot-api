@@ -1,9 +1,3 @@
-/**
- * author     : geekplus
- * email      : geekcjj@gmail.com
- * date       : 11/19/23 12:40
- * description: 做什么的？
- */
 package com.geekplus.common.util.image;
 
 import com.geekplus.common.config.WebAppConfig;
@@ -29,6 +23,12 @@ import java.util.Base64;
 import java.util.Random;
 import java.util.Set;
 
+/**
+ * author     : geekplus
+ * email      : geekcjj@gmail.com
+ * date       : 11/19/23 12:40
+ * description: 做什么的？
+ */
 public class ThumbnailUtils {
 
     public static void getThumbnail(String originalImg){
@@ -150,7 +150,7 @@ public class ThumbnailUtils {
                 //System.out.println("服务器图片地址url："+imgPath);
                 serverImgPath=imgPath.substring(imgPath.indexOf(Constant.RESOURCE_PREFIX)).replaceAll(Constant.RESOURCE_PREFIX, WebAppConfig.getProfile());
                 BufferedImage originalImage = ImageIO.read(new File(serverImgPath));
-                String thumbnailPath=File.separator+"thumbnail"+File.separator + DateUtils.dateTime() + File.separator + IdUtils.fastUUID() + suffixExtension;
+                String thumbnailPath=File.separator+"thumbnail"+File.separator + DateUtils.datePath() + File.separator + IdUtils.fastUUID() + suffixExtension;
                 //String serverThumbnailPath=WebAppConfig.getProfile()+thumbnailPath;
                 File serverDesc = FileUploadUtils.getAbsoluteFile(WebAppConfig.getProfile(), thumbnailPath);
                 if(ImageUtil.calculateSharpness(originalImage)>=60) {
