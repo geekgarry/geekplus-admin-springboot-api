@@ -6,9 +6,11 @@ import com.geekplus.common.config.WebAppConfig;
 import com.geekplus.common.constant.Constant;
 import com.geekplus.common.domain.Result;
 import com.geekplus.common.enums.BusinessType;
+import com.geekplus.common.util.DateUtils;
 import com.geekplus.common.util.string.StringUtils;
 import com.geekplus.common.util.file.FileUploadUtils;
 import com.geekplus.common.util.file.FileUtils;
+import com.geekplus.common.util.uuid.IdUtils;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
 import com.google.zxing.MultiFormatWriter;
@@ -26,7 +28,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -65,7 +69,7 @@ public class CommonController
             FileUtils.writeBytes(filePath, response.getOutputStream());
             if (delete)
             {
-                FileUtils.deleteFile(filePath);
+                FileUtils.deleteFileCategory(filePath);
             }
         }
         catch (Exception e)
@@ -78,18 +82,92 @@ public class CommonController
      * 通用上传请求
      */
     @PostMapping("/common/upload")
-    public Result uploadFile(MultipartFile file) throws Exception
+    public Result uploadFile(@RequestPart("file") MultipartFile file, @RequestParam(name = "pathName", required = false) String pathName) throws Exception
     {
         try
         {
             // 上传文件路径
             String filePath = WebAppConfig.getUploadPath();
+            if(pathName==null||"".equals(pathName)){
+                if(FileUtils.isImageFile(file)){
+                    filePath=WebAppConfig.getProfile() + File.separator+"article";
+                }else if(FileUtils.isVideoFile(file)){
+                    filePath=WebAppConfig.getProfile() + File.separator+"video";
+                }else if(FileUtils.isAudioFile(file)){
+                    filePath=WebAppConfig.getProfile() + File.separator+"music";
+                }else {
+                    filePath=WebAppConfig.getProfile() + File.separator+"document";
+                }
+                //filePath = WebAppConfig.getProfile() + File.separator + pathName;
+            }else{
+                filePath = WebAppConfig.getProfile() + File.separator + pathName;
+            }
             // 上传并返回新文件名称
-            String fileName = FileUploadUtils.upload(filePath, file);
-            String url = serverConfig.getUrl() + fileName;
+            //String fileName = FileUploadUtils.upload(filePath, file);
+            Map fileMap = FileUploadUtils.upload2(filePath, file);
+            //String url = serverConfig.getUrl() + fileName;
+            Result ajax = Result.success();
+            ajax.put("fileName", fileMap.get("fileName"));
+            ajax.put("originalName",file.getOriginalFilename());
+            ajax.put("url", fileMap.get("fileUrl"));
+            return ajax;
+        }
+        catch (Exception e)
+        {
+            return Result.error(e.getMessage());
+        }
+    }
+
+    /**
+     * 上传文件请求适用于文章等特殊场景
+     */
+    @PostMapping("/common/uploadFile")
+    public Result uploadFileForArticle(@RequestPart("file") MultipartFile file, @RequestParam(name = "fileTitle", required = false) String fileTitle) throws Exception
+    {
+//        if(!checkFormats(file.getOriginalFilename())){
+//            return Result.error("上传图片格式不是png,jpg或jpeg！");
+//        }
+        try
+        {
+            // 上传文件路径,加上以日期为路径的一个目录
+            //String filePath = WebAppConfig.getUploadPath();
+            String realFilePath;
+            if(FileUtils.isImageFile(file)){
+                realFilePath= File.separator+"article"+File.separator+ DateUtils.datePath();
+            }else if(FileUtils.isVideoFile(file)){
+                realFilePath=File.separator+"video"+File.separator+DateUtils.datePath();
+            }else if(FileUtils.isAudioFile(file)){
+                realFilePath=File.separator+"music"+File.separator+DateUtils.datePath();
+            }else {
+                realFilePath=File.separator+"document"+File.separator+DateUtils.datePath();
+            }
+
+            String uploadDir= WebAppConfig.getProfile()+realFilePath;
+            // 上传并获取文件名称
+            String fileName = "";
+            String originalName=file.getOriginalFilename();
+            String extension = FileUploadUtils.getExtension(file);
+            //String uuidFileName = UUID.randomUUID().toString() + ".png";
+            //目标文件
+            //File dest = new File(uploadDir + "head_img" ,uuidFileName);
+            //保存文件
+            //file.transferTo(dest);
+            fileName = IdUtils.fastUUID() + "." + extension;
+
+            // 上传并返回新文件名称
+            //String fileName = FileUploadUtils.upload(filePath, file);
+            //File desc = new File(uploadDir + File.separator + fileName);
+            File desc =FileUtils.getExistFileCategory(uploadDir + File.separator + fileName);
+            file.transferTo(desc);
+            //String pathFileName = getPathFileName(baseDir, fileName);
+            String resultFileName= Constant.RESOURCE_PREFIX+realFilePath+File.separator+fileName;
+            //String url = serverConfig.getUrl() + resultFileName;
+            //log.info("用户请求URL信息："+serverConfig.getUrl());
             Result ajax = Result.success();
             ajax.put("fileName", fileName);
-            ajax.put("url", url);
+            //ajax.put("imgTitle",title);
+            ajax.put("originalFileName", originalName);
+            ajax.put("url", resultFileName);
             return ajax;
         }
         catch (Exception e)
@@ -128,16 +206,38 @@ public class CommonController
     }
 
     /**
-     * 查询文件里的所有图片，删除某个图片文件
+     * 删除单个文件
      */
-    @Log(title = "删除文件夹里的图片文件", businessType = BusinessType.DELETE)
+    @Log(title = "删除文件夹里的文件", businessType = BusinessType.DELETE)
     @GetMapping("/common/deleteFile")
     public Result deleteFile(String filePath)
     {
         String profile= Constant.RESOURCE_PREFIX;//profile
         String allFilePath=WebAppConfig.getProfile()+filePath.replace(profile,"");
-        boolean flag=FileUtils.deleteFile(allFilePath);
-        if(flag==true){
+        int flag=FileUtils.deleteFileCategory(allFilePath);
+        if(flag>0){
+            return Result.success("删除文件成功！");
+        }else{
+            return Result.success("删除文件失败！");
+        }
+    }
+
+    /**
+     * 批量删除文件List
+     */
+    @Log(title = "删除文件夹里的文件List", businessType = BusinessType.DELETE)
+    @PostMapping("/common/deleteFileList")
+    public Result deleteFileList(@RequestBody List<Map> filePaths)
+    {
+        int length=filePaths.size();
+        for (int i = 0; i < filePaths.size(); i++) {
+            String filePath=filePaths.get(i).get("filePath").toString();
+            String profile= Constant.RESOURCE_PREFIX;//profile
+            String allFilePath=WebAppConfig.getProfile()+filePath.replace(profile,"");
+            int ds=FileUtils.deleteFileCategory(allFilePath);
+            length-=ds;
+        }
+        if(length==0){
             return Result.success("删除文件成功！");
         }else{
             return Result.success("删除文件失败！");
@@ -154,7 +254,7 @@ public class CommonController
         for(String filePath:filePaths) {
             String profile = Constant.RESOURCE_PREFIX;//profile
             String allFilePath = WebAppConfig.getProfile() + filePath.replace(profile, "");
-            FileUtils.deleteFile(allFilePath);
+            FileUtils.deleteFileCategory(allFilePath);
 //            if (flag == true) {
 //                return Result.success("删除文件成功！");
 //            } else {

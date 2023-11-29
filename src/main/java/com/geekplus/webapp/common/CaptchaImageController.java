@@ -1,9 +1,3 @@
-/**
- * author     : geekplus
- * email      : geekcjj@gmail.com
- * date       : 2022/5/23 8:55 上午
- * description: 做什么的？
- */
 package com.geekplus.webapp.common;
 
 import com.geekplus.common.domain.Result;
@@ -28,6 +22,12 @@ import java.io.IOException;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * author     : geekplus
+ * email      : geekcjj@gmail.com
+ * date       : 2022/5/23 8:55 上午
+ * description: 请求返回验证码图片
+ */
 @Slf4j
 @Controller
 public class CaptchaImageController {

@@ -13,6 +13,11 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -20,7 +25,7 @@ import java.util.*;
  *
  * @author
  */
-public class FileUtils extends org.apache.commons.io.FileUtils
+public class FileUtils
 {
     public static String FILENAME_PATTERN = "[a-zA-Z0-9_\\-\\|\\.\\u4e00-\\u9fa5]+";
 
@@ -83,27 +88,48 @@ public class FileUtils extends org.apache.commons.io.FileUtils
     }
 
     /**
+     * 递归删除文件夹和文件
+     *
+     * @param filePath 文件
+     * @return
+     */
+    public static int deleteFileByRecursion(String filePath)
+    {
+        int delCount = 0;
+        File file = new File(filePath);
+        if(file.isDirectory() && file.listFiles().length>0){
+            File[] files=file.listFiles();
+            for(File fileItem : files){
+                deleteFileByRecursion(fileItem.getPath());
+            }
+        }else if(file.isDirectory() && file.listFiles().length==0){
+            file.delete();
+            delCount++;
+        }
+        // 路径为文件且不为空则进行删除
+        if (file.isFile() && file.exists())
+        {
+            file.delete();
+            delCount++;
+        }
+        return delCount;
+    }
+
+    /**
      * 删除文件
      *
      * @param filePath 文件
      * @return
      */
-    public static boolean deleteFile(String filePath)
-    {
-        boolean flag = false;
-        File file = new File(filePath);
-        // 路径为文件且不为空则进行删除
-        if (file.isFile() && file.exists())
-        {
-            file.delete();
-            flag = true;
-        }
-        return flag;
-    }
-
     public static int deleteFileCategory(String filePath){
         int flag=0;
         File file = new File(filePath);
+        // 路径为文件夹且为空则进行删除
+        if (file.isDirectory() && file.listFiles().length==0)
+        {
+            file.delete();
+            flag = 1;
+        }
         // 路径为文件且不为空则进行删除
         if (file.isFile() && file.exists())
         {
@@ -335,14 +361,62 @@ public class FileUtils extends org.apache.commons.io.FileUtils
         return false;
     }
 
-    public static final File getExistFileCategory(String filePath) throws IOException {
+    //判断是否为视频
+    public static boolean isVideoFile(MultipartFile file) {
+        String contentType = file.getContentType();
+        String fileName = file.getOriginalFilename();
+
+        // 判断文件类型是否为视频类型
+        if (contentType != null && contentType.startsWith("video/")) {
+            return true;
+        }
+
+        // 判断文件扩展名是否为视频类型
+        if (fileName != null && fileName.endsWith(".mp4") || fileName.endsWith(".avi") || fileName.endsWith(".mov")
+                || fileName.endsWith(".mpg") || fileName.endsWith(".mpeg") || fileName.endsWith(".3gp") || fileName.endsWith(".flv")) {
+            return true;
+        }
+
+        return false;
+    }
+
+    //判断是否为音频
+    public static boolean isAudioFile(MultipartFile file) {
+        String contentType = file.getContentType();
+        String fileName = file.getOriginalFilename();
+
+        // 判断文件类型是否为视频类型
+        if (contentType != null && contentType.startsWith("audio/")) {
+            return true;
+        }
+
+        // 判断文件扩展名是否为视频类型
+        if (fileName != null && fileName.endsWith(".mp3") || fileName.endsWith(".wav") || fileName.endsWith(".wma") || fileName.endsWith(".flac") || fileName.endsWith(".ape")
+                || fileName.endsWith(".midi") || fileName.endsWith(".aac") || fileName.endsWith(".mov")) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public static final File getExistFileCategory(String filePath) {
         File file = new File(filePath);
         if (!file.getParentFile().exists())
         {
+            //做一个二次判断的保险，防止没有创建成功
+            if (!file.getParentFile().getParentFile().exists())
+            {
+                file.getParentFile().getParentFile().mkdirs();
+            }
             file.getParentFile().mkdirs();
+//            getExistFileCategory(file.getParentFile().getPath());
         }
         if (!file.exists()) {
-            file.createNewFile();
+            try {
+                file.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 //        else{
 //            file.delete();
@@ -351,7 +425,117 @@ public class FileUtils extends org.apache.commons.io.FileUtils
         return file;
     }
 
-    // 递归遍历
+    /**
+     * @Author geekplus
+     * @Description //递归遍历处文件中的所有文件信息组成List
+     * @Param
+     * @Throws
+     * @Return {@link }
+     */
+    public static List<Map<String,Object>> getAllFileDirectoryInfo(File file) {
+        //File file=new File(filePath);
+        File[] fileList = file.listFiles();
+        //File file = new File(filePath);
+        List<Map<String,Object>> mapList=new ArrayList<>();
+        if (fileList == null || fileList.length == 0) {
+            return null;
+        }
+        try {
+            for (File f : fileList) {
+                //这里将列出所有的文件夹,如果是文件目录为0文件为1
+                int isFolder=f.isDirectory()?0:1;
+                //这里将列出所有的文件
+                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                String createTime = formatter.format(f.lastModified());
+                Path filePath = Paths.get(f.getAbsolutePath());
+                BasicFileAttributes attributes;
+                attributes = Files.readAttributes(filePath, BasicFileAttributes.class);
+                long modificationTime = attributes.lastModifiedTime().toMillis();
+                String updateTime = formatter.format(modificationTime);
+                Map mapKV=new HashMap<String,Object>();
+                if(!f.isHidden()) {
+                    //System.out.println("file==>" + f.getAbsolutePath());
+                    String fileAbPathName = f.getAbsolutePath();//.replaceAll(WebAppConfig.getProfile(),Constant.RESOURCE_PREFIX);
+                    mapKV.put("fileName", f.getName());
+                    mapKV.put("filePath", fileAbPathName);
+                    mapKV.put("fileUrl", f.getPath());
+                    mapKV.put("isFolder", isFolder);
+                    mapKV.put("totalSpace", f.getTotalSpace());
+                    mapKV.put("freeSpace", f.getFreeSpace());
+                    mapKV.put("parentCategory", f.getParentFile().getParent());
+                    mapKV.put("fileSize", f.length());
+                    mapKV.put("createTime", createTime);
+                    mapKV.put("updateTime", updateTime);
+                }
+                mapList.add(mapKV);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return mapList;
+    }
+
+    /**
+      * @Author geekplus
+      * @Description //递归遍历处文件中的所有文件信息组成List
+      * @Param
+      * @Throws
+      * @Return {@link }
+      */
+    public static void getDirectoryAllFileInfo(File file,List<Map<String,Object>> list) {
+        //File file=new File(filePath);
+        File[] fileList = file.listFiles();
+        //File file = new File(filePath);
+        //List<String> avatarList=new ArrayList<>();
+        if (fileList == null || fileList.length == 0) {
+            return;
+        }
+        try {
+            for (File f : fileList) {
+                if (f.isDirectory()) {
+                    //这里将列出所有的文件夹,如果是文件目录，则递归调用
+                    //System.out.println("Dir==>" + f.getAbsolutePath());
+                    getDirectoryAllFileInfo(f,list);
+                } else if(f.isFile()){
+                    //这里将列出所有的文件
+                    List<Map<String,Object>> mapList=new ArrayList<>();
+                    Map mapKV=new HashMap<String,Object>();
+                    String fileName=f.getName();
+                    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    String createTime = formatter.format(f.lastModified());
+                    Path filePath = Paths.get(f.getAbsolutePath());
+                    BasicFileAttributes attributes;
+                    attributes = Files.readAttributes(filePath, BasicFileAttributes.class);
+                    long modificationTime = attributes.lastModifiedTime().toMillis();
+                    //System.out.println("文件的修改时间为: " + modificationTime);
+                    if(!f.isHidden()) {
+                        //System.out.println("file==>" + f.getAbsolutePath());
+                        String fileAbPathName = f.getAbsolutePath();//.replaceAll(WebAppConfig.getProfile(),Constant.RESOURCE_PREFIX);
+                        mapKV.put("fileName", fileName);
+                        mapKV.put("filePath", fileAbPathName);
+                        mapKV.put("fileUrl", f.getPath());
+                        mapKV.put("totalSpace", f.getTotalSpace());
+                        mapKV.put("freeSpace", f.getFreeSpace());
+                        mapKV.put("parentCategory", f.getParentFile().getParent());
+                        mapKV.put("fileSize", f.length());
+                        mapKV.put("createTime", f.lastModified());
+                        mapKV.put("updateTime", modificationTime);
+                        list.add(mapKV);
+                    }
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    /**
+      * @Author geekplus
+      * @Description //递归遍历处文件中的所有图片文件信息组成List
+      * @Param [file, list]
+      * @Throws
+      * @Return {@link}
+      */
     public static void getDirectoryAllFile(File file,List<String> list) {
         //File file = new File(filePath);
         //List<String> avatarList=new ArrayList<>();
@@ -375,8 +559,4 @@ public class FileUtils extends org.apache.commons.io.FileUtils
         }
     }
 
-//    public static void main(String[] args) {
-//        File file=new File("/Users/我的壁纸");
-//        System.out.println(getDirectoryAllFile(file));
-//    }
 }
