@@ -45,6 +45,9 @@ public class SysFileController {
             String filePath=filePaths.get(i).get("filePath").toString();
             String profile= Constant.RESOURCE_PREFIX;//profile
             String allFilePath=WebAppConfig.getProfile()+filePath.replace(profile,"");
+            if(filePath.contains(WebAppConfig.getProfile())) {
+                allFilePath=filePath;
+            }
             int ds=FileUtils.deleteFileCategory(allFilePath);
             length-=ds;
         }
@@ -64,6 +67,9 @@ public class SysFileController {
     {
         String profile= Constant.RESOURCE_PREFIX;//profile
         String allFilePath=WebAppConfig.getProfile()+filePath.replace(profile,"");
+        if(filePath.contains(WebAppConfig.getProfile())) {
+            allFilePath=filePath;
+        }
         int count=FileUtils.deleteFileByRecursion(allFilePath);
         if(count>0){
             return Result.success("删除文件成功！");
@@ -81,6 +87,9 @@ public class SysFileController {
     {
         String profile= Constant.RESOURCE_PREFIX;//profile
         String allFilePath=WebAppConfig.getProfile()+filePath.replace(profile,"");
+        if(filePath.contains(WebAppConfig.getProfile())) {
+            allFilePath=filePath;
+        }
         int flag=FileUtils.deleteFileCategory(allFilePath);
         if(flag>0){
             return Result.success("删除文件成功！");
@@ -98,11 +107,13 @@ public class SysFileController {
      */
     @GetMapping("/readCurrentFileList")
     public Result readCurrentFileList(String folder) throws IOException {
-        String readFolder="";
+        String readFolder=WebAppConfig.getProfile()+folder;
         if(folder==null||"".equals(folder)) {
             readFolder=WebAppConfig.getProfile();
-        }else{
-            readFolder=WebAppConfig.getProfile()+File.separator+folder;
+        }if(folder=="/"||"/".equals(folder)) {
+            readFolder=WebAppConfig.getProfile();
+        }else if(folder.contains(WebAppConfig.getProfile())) {
+            readFolder=folder;
         }
         //List<Map> mapList=FileUtils.readFileList(WebAppConfig.getProfile()+File.separator +folder);
         File file = new File(readFolder);
@@ -122,7 +133,15 @@ public class SysFileController {
 //        }catch(IOException e){
 //            return Result.success(e.getMessage());
 //        }
-        File file=new File(WebAppConfig.getProfile()+ File.separator + fileFolder);
+        String readFolder=WebAppConfig.getProfile()+fileFolder;
+        if(fileFolder==null||"".equals(fileFolder)) {
+            readFolder=WebAppConfig.getProfile();
+        }if(fileFolder=="/"||"/".equals(fileFolder)) {
+            readFolder=WebAppConfig.getProfile();
+        }else if(fileFolder.contains(WebAppConfig.getProfile())) {
+            readFolder=fileFolder;
+        }
+        File file=new File(readFolder);
         List<String> list= new ArrayList<>();
         FileUtils.getDirectoryAllFile(file,list);
         return Result.success(list);

@@ -353,50 +353,62 @@ public class FileUtils
     public static boolean isImageFile(MultipartFile file){
 //        String mimetype= mtftp.getContentType(file);
         String fileNameOriginal = file.getOriginalFilename();// 文件原名
+        String fileExtension=FileTypeUtils.getFileType(fileNameOriginal);
+        boolean isImage1=false;
+        boolean isImage2=false;
         String mimeType = ServletUtils.getRequest().getServletContext().getMimeType(fileNameOriginal);
         if (mimeType.startsWith("image/")) {
             // It's an image.
-            return true;
+            isImage1=true;
         }
-        return false;
+        // 判断文件扩展名是否为图片类型
+        if(Arrays.asList(MimeTypeUtils.IMAGE_EXTENSION).contains(fileExtension)){
+            isImage2=true;
+        }
+
+        return isImage1||isImage2;
     }
 
     //判断是否为视频
     public static boolean isVideoFile(MultipartFile file) {
         String contentType = file.getContentType();
         String fileName = file.getOriginalFilename();
-
+        String fileExtension=FileTypeUtils.getFileType(fileName);
+        boolean isVideo1=false;
+        boolean isVideo2=false;
         // 判断文件类型是否为视频类型
         if (contentType != null && contentType.startsWith("video/")) {
-            return true;
+            isVideo1=true;
         }
 
         // 判断文件扩展名是否为视频类型
-        if (fileName != null && fileName.endsWith(".mp4") || fileName.endsWith(".avi") || fileName.endsWith(".mov")
-                || fileName.endsWith(".mpg") || fileName.endsWith(".mpeg") || fileName.endsWith(".3gp") || fileName.endsWith(".flv")) {
-            return true;
+        if(Arrays.asList(MimeTypeUtils.VIDEO_EXTENSION).contains(fileExtension)){
+            isVideo2=true;
         }
 
-        return false;
+        return isVideo1||isVideo2;
     }
 
     //判断是否为音频
     public static boolean isAudioFile(MultipartFile file) {
         String contentType = file.getContentType();
         String fileName = file.getOriginalFilename();
-
-        // 判断文件类型是否为视频类型
+        String fileExtension=FileTypeUtils.getFileType(fileName);
+        boolean isAudio1=false;
+        boolean isAudio2=false;
+        // 判断文件类型是否为音频类型
         if (contentType != null && contentType.startsWith("audio/")) {
-            return true;
+            isAudio1=true;
         }
 
-        // 判断文件扩展名是否为视频类型
-        if (fileName != null && fileName.endsWith(".mp3") || fileName.endsWith(".wav") || fileName.endsWith(".wma") || fileName.endsWith(".flac") || fileName.endsWith(".ape")
-                || fileName.endsWith(".midi") || fileName.endsWith(".aac") || fileName.endsWith(".mov")) {
-            return true;
+        // 判断文件扩展名是否为音频类型
+        //if (fileName != null && fileName.endsWith(".mp3"))
+        //if (str.equalsIgnoreCase(fileExtension))
+        if(Arrays.asList(MimeTypeUtils.AUDIO_EXTENSION).contains(fileExtension)){
+            isAudio2=true;
         }
 
-        return false;
+        return isAudio1||isAudio2;
     }
 
     public static final File getExistFileCategory(String filePath) {
@@ -424,6 +436,11 @@ public class FileUtils
 //        }
         return file;
     }
+
+    //apache tika的文件解析类库
+//    public static String getFileTypeByTika(String fileName) {
+//        return null;
+//    }
 
     /**
      * @Author geekplus
@@ -459,6 +476,9 @@ public class FileUtils
                     mapKV.put("fileName", f.getName());
                     mapKV.put("filePath", fileAbPathName);
                     mapKV.put("fileUrl", f.getPath());
+                    if(isFolder==1){
+                        mapKV.put("fileType",MimeTypeUtils.getFileExtensionType(f.getName()));
+                    }
                     mapKV.put("isFolder", isFolder);
                     mapKV.put("totalSpace", f.getTotalSpace());
                     mapKV.put("freeSpace", f.getFreeSpace());
@@ -466,8 +486,8 @@ public class FileUtils
                     mapKV.put("fileSize", f.length());
                     mapKV.put("createTime", createTime);
                     mapKV.put("updateTime", updateTime);
+                    mapList.add(mapKV);
                 }
-                mapList.add(mapKV);
             }
         }catch (Exception e){
             e.printStackTrace();

@@ -14,10 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 文件上传工具类
@@ -297,13 +294,13 @@ public class FileUploadUtils
     }
 
     public static void main(String[] args) {
-        String filePath="/Users/geekplus/Downloads/1234/1/2/3/4/5/6/7";
+        //String filePath="/Users/geekplus/Downloads/1234/1/2/3/4/5/6/7";
         List<Map<String,Object>> mapList=new ArrayList<>();
-        File file=new File("/Users/MyProjectBase/Html&Js/iArchie博客网站后台/layui");
+        //File file=new File("/Users/MyProjectBase/Html&Js/iArchie博客网站后台/images");
         //System.out.println(getAbsoluteFile(filePath,"444.txt").getPath());
         //System.out.println(FileUtils.getExistFileCategory(filePath+"/100.txt").getPath());
         //FileUtils.getDirectoryAllFileInfo(file,mapList);
-        System.out.println(JSONObjectUtil.objectToJson(FileUtils.getAllFileDirectoryInfo(file)));
-        System.out.println(JSONObjectUtil.objectToJson(mapList));
+        //System.out.println(JSONObjectUtil.objectToJson(FileUtils.getAllFileDirectoryInfo(file)));
+        //System.out.println(JSONObjectUtil.objectToJson(mapList));
     }
 }
