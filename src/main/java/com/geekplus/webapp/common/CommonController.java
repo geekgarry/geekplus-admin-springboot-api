@@ -316,6 +316,7 @@ public class CommonController
       * @Throws
       * @Return {@link }
       */
+    @GetMapping("/translate/en2zh")
     public Result translateLang(@RequestParam("words") String englishWords){
         String chineseWords =TranslatorUtil.translate(englishWords);
         return Result.success(chineseWords);
