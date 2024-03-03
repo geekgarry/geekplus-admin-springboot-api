@@ -6,6 +6,9 @@
  */
 package com.geekplus.common.util.translate;
 
+import cn.hutool.core.text.UnicodeUtil;
+import cn.hutool.crypto.SecureUtil;
+import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONArray;
 
 import java.io.BufferedReader;
@@ -13,6 +16,8 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.HashMap;
+import java.util.Map;
 
 public class TranslatorUtil {
     /**
@@ -56,7 +61,31 @@ public class TranslatorUtil {
         return result.toString();
     }
 
+    // 对接的api为百度翻译
+    private static final String TRANS_API_HOST = "http://api.fanyi.baidu.com/api/trans/vip/translate";
+    private static String appid = "xxx";
+    private static String securityKey = "xxx";
+    // 发送查询
+    public static String getTranslateResult(String query, String from, String to) {
+        Map<String, Object> params = new HashMap();
+        params.put("q", query);
+        params.put("from", from);
+        params.put("to", to);
+        params.put("appid", appid);
+        // 随机数
+
+        String salt = String.valueOf(System.currentTimeMillis());
+        params.put("salt", salt);
+        // 签名
+        String src = appid + query + salt + securityKey;
+        // 加密前的原文
+        params.put("sign", SecureUtil.md5(src));
+        return HttpUtil.get(TRANS_API_HOST, params);
+    }
+
     public static void main(String[] args) {
+        String res = getTranslateResult("苹果", "auto", "en");
+        System.out.println(UnicodeUtil.toString(res));
         System.out.println(translate("noticeId"));
     }
 }

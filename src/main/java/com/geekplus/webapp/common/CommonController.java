@@ -10,6 +10,7 @@ import com.geekplus.common.util.DateUtils;
 import com.geekplus.common.util.string.StringUtils;
 import com.geekplus.common.util.file.FileUploadUtils;
 import com.geekplus.common.util.file.FileUtils;
+import com.geekplus.common.util.translate.TranslatorUtil;
 import com.geekplus.common.util.uuid.IdUtils;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
@@ -308,4 +309,15 @@ public class CommonController
         return Result.success("生成二维码成功",base64);
     }
 
+    /**
+      * @Author geekplus
+      * @Description //英译汉，翻译api
+      * @Param
+      * @Throws
+      * @Return {@link }
+      */
+    public Result translateLang(@RequestParam("words") String englishWords){
+        String chineseWords =TranslatorUtil.translate(englishWords);
+        return Result.success(chineseWords);
+    }
 }
