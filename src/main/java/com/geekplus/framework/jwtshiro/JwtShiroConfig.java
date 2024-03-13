@@ -88,6 +88,7 @@ public class JwtShiroConfig {
         map.put("/common/getQRCode**","anon");
         map.put("/common/download**","anon");
         map.put("/common/download/resource**","anon");
+        map.put("/translate/**","anon");
         map.put("/csrf","anon");
         map.put("/druid/**","anon");
         //swagger资源过滤

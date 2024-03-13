@@ -473,16 +473,17 @@ public class FileUtils
                 if(!f.isHidden()) {
                     //System.out.println("file==>" + f.getAbsolutePath());
                     String fileAbPathName = f.getAbsolutePath();//.replaceAll(WebAppConfig.getProfile(),Constant.RESOURCE_PREFIX);
+                    String systemPrimaryFile = f.getParentFile().getParent();
                     mapKV.put("fileName", f.getName());
-                    mapKV.put("filePath", fileAbPathName);
-                    mapKV.put("fileUrl", f.getPath());
+                    mapKV.put("filePath", fileAbPathName.replaceAll(systemPrimaryFile,""));
+                    mapKV.put("fileUrl", f.getPath().replaceAll(systemPrimaryFile,""));
                     if(isFolder==1){
                         mapKV.put("fileType",MimeTypeUtils.getFileExtensionType(f.getName()));
                     }
                     mapKV.put("isFolder", isFolder);
                     mapKV.put("totalSpace", f.getTotalSpace());
                     mapKV.put("freeSpace", f.getFreeSpace());
-                    mapKV.put("parentCategory", f.getParentFile().getParent());
+                    mapKV.put("parentCategory", "/");
                     mapKV.put("fileSize", f.length());
                     mapKV.put("createTime", createTime);
                     mapKV.put("updateTime", updateTime);
