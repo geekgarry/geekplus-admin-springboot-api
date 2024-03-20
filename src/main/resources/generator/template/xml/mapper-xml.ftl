@@ -86,7 +86,7 @@
         <#if pkColumn.isIncrement=='1'>
         <#list allColumn as column>
         <#if column.columnName!=pkColumn.columnName && column.javaType == 'Date' && column.smallColumnName=='createTime'>
-        <if test="${column.smallColumnName} != null<#if column.javaType == 'String'> and ${column.smallColumnName} != ''</#if>">SYSDATE(),</if>
+        SYSDATE(),
         <#elseif column.columnName!=pkColumn.columnName>
         <if test="${column.smallColumnName} != null<#if column.javaType == 'String'> and ${column.smallColumnName} != ''</#if>">${r'#'}{${column.smallColumnName}},</if>
         </#if>
@@ -94,7 +94,7 @@
         <#else>
         <#list allColumn as column>
         <#if column.javaType == 'Date' && column.smallColumnName=='createTime'>
-        <if test="${column.smallColumnName} != null<#if column.javaType == 'String'> and ${column.smallColumnName} != ''</#if>">SYSDATE(),</if>
+        SYSDATE(),
         <#else>
         <if test="${column.smallColumnName} != null<#if column.javaType == 'String'> and ${column.smallColumnName} != ''</#if>">${r'#'}{${column.smallColumnName}},</if>
         </#if>
@@ -155,7 +155,7 @@
         <trim prefix="SET" suffixOverrides=",">
         <#list allColumn as column>
         <#if column.isPk !='1' && column.javaType == 'Date' && column.smallColumnName=='updateTime'>
-        <if test="${column.smallColumnName} != null <#if column.javaType == 'String' > and ${column.smallColumnName} != ''</#if>">${column.columnName} = SYSDATE(),</if>
+        ${column.columnName} = SYSDATE(),
         <#elseif column.isPk !='1'>
         <if test="${column.smallColumnName} != null <#if column.javaType == 'String' > and ${column.smallColumnName} != ''</#if>">${column.columnName} = ${r'#'}{${column.smallColumnName}},</if>
         </#if>
