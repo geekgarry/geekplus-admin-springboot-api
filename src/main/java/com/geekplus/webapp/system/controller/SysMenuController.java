@@ -1,6 +1,7 @@
 package com.geekplus.webapp.system.controller;
 
 import com.geekplus.common.annotation.Log;
+import com.geekplus.common.annotation.RepeatSubmit;
 import com.geekplus.common.constant.HttpStatusCode;
 import com.geekplus.common.core.controller.BaseController;
 import com.geekplus.common.domain.Result;
@@ -41,6 +42,7 @@ public class SysMenuController extends BaseController {
     @RequiresPermissions("system:menu:add")
     @Log(title = "新增菜单权限",businessType = BusinessType.INSERT,operatorType = OperatorType.MANAGE)
     @PostMapping("/add")
+    @RepeatSubmit
     public Result add(@RequestBody SysMenu sysMenu) {
         return toResult(sysMenuService.insertSysMenu(sysMenu));
     }

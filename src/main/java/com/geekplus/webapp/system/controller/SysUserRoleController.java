@@ -1,6 +1,7 @@
 package com.geekplus.webapp.system.controller;
 
 import com.geekplus.common.annotation.Log;
+import com.geekplus.common.annotation.RepeatSubmit;
 import com.geekplus.common.constant.HttpStatusCode;
 import com.geekplus.common.core.controller.BaseController;
 import com.geekplus.common.domain.Result;
@@ -30,6 +31,7 @@ public class SysUserRoleController extends BaseController {
      */
     @Log(title = "添加用户和角色",businessType = BusinessType.INSERT,operatorType = OperatorType.MANAGE)
     @PostMapping("/add")
+    @RepeatSubmit
     public Result add(@RequestBody SysUserRole sysUserRole) {
         return toResult(sysUserRoleService.insertSysUserRole(sysUserRole));
     }
@@ -39,6 +41,7 @@ public class SysUserRoleController extends BaseController {
      */
     @Log(title = "添加用户和角色",businessType = BusinessType.INSERT)
     @PostMapping("/batchAdd")
+    @RepeatSubmit
     public Result batchAdd(@RequestBody List<SysUserRole> sysUserRole) {
         return toResult(sysUserRoleService.batchInsertSysUserRoleList(sysUserRole));
     }

@@ -65,8 +65,78 @@ public class UserTokenService {
         setUserAgent(loginUser);
         String token = jwtTokenUtil.token(loginUser);
         kickOutSameUser(loginUser.getUserName(),token);
-        refreshRedisLoginToken(loginUser);
+        setLoginUser(loginUser);
         return token;
+    }
+
+    /**
+      * @Author geekplus
+      * @Description //这里是为了检查校验每次请求的token是否有效，
+      * 有效就得到redis或数据库中的登录用户信息
+      * @Param
+      * @Throws
+      * @Return {@link }
+      */
+    public LoginUser checkUserTokenGetLoginUser(String token) { //IsEffect
+        if (!jwtTokenUtil.verify(token)) {
+            throw new AuthenticationException("用户认证失败！token已经过期失效，请重新登录！");
+        }else {
+            String username = jwtTokenUtil.getUserNameFromToken(token);
+            if (username == null) {
+                throw new AuthenticationException("token非法无效!");
+            }
+            log.info("从token中获取用户名为{}", username);
+            LoginUser user = (LoginUser) redisUtil.get(getTokenKey(jwtTokenUtil.getTokenIdFromToken(token)));
+            if(user==null || "".equals(user)) {
+                user = sysUserService.selectUserAllInfo(username);
+            }
+            //user.setTokenId(token);
+            // 校验token是否超时失效 & 或者账号密码是否错误 核心部分
+            if (!jwtTokenRefresh(token, user)) {
+                throw new AuthenticationException("token已经过期失效，请重新登录！");
+            }
+            return user;
+        }
+    }
+
+    /**
+      * @Author geekplus
+      * @Description //判断redis存储tokenId用户信息是否需要刷新过期时间，
+      * 如果需要则重新签发token再放入返回响应头中，前端可以在当前请求的响应头中取到新的token，
+      * 前端再设置覆盖原cookie的旧值
+      * @Param
+      * @Throws
+      * @Return {@link }
+      */
+    public boolean jwtTokenRefresh(String token, LoginUser loginUser) {
+        Long currentTimeMillis= System.currentTimeMillis();
+        //LoginUser userInfo = (LoginUser) redisUtil.get(Constant.LOGIN_USER_TOKEN+token);
+        String tokenId=jwtTokenUtil.getTokenIdFromToken(token);
+        //LoginUser logUser = tokenService.getUserInfo(ServletUtil.getRequest());
+        //if(StringUtils.isNotNull(loginUser) && StringUtils.isNull(SecurityUtils.getSubject().getPrincipal())){
+        //if(!"".equals(token) && null!=token && !token.equals("null")){
+        if(redisUtil.hasKey(getTokenKey(tokenId))){
+            //Long tokenMillis=JwtTokenUtil.verifyResult(token).getExpiresAt().getTime();
+            //if(!JwtTokenUtil.verify(cacheToken,loginUser)){
+            if(jwtTokenUtil.checkRefresh(token,currentTimeMillis)){
+                redisUtil.del(getTokenKey(tokenId));
+                String newAuthorization = refreshToken(loginUser,tokenId);
+                log.info("刷新的token: {}",newAuthorization);
+                // 设置超时时间
+                // 最后将刷新的AccessToken存放在Response的Header中的Authorization字段返回
+                HttpServletResponse httpServletResponse = ServletUtil.getResponse();
+                httpServletResponse.setHeader(header, newAuthorization);
+                httpServletResponse.setHeader("Access-Control-Expose-Headers", header);
+                //redisUtil.set(Constant.LOGIN_USER_TOKEN+newAuthorization, loginUser, expireTime);
+            }
+//            else{
+//                loginUser.setTokenId(tokenId);
+//                redisUtil.set(Constant.LOGIN_USER_TOKEN+tokenId, loginUser, expireTime);
+//                //throw new AuthenticationException("token认证失效,token过期,重新登录!");
+//            }
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -75,7 +145,7 @@ public class UserTokenService {
      * @param tokenId
      * @return
      */
-    public String createToken(LoginUser loginUser,String tokenId){
+    public String refreshToken(LoginUser loginUser,String tokenId){
         if(tokenId==null || "".equals(tokenId)){
             //String uuid= IdUtils.fastUUID();
             tokenId=IdUtils.fastUUID();
@@ -83,30 +153,8 @@ public class UserTokenService {
         loginUser.setTokenId(tokenId);
         setUserAgent(loginUser);
         String token = jwtTokenUtil.token(loginUser);
-        refreshRedisLoginToken(loginUser);
+        setLoginUser(loginUser);
         return token;
-    }
-
-    /**
-     *刷新redis登录用户信息
-     */
-    public void refreshRedisLoginToken(LoginUser loginUser){
-        //把存储在redis中的充要信息去除，如密码等
-        loginUser.setPassword(null);
-        redisUtil.set(getTokenKey(loginUser.getTokenId()), loginUser, expireTime);
-    }
-
-    /**
-     *设置用户代理相关请求头信息，浏览器和操作系统
-     */
-    public void setUserAgent(LoginUser loginUser){
-        UserAgent userAgent = UserAgent.parseUserAgentString(ServletUtil.getRequest().getHeader("User-Agent"));
-        // 获取客户端操作系统
-        String os = userAgent.getOperatingSystem().getName();
-        // 获取客户端浏览器
-        String browser = userAgent.getBrowser().getName();
-        loginUser.setBrowser(browser);
-        loginUser.setOs(os);
     }
 
     /**
@@ -116,7 +164,7 @@ public class UserTokenService {
     {
         if (StringUtils.isNotNull(loginUser) && StringUtils.isNotEmpty(loginUser.getTokenId()))
         {
-            refreshRedisToken(loginUser);
+            refreshRedisTokenId(loginUser);
         }
     }
 
@@ -140,73 +188,6 @@ public class UserTokenService {
         return null;
     }
 
-    public LoginUser checkUserTokenGetLoginUser(String token) { //IsEffect
-        if (!jwtTokenUtil.verify(token)) {
-            throw new AuthenticationException("用户认证失败！token已经过期失效，请重新登录！");
-        }else {
-            String username = jwtTokenUtil.getUserNameFromToken(token);
-            if (username == null) {
-                throw new AuthenticationException("token非法无效!");
-            }
-            log.info("从token中获取用户名为{}", username);
-            LoginUser user = (LoginUser) redisUtil.get(getTokenKey(jwtTokenUtil.getTokenIdFromToken(token)));
-            if(user==null || "".equals(user)) {
-                user = sysUserService.selectUserAllInfo(username);
-            }
-            //user.setTokenId(token);
-            // 校验token是否超时失效 & 或者账号密码是否错误 核心部分
-            if (!jwtTokenRefresh(token, user)) {
-                throw new AuthenticationException("token已经过期失效，请重新登录！");
-            }
-            return user;
-        }
-    }
-
-    public boolean jwtTokenRefresh(String token, LoginUser loginUser) {
-        Long currentTimeMillis= System.currentTimeMillis();
-        //LoginUser userInfo = (LoginUser) redisUtil.get(Constant.LOGIN_USER_TOKEN+token);
-        String tokenId=jwtTokenUtil.getTokenIdFromToken(token);
-        //LoginUser logUser = tokenService.getUserInfo(ServletUtil.getRequest());
-        //if(StringUtils.isNotNull(loginUser) && StringUtils.isNull(SecurityUtils.getSubject().getPrincipal())){
-        //if(!"".equals(token) && null!=token && !token.equals("null")){
-        if(redisUtil.hasKey(getTokenKey(tokenId))){
-            //Long tokenMillis=JwtTokenUtil.verifyResult(token).getExpiresAt().getTime();
-            //if(!JwtTokenUtil.verify(cacheToken,loginUser)){
-            if(jwtTokenUtil.checkRefresh(token,currentTimeMillis)){
-                redisUtil.del(getTokenKey(tokenId));
-                String newAuthorization = createToken(loginUser,tokenId);
-                log.info("刷新的token: {}",newAuthorization);
-                // 设置超时时间
-                // 最后将刷新的AccessToken存放在Response的Header中的Authorization字段返回
-                HttpServletResponse httpServletResponse = ServletUtil.getResponse();
-                httpServletResponse.setHeader(header, newAuthorization);
-                httpServletResponse.setHeader("Access-Control-Expose-Headers", header);
-                //redisUtil.set(Constant.LOGIN_USER_TOKEN+newAuthorization, loginUser, expireTime);
-            }
-//            else{
-//                loginUser.setTokenId(tokenId);
-//                redisUtil.set(Constant.LOGIN_USER_TOKEN+tokenId, loginUser, expireTime);
-//                //throw new AuthenticationException("token认证失效,token过期,重新登录!");
-//            }
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * 刷新令牌有效期
-     * loginUser的信息是要从redis里取出，保证存在tokenId
-     * @param loginUser 登录信息
-     */
-    public void refreshRedisToken(LoginUser loginUser)
-    {
-        loginUser.setLoginTime(new Date());
-        //loginUser.setExpireTime(loginUser.getLoginTime() + expireTime * MILLIS_MINUTE);
-        // 根据uuid将loginUser缓存
-        String userKey = getTokenKey(loginUser.getTokenId());
-        redisUtil.set(userKey, loginUser, expireTime);
-    }
-
     /**
       * @Author geekplus
       * @Description //提供给个人中心用户信息查询
@@ -225,6 +206,22 @@ public class UserTokenService {
             return sysUser;
         }
         return null;
+    }
+
+    /**
+     * 刷新redis存储的登录用户信息
+     * loginUser的信息是要从redis里取出，保证存在userKey
+     * @param loginUser 登录信息
+     */
+    public void refreshRedisTokenId(LoginUser loginUser)
+    {
+        //loginUser.setLoginTime(new Date());
+        // 把存储在redis中的充要信息去除，如密码等
+        loginUser.setPassword(null);
+        //loginUser.setExpireTime(loginUser.getLoginTime() + expireTime * MILLIS_MINUTE);
+        // 根据uuid将loginUser缓存
+        String userKey = getTokenKey(loginUser.getTokenId());
+        redisUtil.set(userKey, loginUser, expireTime);
     }
 
     public Long getSysUserId(HttpServletRequest request){
@@ -299,6 +296,19 @@ public class UserTokenService {
     private String getTokenKey(String uuid)
     {
         return Constant.LOGIN_USER_TOKEN + uuid;
+    }
+
+    /**
+     *设置用户代理相关请求头信息，浏览器和操作系统
+     */
+    public void setUserAgent(LoginUser loginUser){
+        UserAgent userAgent = UserAgent.parseUserAgentString(ServletUtil.getRequest().getHeader("User-Agent"));
+        // 获取客户端操作系统
+        String os = userAgent.getOperatingSystem().getName();
+        // 获取客户端浏览器
+        String browser = userAgent.getBrowser().getName();
+        loginUser.setBrowser(browser);
+        loginUser.setOs(os);
     }
 
 }

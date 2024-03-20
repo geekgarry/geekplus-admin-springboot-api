@@ -1,6 +1,7 @@
 package com.geekplus.webapp.system.controller;
 
 import com.geekplus.common.annotation.Log;
+import com.geekplus.common.annotation.RepeatSubmit;
 import com.geekplus.common.constant.HttpStatusCode;
 import com.geekplus.common.core.controller.BaseController;
 import com.geekplus.common.domain.Result;
@@ -29,6 +30,7 @@ public class SysRoleMenuController extends BaseController {
      */
     @Log(title = "添加角色和菜单权限",businessType = BusinessType.INSERT)
     @PostMapping("/add")
+    @RepeatSubmit
     public Result add(@RequestBody SysRoleMenu sysRoleMenu) {
         return toResult(sysRoleMenuService.insertSysRoleMenu(sysRoleMenu));
     }
@@ -38,6 +40,7 @@ public class SysRoleMenuController extends BaseController {
      */
     @Log(title = "批量添加角色和菜单权限",businessType = BusinessType.INSERT)
     @PostMapping("/batchAdd")
+    @RepeatSubmit
     public Result batchAdd(@RequestBody List<SysRoleMenu> sysRoleMenu) {
         return toResult(sysRoleMenuService.batchInsertSysRoleMenuList(sysRoleMenu));
     }

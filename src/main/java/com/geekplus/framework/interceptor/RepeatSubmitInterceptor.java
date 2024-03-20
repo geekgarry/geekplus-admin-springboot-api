@@ -3,6 +3,8 @@ package com.geekplus.framework.interceptor;
 import com.alibaba.fastjson.JSONObject;
 import com.geekplus.common.annotation.RepeatSubmit;
 import com.geekplus.common.domain.Result;
+import com.geekplus.common.enums.ApiExceptionEnum;
+import com.geekplus.common.myexception.BusinessException;
 import com.geekplus.common.redis.RedisUtil;
 import com.geekplus.common.util.ServletUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Method;
@@ -29,7 +32,7 @@ public class RepeatSubmitInterceptor implements HandlerInterceptor
     /**
      * Redis的API
      */
-    @Autowired
+    @Resource
     private RedisUtil redisUtil;
 
     /**
@@ -56,18 +59,19 @@ public class RepeatSubmitInterceptor implements HandlerInterceptor
 
             //组合判断条件，这里仅仅是演示，实际项目中根据架构组合条件
             //请求的URI
-            String uri = request.getRequestURI();
-
+            String userName=ServletUtils.getParameter("userName");
+            String uriKey = request.getRequestURI();
+            String redisValue=Objects.nonNull(repeatSubmitByMethod) ? repeatSubmitByMethod.value() : repeatSubmitByCls.value();
             //存在即返回false，不存在即返回true
-            Boolean ifAbsent = redisUtil.setIfAbsent(uri, "",
+            Boolean ifAbsent = redisUtil.setIfAbsent(uriKey, redisValue,
                     Objects.nonNull(repeatSubmitByMethod) ? repeatSubmitByMethod.seconds() : repeatSubmitByCls.seconds());
-
+            log.info("是否重复请求？");
             //如果存在，表示已经请求过了，直接抛出异常，由全局异常进行处理返回指定信息
-            if (ifAbsent != null && !ifAbsent) {
-                String msg = String.format("url:[%s]重复请求", uri);
+            if (!ifAbsent) {//ifAbsent != null &&
+                String msg = String.format("url:[%s]重复请求", uriKey);
                 log.warn(msg);
                 // throw new RepeatSubmitException(msg);
-                throw new Exception(msg);
+                throw new BusinessException(ApiExceptionEnum.LOGIN_DISABLED_ERROR);
             }
         }
         return true;

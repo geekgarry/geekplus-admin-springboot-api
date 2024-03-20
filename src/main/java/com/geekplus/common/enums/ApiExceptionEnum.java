@@ -19,6 +19,8 @@ public enum ApiExceptionEnum {
     DATA_ERROR(204, "数据异常"),
     DATA_UPDATE_ERROR(205, "数据版本异常"),
     NO_USER_ID(206,"没有登录，获取菜单权限失败"),
+    REPEAT_SUBMIT(207,"重复提交请求"),
+    REPEAT_LOGIN(2002,"重复登录请求"),
 
     LOGIN_AUTH(208, "未登陆"),
     LOGIN_FAIL(2088, "登录失败"),

@@ -1,5 +1,6 @@
 package com.geekplus.webapp.system.controller;
 
+import com.geekplus.common.annotation.RepeatSubmit;
 import com.geekplus.common.core.controller.BaseController;
 import com.geekplus.common.domain.Result;
 import com.geekplus.common.myexception.BusinessException;
@@ -28,6 +29,7 @@ public class SysDeptController extends BaseController {
      */
     @RequiresPermissions("system:dept:add")
     @PostMapping("/add")
+    @RepeatSubmit
     public Result add(@RequestBody SysDept sysDept) {
         return toResult(sysDeptService.insertSysDept(sysDept));
     }

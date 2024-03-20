@@ -1,6 +1,7 @@
 package com.geekplus.webapp.system.controller;
 
 import com.geekplus.common.annotation.Log;
+import com.geekplus.common.annotation.RepeatSubmit;
 import com.geekplus.common.config.WebAppConfig;
 import com.geekplus.common.constant.HttpStatusCode;
 import com.geekplus.common.core.controller.BaseController;
@@ -56,6 +57,7 @@ public class SysUserController extends BaseController {
     @RequiresPermissions("system:user:add")
     @Log(title = "添加系统用户",businessType = BusinessType.INSERT,operatorType = OperatorType.MANAGE)
     @PostMapping("/add")
+    @RepeatSubmit
     public Result add(@RequestBody SysUser sysUser) {
         return toResult(sysUserService.insertSysUser(sysUser));
     }
@@ -63,6 +65,7 @@ public class SysUserController extends BaseController {
     @RequiresPermissions("system:user:add")
     @Log(title = "系统添加用户信息",businessType = BusinessType.INSERT,operatorType = OperatorType.MANAGE)
     @PostMapping("/addEncodePwd")
+    @RepeatSubmit
     public Result addEncodePwd(@RequestBody SysUser sysUser) {
         Result result=toResult(sysUserService.insertSysUserEnCodePwd(sysUser));
         result.put("userId",sysUser.getUserId());
@@ -115,6 +118,7 @@ public class SysUserController extends BaseController {
     @RequiresPermissions("system:user:update")
     @Log(title = "修改用户密码",businessType = BusinessType.UPDATE,operatorType = OperatorType.MANAGE)
     @GetMapping("/updateUserPwd")
+    @RepeatSubmit
     public Result updateUserPwd(String oldPassword, String newPassword) {
         //Session session= SecurityUtils.getSubject().getSession();
         //Long userId=Long.parseLong(session.getAttribute("userId").toString());

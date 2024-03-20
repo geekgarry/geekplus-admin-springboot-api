@@ -1,6 +1,7 @@
 package com.geekplus.webapp.system.controller;
 
 import com.geekplus.common.annotation.Log;
+import com.geekplus.common.annotation.RepeatSubmit;
 import com.geekplus.common.constant.HttpStatusCode;
 import com.geekplus.common.core.controller.BaseController;
 import com.geekplus.common.domain.Result;
@@ -31,6 +32,7 @@ public class SysConfigController extends BaseController {
      */
     @Log(title = "新增系统配置",businessType = BusinessType.INSERT,operatorType = OperatorType.MANAGE)
     @PostMapping("/add")
+    @RepeatSubmit
     public Result add(@RequestBody SysConfig sysConfig) {
         return toResult(sysConfigService.insertSysConfig(sysConfig));
     }

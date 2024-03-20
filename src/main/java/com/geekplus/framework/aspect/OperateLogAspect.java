@@ -57,7 +57,6 @@ public class OperateLogAspect {
     //@Pointcut("execution(* com.geekplus.webapp..*.controller..*.*(..))")
     @Pointcut("@annotation(com.geekplus.common.annotation.Log)")
     public void logPointcut() {
-
     }
 
     @Before("logPointcut()")

@@ -42,29 +42,12 @@ public class JwtTokenUtil {
     //private static final String TOKEN_SECRET = "ROCZFasChinaUUChanPlusIsCEO2023MAIKR";
 
     /**
-     * 创建令牌
-     *
-     * @param loginUser 用户信息
-     * @return 令牌
-     */
-    public String createToken(LoginUser loginUser)
-    {
-        String tokenId = IdUtils.fastUUID();
-        loginUser.setTokenId(tokenId);
-        refreshToken(loginUser);
-
-        return createToken(loginUser);
-    }
-
-    public String sign(String username) {
-        Date date = new Date(System.currentTimeMillis() + 30 * 60 * 1000);
-        Algorithm algorithm = Algorithm.HMAC256(TOKEN_SECRET);
-        return JWT.create()
-                .withClaim("userName", username)
-                .withExpiresAt(date)
-                .sign(algorithm);
-    }
-
+      * @Author geekplus
+      * @Description //关键用户信息和过期时间加密生成token
+      * @Param 
+      * @Throws 
+      * @Return {@link }
+      */
     public String token(LoginUser sysUser){
         String token = "";
         try {
@@ -94,36 +77,6 @@ public class JwtTokenUtil {
         return token;
     }
 
-    /**
-     * 2.4 token刷新
-     *
-     * @return
-     */
-    public boolean refreshToken(LoginUser loginUser) {
-        // 定义前缀+token 为缓存中的key，得到对应的value（cacheToken）
-        String cacheToken = String.valueOf(redisUtil.get(Constant.LOGIN_USER_TOKEN + ':' + loginUser.getTokenId()));
-        // 判断缓存中的token是否存在
-        if (cacheToken != null && !cacheToken.equals("") && !cacheToken.equals("null")) {
-            // 校验token有效性
-            // 缓存中存在，验证失败（JwtUtil.verify在上一篇文章中已经介绍）
-            if (!verify(cacheToken)) {
-                // 重新sign，得到新的token
-                String newAuthorization = token(loginUser);
-                // 写入到缓存中，key不变，将value换成新的token
-                redisUtil.set(Constant.LOGIN_USER_TOKEN + ':' + loginUser.getTokenId(), newAuthorization);
-                // 设置超时时间【这里除以1000是因为设置时间单位为秒了】【一般续签的时间都会乘以2】
-                redisUtil.expire(Constant.LOGIN_USER_TOKEN + ':' + loginUser.getTokenId(), EXPIRE_TIME);
-                // 缓存中存在，验证成功
-            } else {
-                // 上面的写法，与下面的相同
-                // 用户这次请求JWTToken值还在生命周期内，重新put新的生命周期时间（有效时间）
-                redisUtil.set(Constant.LOGIN_USER_TOKEN + ':' + loginUser.getTokenId(), cacheToken, EXPIRE_TIME);
-            }
-            return true;
-        }
-        return false;
-    }
-
     public boolean verify(String token){
         /**
          * @desc   验证token，通过返回true
@@ -142,7 +95,9 @@ public class JwtTokenUtil {
     }
 
     /**
-     * 判断是否需要刷新
+     * 判断是否需要刷新，这里为了不必要每次请求都要刷新生成token，
+     * 采用在30分钟过期时间内的最后剩12分钟内再进行刷新，
+     * 也就是登录后30分钟内超过18分钟后在进行刷新
      * @param cacheToken 缓存中的token
      * @param currentTime 当前时间
      * @return
@@ -158,23 +113,16 @@ public class JwtTokenUtil {
             return false;
     }
 
-    public boolean verify(String token,LoginUser loginUser){
-        /**
-         * @desc   验证token，通过返回true
-         * @params [token]需要校验的串
-         **/
-        try {
-            Algorithm algorithm = Algorithm.HMAC256(TOKEN_SECRET);
-            JWTVerifier verifier = JWT.require(algorithm)
-                    .withClaim("userName",loginUser.getUserName())
-                    .withClaim("email",loginUser.getEmail())
-                    .build();
-            DecodedJWT jwt = verifier.verify(token);
-            return true;
-        }catch (Exception e){
-            e.printStackTrace();
-            return  false;
-        }
+    //解析token拿到etokenId
+    public String getTokenIdFromToken(String token){
+        String tokenId = verifyResult(token).getClaim("tokenId").asString();
+        return tokenId;
+    }
+
+    //解析token拿到userNam
+    public String getUserNameFromToken(String token){
+        String userName = verifyResult(token).getClaim("userName").asString();
+        return userName;
     }
 
     public DecodedJWT verifyResult(String token){
@@ -188,18 +136,6 @@ public class JwtTokenUtil {
         return jwt;
     }
 
-    //解析token拿到etokenId
-    public String getTokenIdFromToken(String token){
-        String tokenId = verifyResult(token).getClaim("tokenId").asString();
-        return tokenId;
-    }
-
-    //解析token拿到userNam
-    public String getUserNameFromToken(String token){
-        String userName = verifyResult(token).getClaim("userName").asString();
-        return userName;
-    }
-
     //获取过期时间
     public Long getExpire(String token){
         try {
@@ -208,11 +144,6 @@ public class JwtTokenUtil {
         }catch (Exception e){
             return null;
         }
-    }
-
-    public boolean isExpire(String token){
-        DecodedJWT jwt = JWT.decode(token);
-        return System.currentTimeMillis() > jwt.getExpiresAt().getTime();
     }
 
     public static void main(String[] args) {

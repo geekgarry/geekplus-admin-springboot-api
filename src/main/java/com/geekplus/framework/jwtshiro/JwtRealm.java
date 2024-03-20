@@ -99,7 +99,7 @@ public class JwtRealm extends AuthorizingRealm {
         // String username = usernamePasswordToken.getUsername();
         // String password = new String(usernamePasswordToken.getPassword());
         System.out.println("*************###################***************");
-        // 通过username从数据库中查找 User对象，如果找到则进行验证
+        // 通过username从redis或数据库中查找 User对象，如果找到则进行验证
         LoginUser loginUser=tokenService.checkUserTokenGetLoginUser(token);
         // 进行验证
         SimpleAuthenticationInfo authenticationInfo = new SimpleAuthenticationInfo(loginUser, token, getName());

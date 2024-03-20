@@ -1,8 +1,11 @@
 package ${basePackage}.webapp.${moduleName}.controller;
 
-import com.geekplus.common.core.controller.BaseController;
+import ${basePackage}.common.annotation.Log;
+import ${basePackage}.common.annotation.RepeatSubmit;
+import ${basePackage}.common.core.controller.BaseController;
 import ${basePackage}.common.domain.Result;
 import ${basePackage}.common.enums.BusinessType;
+import ${basePackage}.common.enums.OperatorType;
 import ${basePackage}.common.util.poi.ExcelUtil;
 import ${basePackage}.webapp.${moduleName}.entity.${modelNameUpperCamel};
 import ${basePackage}.webapp.${moduleName}.service.${modelNameUpperCamel}Service;
@@ -11,6 +14,7 @@ import ${basePackage}.common.annotation.Log;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.web.bind.annotation.*;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -28,7 +32,10 @@ public class ${modelNameUpperCamel}Controller extends BaseController {
     /**
      * 增加 ${functionName}
      */
+    @RequiresPermissions("${permissionPrefix}:add")
+    @Log(title = "新增${title}", businessType = BusinessType.INSERT, operatorType = OperatorType.MANAGE)
     @PostMapping("/add")
+    @RepeatSubmit
     public Result add(@RequestBody ${modelNameUpperCamel} ${modelNameLowerCamel}) {
         return toResult(${modelNameLowerCamel}Service.insert${modelNameUpperCamel}(${modelNameLowerCamel}));
     }
@@ -36,7 +43,10 @@ public class ${modelNameUpperCamel}Controller extends BaseController {
     /**
      * 增加 ${functionName}
      */
+    @RequiresPermissions("${permissionPrefix}:add")
+    @Log(title = "批量新增${title}", businessType = BusinessType.INSERT, operatorType = OperatorType.MANAGE)
     @PostMapping("/batchAdd")
+    @RepeatSubmit
     public Result batchAdd(@RequestBody List<${modelNameUpperCamel}> ${modelNameLowerCamel}) {
     return toResult(${modelNameLowerCamel}Service.batchInsert${modelNameUpperCamel}List(${modelNameLowerCamel}));
     }
@@ -44,7 +54,8 @@ public class ${modelNameUpperCamel}Controller extends BaseController {
     /**
      * 删除 ${functionName}
      */
-    @Log(title = "删除", businessType = BusinessType.DELETE)
+    @RequiresPermissions("${permissionPrefix}:remove")
+    @Log(title = "删除${title}", businessType = BusinessType.DELETE, operatorType = OperatorType.MANAGE)
     @GetMapping("/delete")
     public Result remove(@RequestParam ${pkColumn.javaType} ${pkColumn.smallColumnName}) {
         return toResult(${modelNameLowerCamel}Service.delete${modelNameUpperCamel}ById(${pkColumn.smallColumnName}));
@@ -53,7 +64,8 @@ public class ${modelNameUpperCamel}Controller extends BaseController {
     /**
      * 批量删除 ${functionName}
      */
-    @Log(title = "批量删除", businessType = BusinessType.DELETE)
+    @RequiresPermissions("${permissionPrefix}:remove")
+    @Log(title = "批量删除${title}", businessType = BusinessType.DELETE, operatorType = OperatorType.MANAGE)
     @DeleteMapping("/{${pkColumn.smallColumnName}s}")
     public Result remove(@PathVariable ${pkColumn.javaType}[] ${pkColumn.smallColumnName}s) {
         return toResult(${modelNameLowerCamel}Service.delete${modelNameUpperCamel}ByIds(${pkColumn.smallColumnName}s));
@@ -62,7 +74,8 @@ public class ${modelNameUpperCamel}Controller extends BaseController {
     /**
      * 更新 ${functionName}
      */
-    @Log(title = "修改", businessType = BusinessType.UPDATE)
+    @RequiresPermissions("${permissionPrefix}:edit")
+    @Log(title = "修改${title}", businessType = BusinessType.UPDATE, operatorType = OperatorType.MANAGE)
     @PostMapping("/update")
     public Result edit(@RequestBody ${modelNameUpperCamel} ${modelNameLowerCamel}) {
         return toResult(${modelNameLowerCamel}Service.update${modelNameUpperCamel}(${modelNameLowerCamel}));
@@ -71,6 +84,7 @@ public class ${modelNameUpperCamel}Controller extends BaseController {
     /**
      * 单条数据详情 ${functionName}
      */
+    @RequiresPermissions("${permissionPrefix}:query")
     @GetMapping("/detail")
     public Result detail(@RequestParam ${pkColumn.javaType} ${pkColumn.smallColumnName}) {
         ${modelNameUpperCamel} ${modelNameLowerCamel} = ${modelNameLowerCamel}Service.select${modelNameUpperCamel}ById(${pkColumn.smallColumnName});
@@ -109,7 +123,8 @@ public class ${modelNameUpperCamel}Controller extends BaseController {
     /**
     * 导出数据字典类型
     */
-    @Log(title = "导出数据字典类型", businessType = BusinessType.EXPORT)
+    @RequiresPermissions("${permissionPrefix}:export")
+    @Log(title = "导出${title}", businessType = BusinessType.EXPORT, operatorType = OperatorType.MANAGE)
     @GetMapping("/export")
     public Result export(${modelNameUpperCamel} ${modelNameLowerCamel}){
         List<${modelNameUpperCamel}> list = ${modelNameLowerCamel}Service.select${modelNameUpperCamel}List(${modelNameLowerCamel});

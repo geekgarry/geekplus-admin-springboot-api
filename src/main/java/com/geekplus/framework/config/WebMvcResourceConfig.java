@@ -24,9 +24,9 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import javax.annotation.Resource;
 
 @Configuration
-public class ResourceConfig implements WebMvcConfigurer {
-    @Autowired
-    private RepeatSubmitInterceptor repeatSubmitInterceptor;
+public class WebMvcResourceConfig implements WebMvcConfigurer {
+    //@Resource
+    //private RepeatSubmitInterceptor repeatSubmitInterceptor;
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry)
@@ -49,7 +49,7 @@ public class ResourceConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry)
     {
-        registry.addInterceptor(repeatSubmitInterceptor).addPathPatterns("/**");
+        //registry.addInterceptor(repeatSubmitInterceptor).addPathPatterns("/**");
     }
 
     @Override

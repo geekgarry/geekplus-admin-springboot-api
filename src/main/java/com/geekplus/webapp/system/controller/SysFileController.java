@@ -1,6 +1,7 @@
 package com.geekplus.webapp.system.controller;
 
 import com.geekplus.common.annotation.Log;
+import com.geekplus.common.annotation.RepeatSubmit;
 import com.geekplus.common.config.WebAppConfig;
 import com.geekplus.common.constant.Constant;
 import com.geekplus.common.domain.Result;
@@ -38,6 +39,7 @@ public class SysFileController {
      */
     @Log(title = "删除文件夹里的文件", businessType = BusinessType.DELETE)
     @PostMapping("/deleteSelectedFiles")
+    @RepeatSubmit
     public Result deleteSelectedFile(@RequestBody List<Map> filePaths)
     {
         int length=filePaths.size();
@@ -63,6 +65,7 @@ public class SysFileController {
      */
     @Log(title = "删除文件夹里的文件", businessType = BusinessType.DELETE)
     @GetMapping("/deleteFileByRecursion")
+    @RepeatSubmit
     public Result deleteFileByRecursion(String filePath)
     {
         String profile= Constant.RESOURCE_PREFIX;//profile
@@ -83,6 +86,7 @@ public class SysFileController {
      */
     @Log(title = "删除文件夹里的文件", businessType = BusinessType.DELETE)
     @GetMapping("/deleteFile")
+    @RepeatSubmit
     public Result deleteFileAnCategory(String filePath)
     {
         String profile= Constant.RESOURCE_PREFIX;//profile

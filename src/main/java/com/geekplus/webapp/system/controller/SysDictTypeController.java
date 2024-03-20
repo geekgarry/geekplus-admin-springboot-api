@@ -1,6 +1,7 @@
 package com.geekplus.webapp.system.controller;
 
 import com.geekplus.common.annotation.Log;
+import com.geekplus.common.annotation.RepeatSubmit;
 import com.geekplus.common.constant.HttpStatusCode;
 import com.geekplus.common.core.controller.BaseController;
 import com.geekplus.common.domain.Result;
@@ -29,6 +30,7 @@ public class SysDictTypeController extends BaseController {
      * 增加
      */
     @PostMapping("/add")
+    @RepeatSubmit
     public Result add(@RequestBody SysDictType sysDictType) {
         return toResult(sysDictTypeService.insertSysDictType(sysDictType));
     }

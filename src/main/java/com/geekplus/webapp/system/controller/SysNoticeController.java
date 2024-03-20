@@ -1,6 +1,7 @@
 package com.geekplus.webapp.system.controller;
 
 import com.geekplus.common.annotation.Log;
+import com.geekplus.common.annotation.RepeatSubmit;
 import com.geekplus.common.constant.HttpStatusCode;
 import com.geekplus.common.core.controller.BaseController;
 import com.geekplus.common.domain.Result;
@@ -33,6 +34,7 @@ public class SysNoticeController extends BaseController {
     @RequiresPermissions("system:notice:add")
     @Log(title = "新增系统通知",businessType = BusinessType.INSERT,operatorType = OperatorType.MANAGE,isSaveRequestData = false)
     @PostMapping("/add")
+    @RepeatSubmit
     public Result add(@RequestBody SysNotice sysNotice) {
         return toResult(sysNoticeService.insertSysNotice(sysNotice));
     }
@@ -97,6 +99,7 @@ public class SysNoticeController extends BaseController {
     /**
     * 条件查询所有
     */
+    @RequiresPermissions("system:notice:list")
     @GetMapping("/list")
     public PageDataInfo list(SysNotice sysNotice) {
         startPage();

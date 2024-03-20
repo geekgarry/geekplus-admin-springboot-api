@@ -6,6 +6,8 @@
  */
 package com.geekplus.webapp.common;
 
+import com.geekplus.common.annotation.RepeatLogin;
+import com.geekplus.common.annotation.RepeatSubmit;
 import com.geekplus.common.constant.Constant;
 import com.geekplus.common.core.controller.BaseController;
 import com.geekplus.common.domain.LoginUser;
@@ -59,6 +61,7 @@ public class SysUserLoginController extends BaseController {
     private JwtTokenUtil jwtTokenUtil;
 
     @PostMapping("/login")
+    @RepeatLogin
     public Result login(@RequestBody LoginUser loginUser){
         //添加用户认证信息
         Subject subject = SecurityUtils.getSubject();

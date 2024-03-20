@@ -1,6 +1,7 @@
 package com.geekplus.webapp.system.controller;
 
 import com.geekplus.common.annotation.Log;
+import com.geekplus.common.annotation.RepeatSubmit;
 import com.geekplus.common.constant.HttpStatusCode;
 import com.geekplus.common.core.controller.BaseController;
 import com.geekplus.common.domain.Result;
@@ -37,6 +38,7 @@ public class SysRoleController extends BaseController {
     @RequiresPermissions("system:role:add")
     @Log(title = "角色管理",businessType = BusinessType.INSERT,operatorType = OperatorType.MANAGE,isSaveRequestData = false)
     @PostMapping("/add")
+    @RepeatSubmit
     public Result add(@RequestBody SysRole sysRole) {
         return toResult(sysRoleService.insertSysRole(sysRole));
     }
