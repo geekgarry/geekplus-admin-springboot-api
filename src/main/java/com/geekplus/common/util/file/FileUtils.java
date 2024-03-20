@@ -504,52 +504,55 @@ public class FileUtils
      * @Throws
      * @Return {@link }
      */
-    public static List<Map<String,Object>> getAllMusicFileInfo(File file) {
+    public static void getAllMusicFileInfo(File file,List<Map<String,Object>> mapList) {
         //File file=new File(filePath);
         File[] fileList = file.listFiles();
         //File file = new File(filePath);
-        List<Map<String,Object>> mapList=new ArrayList<>();
         if (fileList == null || fileList.length == 0) {
-            return null;
+            return;
         }
         try {
             for (File f : fileList) {
-                //这里将列出所有的文件夹,如果是文件目录为0文件为1
-                int isFolder=f.isDirectory()?0:1;
-                //这里将列出所有的文件
-                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                String createTime = formatter.format(f.lastModified());
-                Path filePath = Paths.get(f.getAbsolutePath());
-                BasicFileAttributes attributes;
-                attributes = Files.readAttributes(filePath, BasicFileAttributes.class);
-                long modificationTime = attributes.lastModifiedTime().toMillis();
-                String updateTime = formatter.format(modificationTime);
-                Map mapKV=new HashMap<String,Object>();
-                if(!f.isHidden()) {
-                    //System.out.println("file==>" + f.getAbsolutePath());
-                    String fileAbPathName = f.getAbsolutePath();//.replaceAll(WebAppConfig.getProfile(),Constant.RESOURCE_PREFIX);
-                    String systemPrimaryFile = f.getParentFile().getParent();
-                    mapKV.put("fileName", f.getName());
-                    mapKV.put("filePath", fileAbPathName.replaceAll(systemPrimaryFile,""));
-                    mapKV.put("fileUrl", f.getPath().replaceAll(systemPrimaryFile,""));
-                    if(isFolder==1){
-                        mapKV.put("fileType",MimeTypeUtils.getFileExtensionType(f.getName()));
+                if (f.isDirectory()) {
+                    //这里将列出所有的文件夹,如果是文件目录，则递归调用
+                    //System.out.println("Dir==>" + f.getAbsolutePath());
+                    getAllMusicFileInfo(f,mapList);
+                } else if(f.isFile()) {
+                    //这里将列出所有的文件夹,如果是文件目录为0文件为1
+                    //int isFolder = f.isDirectory() ? 0 : 1;
+                    //这里将列出所有的文件
+                    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    String createTime = formatter.format(f.lastModified());
+                    Path filePath = Paths.get(f.getAbsolutePath());
+                    BasicFileAttributes attributes;
+                    attributes = Files.readAttributes(filePath, BasicFileAttributes.class);
+                    long modificationTime = attributes.lastModifiedTime().toMillis();
+                    String updateTime = formatter.format(modificationTime);
+                    Map mapKV = new HashMap<String, Object>();
+                    if (!f.isHidden()) {
+                        //System.out.println("file==>" + f.getAbsolutePath());
+                        String fileAbPathName = f.getAbsolutePath();//.replaceAll(WebAppConfig.getProfile(),Constant.RESOURCE_PREFIX);
+                        String systemPrimaryFile = f.getParentFile().getParent();
+                        mapKV.put("fileName", f.getName());
+                        mapKV.put("filePath", fileAbPathName.replaceAll(systemPrimaryFile, ""));
+                        mapKV.put("fileUrl", f.getPath().replaceAll(WebAppConfig.getProfile(), ""));
+                        //if (isFolder == 1)
+                        mapKV.put("fileType", MimeTypeUtils.getFileExtensionType(f.getName()));
+                        //mapKV.put("isFolder", isFolder);
+                        mapKV.put("totalSpace", f.getTotalSpace());
+                        mapKV.put("freeSpace", f.getFreeSpace());
+                        mapKV.put("parentCategory", f.getParentFile().getPath().replaceAll(WebAppConfig.getProfile(),""));
+                        mapKV.put("fileSize", f.length());
+                        mapKV.put("createTime", createTime);
+                        mapKV.put("updateTime", updateTime);
+                        //mapKV.put("musicInfo", ReadMusicInfo.getMusicInfo(fileAbPathName));
+                        mapList.add(mapKV);
                     }
-                    mapKV.put("isFolder", isFolder);
-                    mapKV.put("totalSpace", f.getTotalSpace());
-                    mapKV.put("freeSpace", f.getFreeSpace());
-                    mapKV.put("parentCategory", "/");
-                    mapKV.put("fileSize", f.length());
-                    mapKV.put("createTime", createTime);
-                    mapKV.put("updateTime", updateTime);
-                    //mapKV.put("musicInfo", ReadMusicInfo.getMusicInfo(fileAbPathName));
-                    mapList.add(mapKV);
                 }
             }
         }catch (Exception e){
             e.printStackTrace();
         }
-        return mapList;
     }
 
     /**

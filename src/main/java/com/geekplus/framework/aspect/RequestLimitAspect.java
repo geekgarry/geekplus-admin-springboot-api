@@ -4,6 +4,7 @@ import com.geekplus.common.annotation.RequestLimit;
 import com.geekplus.common.domain.LoginUser;
 import com.geekplus.common.redis.RedisUtil;
 import com.geekplus.common.util.ip.IpUtils;
+import com.geekplus.webapp.system.entity.SysRole;
 import org.apache.shiro.SecurityUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -21,6 +22,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * author     : geekplus
@@ -71,10 +76,16 @@ public class RequestLimitAspect {
         String url = request.getRequestURI();
         String limitValue = "";
         LoginUser principal1 = (LoginUser) SecurityUtils.getSubject().getPrincipal();
-        if (principal1 == null) {
-            limitValue = principal1.getUserName().toString();
-        }else {
-            limitValue = ip;
+        List<SysRole> sysRoles=principal1.getSysRoleList();
+        List<String> roleKey= sysRoles.stream().map(SysRole::getRoleKey).collect(Collectors.toList());
+        List roleSet=Arrays.asList("admin", "webmanager", "commonuser");
+        //判断用户是否为限制访问用户，在规定时间内最大请求数
+        if(roleKey.containsAll(roleSet)) {
+            if (principal1 == null) {
+                limitValue = principal1.getUserName().toString();
+            } else {
+                limitValue = ip;
+            }
         }
 
         // judge codition
