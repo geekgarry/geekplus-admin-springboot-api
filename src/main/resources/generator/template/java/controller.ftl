@@ -54,7 +54,7 @@ public class ${modelNameUpperCamel}Controller extends BaseController {
     /**
      * 删除 ${functionName}
      */
-    @RequiresPermissions("${permissionPrefix}:remove")
+    @RequiresPermissions("${permissionPrefix}:delete")
     @Log(title = "删除${title}", businessType = BusinessType.DELETE, operatorType = OperatorType.MANAGE)
     @GetMapping("/delete")
     public Result remove(@RequestParam ${pkColumn.javaType} ${pkColumn.smallColumnName}) {
@@ -64,7 +64,7 @@ public class ${modelNameUpperCamel}Controller extends BaseController {
     /**
      * 批量删除 ${functionName}
      */
-    @RequiresPermissions("${permissionPrefix}:remove")
+    @RequiresPermissions("${permissionPrefix}:delete")
     @Log(title = "批量删除${title}", businessType = BusinessType.DELETE, operatorType = OperatorType.MANAGE)
     @DeleteMapping("/{${pkColumn.smallColumnName}s}")
     public Result remove(@PathVariable ${pkColumn.javaType}[] ${pkColumn.smallColumnName}s) {
@@ -74,7 +74,7 @@ public class ${modelNameUpperCamel}Controller extends BaseController {
     /**
      * 更新 ${functionName}
      */
-    @RequiresPermissions("${permissionPrefix}:edit")
+    @RequiresPermissions("${permissionPrefix}:update")
     @Log(title = "修改${title}", businessType = BusinessType.UPDATE, operatorType = OperatorType.MANAGE)
     @PostMapping("/update")
     public Result edit(@RequestBody ${modelNameUpperCamel} ${modelNameLowerCamel}) {
@@ -84,7 +84,7 @@ public class ${modelNameUpperCamel}Controller extends BaseController {
     /**
      * 单条数据详情 ${functionName}
      */
-    @RequiresPermissions("${permissionPrefix}:query")
+    @RequiresPermissions("${permissionPrefix}:detail")
     @GetMapping("/detail")
     public Result detail(@RequestParam ${pkColumn.javaType} ${pkColumn.smallColumnName}) {
         ${modelNameUpperCamel} ${modelNameLowerCamel} = ${modelNameLowerCamel}Service.select${modelNameUpperCamel}ById(${pkColumn.smallColumnName});
@@ -110,6 +110,7 @@ public class ${modelNameUpperCamel}Controller extends BaseController {
     /**
      * 条件查询所有 ${functionName}
      */
+    @RequiresPermissions("${permissionPrefix}:list")
     @GetMapping("/list")
     //public PageDataInfo list(@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "0") Integer size,${modelNameUpperCamel} ${modelNameLowerCamel}) {
     public PageDataInfo list(${modelNameUpperCamel} ${modelNameLowerCamel}) {
