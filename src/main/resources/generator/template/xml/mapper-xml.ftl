@@ -72,13 +72,19 @@
         <trim prefix="(" suffix=")" suffixOverrides=",">
         <#if pkColumn.isIncrement=='1'>
         <#list allColumn as column>
-        <#if column.columnName!=pkColumn.columnName>
+        <#if column.columnName!=pkColumn.columnName && column.javaType == 'Date' && column.smallColumnName=='createTime'>
+        ${column.columnName},
+        <#elseif column.columnName!=pkColumn.columnName>
         <if test="${column.smallColumnName} != null<#if column.javaType == 'String'> and ${column.smallColumnName} != ''</#if>">${column.columnName},</if>
         </#if>
         </#list>
         <#else>
         <#list allColumn as column>
+        <#if column.javaType == 'Date' && column.smallColumnName=='createTime'>
+        ${column.columnName},
+        <#else>
         <if test="${column.smallColumnName} != null<#if column.javaType == 'String'> and ${column.smallColumnName} != ''</#if>">${column.columnName},</if>
+        </#if>
         </#list>
         </#if>
         </trim>
