@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 系统操作日志 系统操作日志
@@ -98,6 +99,17 @@ public class SysOperLogController extends BaseController {
         rspData.setTotal(new PageInfo(list).getTotal());
         //PageInfo pageInfo = new PageInfo(list);
         return rspData;
+    }
+
+    /**
+     * 查询访问地址的统计数量
+     */
+    //@RequiresPermissions("system:operLog:listAll")
+    @GetMapping("/getViewCount")
+    public Result getWebVisitorCount() {
+        //PageHelper.startPage(page, size);
+        List<Map<String,Object>> listMap = sysOperLogService.selectWebVisitorCount();
+        return Result.success(listMap);
     }
 
     /**

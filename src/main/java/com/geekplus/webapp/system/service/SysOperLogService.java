@@ -1,9 +1,11 @@
 package com.geekplus.webapp.system.service;
 
 import com.geekplus.webapp.system.entity.SysOperLog;
+import org.apache.ibatis.annotations.MapKey;
 //import com.geekplus.core.Service;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -63,6 +65,11 @@ public interface SysOperLogService {
     * 根据Id查询单条数据
     */
     public SysOperLog selectSysOperLogById(Long operId);
+
+    /**
+     * 查询访问地址的统计数量
+     */
+    List<Map<String,Object>> selectWebVisitorCount();
 
     /**
      *清空表格所有数据 OperLog

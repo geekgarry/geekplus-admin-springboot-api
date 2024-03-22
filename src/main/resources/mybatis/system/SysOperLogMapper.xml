@@ -172,6 +172,12 @@
                 oper_id = #{operId}
     </select>
 
+    <!--查询访问地址的统计数量-->
+    <select id="selectWebViewCount" resultType="map">
+        select if(LOCATE("省", oper_location) || LOCATE("市", oper_location),substring(oper_location,1,LOCATE(' ', oper_location)-2),oper_location) name, count(oper_id) value
+         from sys_oper_log GROUP BY name HAVING name!='' ORDER BY oper_time DESC
+    </select>
+
     <!--添加操作SQL-->
     <insert id="insertSysOperLog" parameterType="SysOperLog"  useGeneratedKeys="true" keyProperty="operId">
         insert into sys_oper_log

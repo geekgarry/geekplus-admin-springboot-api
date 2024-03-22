@@ -105,6 +105,14 @@ public class SysOperLogServiceImpl implements SysOperLogService {
     }
 
     /**
+     * 查询访问地址的统计数量
+     */
+    @Override
+    public List<Map<String, Object>> selectWebVisitorCount() {
+        return sysOperLogMapper.selectWebViewCount();
+    }
+
+    /**
      *清空表格所有数据 OperLog
      */
     @Override

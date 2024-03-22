@@ -1,7 +1,11 @@
 package com.geekplus.webapp.system.mapper;
 
 import com.geekplus.webapp.system.entity.SysOperLog;
+import org.apache.ibatis.annotations.MapKey;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 系统操作日志 系统操作日志
@@ -61,6 +65,12 @@ public interface SysOperLogMapper {
     * 根据Id查询单条数据
     */
     SysOperLog selectSysOperLogById(Long operId);
+
+    /**
+      * 查询访问地址的统计数量
+      */
+    @MapKey("name")
+    List<Map<String,Object>> selectWebViewCount();
 
     /**
      *清空表格所有数据 OperLog
