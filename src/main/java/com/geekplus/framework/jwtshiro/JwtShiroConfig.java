@@ -81,7 +81,7 @@ public class JwtShiroConfig {
         map.put("/captchaBase64","anon");
         map.put("/sys/user/logout","anon");
         map.put("/covid/**","anon");
-        map.put("/openai/**","anon");
+        map.put("/AIBot/**","anon");
         map.put("/geekplusapp/**","anon");
         map.put("/websocket/**","anon");
         map.put("/profile/**","anon");
