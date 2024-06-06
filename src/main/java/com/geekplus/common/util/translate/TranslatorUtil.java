@@ -25,12 +25,44 @@ public class TranslatorUtil {
      * @param word 英文
      * @return
      */
+    // client: 指定客户端类型，这里使用gtx。
+    // sl: 源语言代码（例如en代表英语）。
+    // tl: 目标语言代码（例如zh-CN代表简体中文）。
+    // dt: 数据类型，这里使用t代表翻译文本。
+    // q: 要翻译的文本。
     public static String translate(String word){
         try {
             String url = "https://translate.googleapis.com/translate_a/single?" +
                     "client=gtx&" +
                     "sl=en" +
                     "&tl=zh-CN" +
+                    "&dt=t&q=" + URLEncoder.encode(word, "UTF-8");
+
+            URL obj = new URL(url);
+            HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+            con.setRequestProperty("User-Agent", "Mozilla/5.0");
+
+            BufferedReader in = new BufferedReader(
+                    new InputStreamReader(con.getInputStream()));
+            String inputLine;
+            StringBuilder response = new StringBuilder();
+
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine);
+            }
+            in.close();
+            return parseResult(response.toString());
+        }catch (Exception e){
+            return  word;
+        }
+    }
+
+    public static String translate(String word,String sl,String tl){
+        try {
+            String url = "https://translate.googleapis.com/translate_a/single?" +
+                    "client=gtx&" +
+                    "sl=" + sl +
+                    "&tl=" + tl +
                     "&dt=t&q=" + URLEncoder.encode(word, "UTF-8");
 
             URL obj = new URL(url);

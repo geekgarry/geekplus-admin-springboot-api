@@ -7,6 +7,7 @@ import com.geekplus.common.constant.Constant;
 import com.geekplus.common.domain.Result;
 import com.geekplus.common.enums.BusinessType;
 import com.geekplus.common.util.DateUtils;
+import com.geekplus.common.util.google.TranslateTTS;
 import com.geekplus.common.util.string.StringUtils;
 import com.geekplus.common.util.file.FileUploadUtils;
 import com.geekplus.common.util.file.FileUtils;
@@ -320,5 +321,42 @@ public class CommonController
     public Result translateLang(@RequestParam("words") String englishWords){
         String chineseWords =TranslatorUtil.translate(englishWords);
         return Result.success(chineseWords);
+    }
+
+    /**
+     * @Author geekplus
+     * @Description //翻译api
+     * @Param
+     * @Throws
+     * @Return {@link }
+     */
+    @GetMapping("/translate/all")
+    public Result translateLanguage(@RequestParam("words") String words,@RequestParam("sl") String sl,@RequestParam("tl") String tl){
+        String fanYiWords =TranslatorUtil.translate(words,sl,tl);
+        return Result.success(fanYiWords);
+    }
+
+    /**
+     * @Author geekplus
+     * @Description //翻译api
+     * @Param
+     * @Throws
+     * @Return {@link }
+     */
+    @PostMapping("/translate/ttsZH_CN")
+    public void translateWordsTTS(HttpServletResponse response, @RequestBody String ttsText){
+        TranslateTTS.getGoogleTTSVoice(response,"",ttsText);
+    }
+
+    /**
+     * @Author geekplus
+     * @Description //翻译api
+     * @Param
+     * @Throws
+     * @Return {@link }
+     */
+    @GetMapping("/translate/ttsChinese")
+    public void translateChineseTTS(HttpServletResponse response, @RequestParam("ttsText") String ttsText){
+        TranslateTTS.getGoogleTTSVoice(response,"",ttsText);
     }
 }

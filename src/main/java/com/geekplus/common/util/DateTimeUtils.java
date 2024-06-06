@@ -45,6 +45,11 @@ public class DateTimeUtils {
     public static Date getCurrentTime(LocalDateTime localDateTime) {
         return Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
     }
+
+    public static Date getCurrentDateTime() {
+        return new Date();
+    }
+
     /**
      * yyyy-MM-dd
      */
