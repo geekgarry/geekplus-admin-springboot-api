@@ -19,11 +19,21 @@ server:
     #key-store-type: PKCS12
     #key-alias: maike
     #enabled: true
+#acme:
+#  enabled: true
+#  accept-terms-of-service: true
+#  domain-name: xxxx.xxx
+#  domain-key-file: /root/.acme.sh/*.xxxx.xyz_ecc/*.xxxx.xyz.key
+#  domain-csr-file: /root/.acme.sh/*.xxxx.xyz_ecc/*.xxxx.xyz.csr
+#  domain-chain-file: /root/.acme.sh/*.xxxx.xyz_ecc/fullchain.cer
+#  key-store-file: tomcatCert.p12
+#  key-store-password: 111111
+#  endpoint: hacme://letsencrypt.org
 #eureka的注册中心地址
 #eureka:
 #  client:
 #    serviceUrl:
-#      defaultZone: http://geekplus:123456cjj@localhost:9000/eureka/
+#      defaultZone: http://XXXXXX:123456@localhost:9000/eureka/
 #注册进eureka的名字
 spring:
   application:
@@ -32,9 +42,9 @@ spring:
   servlet:
     multipart:
       # 单个文件大小
-      max-file-size:  10MB
+      max-file-size: 30MB
       # 设置总上传的文件大小
-      max-request-size:  20MB
+      max-request-size: 60MB
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
@@ -132,9 +142,15 @@ swagger:
 #  reasonable: true
 #  supportMethodsArguments: true
 #  params: count=countSql
+openai:
+  api:
+    key: sk-xxxx-40O0Bwhn6Sxdfdfjvgf3BlbkFJb4k3kfddfUpZjVQ0pTuK
+google:
+  gemini:
+    api-key: 7ocDfHJF5TQT3BlbkFJzi3rxTsCmdE6YtRHSX6l
 token:
-  expireTime: 1800
-  residueRefreshTime: 720
+  expireTime: 1800 #过期时间，秒
+  residueRefreshTime: 720 #判断临近快要过期需要重新刷新所剩的时间，秒
   header: Plus-Token
   secret: esbfhjbvhjbfhjvbfjhbvhjbfjhvefffe
 geekplus:
