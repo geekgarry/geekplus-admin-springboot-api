@@ -50,8 +50,14 @@ public class GeminiUtils {
         //httpHeaders.setAll(headerMap);
         //httpHeaders.add("Authorization", "Bearer "+apiKey);
         httpHeaders.add("Content-Type", "application/json"); // 传递请求体时必须设置
-
-        String requestJson="{\"contents\":[{\"parts\":[{\"text\":\""+chatContent+"\"}]}]}";
+        //Google Gemini AI REST安全设置参数
+        String safetySettings="\"safetySettings\": [\n" +
+                "{\"category\": 7, \"threshold\": 4}\n" +
+                "],";
+        String requestJson="{"+
+                safetySettings+
+                "\"contents\":[{\"parts\":[{\"text\":\""+chatContent+"\"}]}]" +
+                "}";
         HttpEntity<String> entity = new HttpEntity<>(requestJson, httpHeaders);
         ResponseEntity<String> response = client.exchange(url, HttpMethod.POST, entity, String.class);
         String candidatesPart=response.getBody();
@@ -85,8 +91,13 @@ public class GeminiUtils {
         httpHeaders.add("Content-Type", "application/json"); // 传递请求体时必须设置
 
         //String requestJson="{\"contents\":[{\"parts\":[{\"text\":\""+chatContent+"\"}]}]}";
+        //Google Gemini AI REST安全设置参数
+        String safetySettings="\"safetySettings\": [\n" +
+                "{\"category\": 7, \"threshold\": 4}\n" +
+                "],";
         String requestJson = String.format(
-                "{\"contents\":[" +
+                "{" + safetySettings +
+                "\"contents\":[" +
                 "{\"parts\":["+
                 "{\"text\": \"%s\"}, %n" +
                 "{\"inline_data\":{" +
@@ -137,12 +148,16 @@ public class GeminiUtils {
 //                        "}, %n" +
 //                "]}", chatContent,chatContent
 //        );
-        String requestJson =
-             "{\"contents\":[" +
+        //Google Gemini AI REST安全设置参数
+        String safetySettings="\"safetySettings\": [\n" +
+                "{\"category\": 7, \"threshold\": 4}\n" +
+                "],";
+        String requestJson ="{" + safetySettings +
+                "\"contents\":[" +
                   preChatJson +
                   "{\"role\":\"user\",\n" +
                   "\"parts\":[{\n" +
-                  "\"text\": \""+chatContent+"\"}]}" +
+                  "\"text\": \""+chatContent+"\"}]}\n" +
              "]}";
         log.info(requestJson);
         HttpEntity<String> entity = new HttpEntity<>(requestJson, httpHeaders);
