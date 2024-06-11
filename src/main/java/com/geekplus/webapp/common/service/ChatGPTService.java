@@ -264,17 +264,17 @@ public class ChatGPTService {
     }
 
     /**
-      * @Author geekplus
-      * @Description // Google Gemini AI 无记忆聊天和携带历史聊天记录
-      * @Param
-      * @Throws
-      * @Return {@link }
-      */
+     * @Author geekplus
+     * @Description // Google Gemini AI 无记忆聊天和携带历史聊天记录
+     * @Param
+     * @Throws
+     * @Return {@link }
+     */
     public Map getGeminiContent(String messageContent, String preMessageJson, String fromUser){
         // 默认信息
         ChatgptLog chatgptLog=new ChatgptLog();
         Map mapMsg = new HashMap();
-        String aiReplyText="不好意思，请再发一次！";
+        String aiReplyText=null;
         //把msgcontent和fromuser转换成md5作为rediskey
         long chatDate= new Date().getTime();
         Date chatReplyDate= new Date();
@@ -302,14 +302,14 @@ public class ChatGPTService {
         log.info("加密的key："+md5Content);
 //        log.info("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
         //Gemini AI 返回内容
-        if(preMessageJson==null||"".equals(preMessageJson)) {
+        if(preMessageJson==null || "".equals(preMessageJson)) {
             aiReplyText = GeminiUtils.postGemini(messageContent, geminiApiKey);
-        }else{
+        }else {
             aiReplyText = GeminiUtils.postGeminiHistory(messageContent, preMessageJson, geminiApiKey);
         }
 
         //存储对话记录
-        if (aiReplyText != null){
+        //if (aiReplyText != null){
             chatReplyDate = DateTimeUtils.getCurrentDateTime();//DateTimeUtils.getCurrentDate(LocalDate.now());
             long chatReplySeconds = new Date().getTime();
             chatgptLog.setChatContent(messageContent+"-Q&A-"+aiReplyText.replaceAll("\\s*",""));
@@ -334,7 +334,7 @@ public class ChatGPTService {
             //msgMapList.add(msgMap2);
             //保存到redis里面 rightPush是从list列表尾部插入，先进后出
             stringRedisTemplate.opsForList().rightPush(md5Content, JSONObject.toJSONString(msgMap1), JSONObject.toJSONString(msgMap2));
-        }
+        //}
         stringRedisTemplate.expire(md5Content, 8, TimeUnit.HOURS);
         chatgptLog.setUserName(fromUser);
         chatgptLog.setUserIp(ip);

@@ -49,7 +49,7 @@ public class ChatGPTController extends BaseController {
 
     /**
       * @Author geekplus
-      * @Description //重要Gemini的发送消息和接收
+      * @Description //重要Gemini的发送消息和接收，此模式中仅需要接收到重要的消息内容chatData
       * @Param
       * @Throws
       * @Return {@link }
@@ -62,7 +62,8 @@ public class ChatGPTController extends BaseController {
 
     /**
      * @Author geekplus
-     * @Description //重要Gemini的发送消息和接收,采用对话模式，聊天模式
+     * @Description //重要Gemini的发送消息和接收,采用对话模式，聊天模式,
+     * //此模式中不再需要消息内容chatData，而是封装一个包含所有聊天记录的preChatData
      * @Param
      * @Throws
      * @Return {@link }

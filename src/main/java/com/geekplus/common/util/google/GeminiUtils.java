@@ -128,7 +128,7 @@ public class GeminiUtils {
     }
 
     //Gemini AI Chat请求方法
-    public static String postGeminiHistory(String chatContent,String preChatJson,String apiKey) {
+    public static String postGeminiHistory(String chatContent,String chatContentJson,String apiKey) {
         String geminiReply=null;
         String url="https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key="+apiKey;
         RestTemplate client = new RestTemplate();
@@ -151,10 +151,13 @@ public class GeminiUtils {
         //Google Gemini AI REST安全设置参数
         String safetySettings="\"safetySettings\": [\n" +
                 "{\"category\": 7, \"threshold\": 4}\n" +
-                "],";
+                "],\n";
+//        String requestJson="{" + safetySettings +
+//                "\"contents\":"+ chatContentJson
+//                +"}";
         String requestJson ="{" + safetySettings +
-                "\"contents\":[" +
-                  preChatJson +
+                "\"contents\":[\n" +
+                chatContentJson + "\n"+
                   "{\"role\":\"user\",\n" +
                   "\"parts\":[{\n" +
                   "\"text\": \""+chatContent+"\"}]}\n" +
