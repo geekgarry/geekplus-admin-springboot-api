@@ -4,8 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SerializerFeature;
-import com.geekplus.common.util.google.GeminiUtils;
-import com.geekplus.webapp.function.entity.ChatgptLog;
+import com.geekplus.webapp.function.entity.ChatAILog;
 import com.geekplus.common.util.DateTimeUtils;
 import com.geekplus.common.util.ServletUtils;
 import com.geekplus.common.util.baiduai.BaiduASRUtil;
@@ -14,12 +13,11 @@ import com.geekplus.common.util.ip.IPAndMACUtils;
 import com.geekplus.common.util.ip.IpUtils;
 import com.geekplus.common.util.openai.ChatGPTUtils;
 import com.geekplus.common.util.openai.GetClientName;
-import com.geekplus.webapp.function.service.IChatgptLogService;
+import com.geekplus.webapp.function.service.IChatAILogService;
 import eu.bitwalker.useragentutils.UserAgent;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
@@ -43,14 +41,12 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class ChatGPTService {
 //    private static final Logger log = LoggerFactory.getLogger(GetClientName.class);
-    @Value("${google.gemini.api-key:}")
-    private String geminiApiKey;
 
     //@Value("${openai.api.key}")
     //private String openAiKey;
 
     @Resource
-    private IChatgptLogService chatgptLogService;
+    private IChatAILogService chatgptLogService;
 
     private final StringRedisTemplate stringRedisTemplate;
 
@@ -80,7 +76,7 @@ public class ChatGPTService {
      */
     public Map reply(String messageContent, String fromUser,String openAiKey) throws SocketException, UnknownHostException {
         // 默认信息
-        ChatgptLog chatgptLog=new ChatgptLog();
+        ChatAILog chatAILog =new ChatAILog();
         Map mapMsg = new HashMap();
         String message="";
         //把msgcontent和fromuser转换成md5作为rediskey
@@ -155,16 +151,16 @@ public class ChatGPTService {
                         stringRedisTemplate.opsForList().rightPush(md5Content, JSONObject.toJSONString(msgMap1), JSONObject.toJSONString(msgMap2));
                         //封装消息
                         //Map<String,Object> map=new HashMap();
-                        chatgptLog.setChatContent(messageContent+"-Q&A-"+message.replaceAll("\\s*",""));
+                        chatAILog.setChatContent(messageContent+"-Q&A-"+message.replaceAll("\\s*",""));
                         mapMsg.put("msg_data",message);
                         //消息类型，1代表图片，0代表普通文本
                         mapMsg.put("msg_type","1");
-                        chatgptLog.setUserName(fromUser);
-                        chatgptLog.setUserIp(ip);
-                        chatgptLog.setUserMac(mac);
+                        chatAILog.setUserName(fromUser);
+                        chatAILog.setUserIp(ip);
+                        chatAILog.setUserMac(mac);
                         Date date= DateTimeUtils.getCurrentDate(LocalDate.now());
-                        chatgptLog.setCreateTime(date);
-                        chatgptLogService.insertChatgptLog(chatgptLog);
+                        chatAILog.setCreateTime(date);
+                        chatgptLogService.insertChatAILog(chatAILog);
                         return mapMsg;
                     }
                 }
@@ -201,16 +197,16 @@ public class ChatGPTService {
                         stringRedisTemplate.opsForList().rightPush(md5Content, JSONObject.toJSONString(msgMap1), JSONObject.toJSONString(msgMap2));
                         //封装消息
                         //Map<String,Object> map=new HashMap();
-                        chatgptLog.setChatContent(messageContent+"-Q&A-"+message.replaceAll("\\s*",""));
+                        chatAILog.setChatContent(messageContent+"-Q&A-"+message.replaceAll("\\s*",""));
                         mapMsg.put("msg_data",message);
                         //消息类型，1代表图片，0代表普通文本
                         mapMsg.put("msg_type","1");
-                        chatgptLog.setUserName(fromUser);
-                        chatgptLog.setUserIp(ip);
-                        chatgptLog.setUserMac(mac);
+                        chatAILog.setUserName(fromUser);
+                        chatAILog.setUserIp(ip);
+                        chatAILog.setUserMac(mac);
                         Date date= DateTimeUtils.getCurrentDate(LocalDate.now());
-                        chatgptLog.setCreateTime(date);
-                        chatgptLogService.insertChatgptLog(chatgptLog);
+                        chatAILog.setCreateTime(date);
+                        chatgptLogService.insertChatAILog(chatAILog);
                         return mapMsg;
                     }
                 }
@@ -231,7 +227,7 @@ public class ChatGPTService {
                 String text = choices.getJSONObject(0).getString("text");
                 //String messagepre = messageResponseBody.getChoices().get(0).getText();
                 message = text.substring(2);
-                chatgptLog.setChatContent(messageContent+"-Q&A-"+text.replaceAll("\\s*",""));
+                chatAILog.setChatContent(messageContent+"-Q&A-"+text.replaceAll("\\s*",""));
                 mapMsg.put("msg_data",text.trim().replaceFirst("\\s*",""));
                 //消息类型，1代表图片，0代表普通文本
                 mapMsg.put("msg_type","0");
@@ -253,120 +249,14 @@ public class ChatGPTService {
             }
         }
         stringRedisTemplate.expire(md5Content, 8, TimeUnit.HOURS);
-        chatgptLog.setUserName(fromUser);
-        chatgptLog.setUserIp(ip);
-        chatgptLog.setUserMac(mac);
+        chatAILog.setUserName(fromUser);
+        chatAILog.setUserIp(ip);
+        chatAILog.setUserMac(mac);
         Date date= DateTimeUtils.getCurrentDate(LocalDate.now());
-        chatgptLog.setCreateTime(date);
-        chatgptLogService.insertChatgptLog(chatgptLog);
+        chatAILog.setCreateTime(date);
+        chatgptLogService.insertChatAILog(chatAILog);
         return mapMsg;
 
-    }
-
-    /**
-     * @Author geekplus
-     * @Description // Google Gemini AI 无记忆聊天和携带历史聊天记录
-     * @Param
-     * @Throws
-     * @Return {@link }
-     */
-    public Map getGeminiContent(String messageContent, String preMessageJson, String fromUser){
-        // 默认信息
-        ChatgptLog chatgptLog=new ChatgptLog();
-        Map mapMsg = new HashMap();
-        String aiReplyText=null;
-        //把msgcontent和fromuser转换成md5作为rediskey
-        long chatDate= new Date().getTime();
-        Date chatReplyDate= new Date();
-        //获取用户的IP和MAC地址
-        httpServletRequest=ServletUtils.getRequest();
-        ip=IpUtils.getIpAddr(httpServletRequest);
-        userAgent=GetClientName.getBrowser(httpServletRequest);
-        userAId=userAgent.getId();
-        osName=userAgent.getOperatingSystem().getName();
-        browserName=userAgent.getBrowser().getName();
-        String mac= "2024-XXX";
-
-        String contentPre = fromUser;
-        if("guest".equals(fromUser) || fromUser=="guest"){
-            contentPre = fromUser+"_"+ip+"_"+osName+"_"+browserName+"_"+userAId;//没有重新赋值
-        }
-        String md5Content = DigestUtils.md5DigestAsHex(contentPre.getBytes());
-        //System.out.println("MAC地址："+mac);
-//        log.info("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
-//        log.info("MAC地址："+IPAndMACUtils.getAddressMac());
-//        //System.out.println("消息内容："+messageContent);
-//        log.info("消息内容："+messageContent);
-//        System.out.println("加密的key："+md5Content);
-        log.info("用户的临时tokenKey"+contentPre);
-        log.info("加密的key："+md5Content);
-//        log.info("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
-        //Gemini AI 返回内容
-        if(preMessageJson==null || "".equals(preMessageJson)) {
-            aiReplyText = GeminiUtils.postGemini(messageContent, geminiApiKey);
-        }else {
-            aiReplyText = GeminiUtils.postGeminiHistory(messageContent, preMessageJson, geminiApiKey);
-        }
-
-        //存储对话记录
-        //if (aiReplyText != null){
-            chatReplyDate = DateTimeUtils.getCurrentDateTime();//DateTimeUtils.getCurrentDate(LocalDate.now());
-            long chatReplySeconds = new Date().getTime();
-            chatgptLog.setChatContent(messageContent+"-Q&A-"+aiReplyText.replaceAll("\\s*",""));
-            mapMsg.put("msg_data",aiReplyText.trim().replaceFirst("\\s*",""));
-            //消息类型，1代表图片，0代表普通文本
-            mapMsg.put("msg_type","0");
-            mapMsg.put("msg_date_time",chatReplySeconds);
-            HashMap<String,Object> msgMap1=new HashMap<>();
-            msgMap1.put("align","right");
-            msgMap1.put("text",messageContent);
-            msgMap1.put("link","");
-            msgMap1.put("type","0");
-            msgMap1.put("time",chatDate);
-            //msgMapList.add(msgMap1);
-            stringRedisTemplate.opsForList().rightPush(md5Content, JSONObject.toJSONString(msgMap1));
-            HashMap<String,Object> msgMap2=new HashMap<>();
-            msgMap2.put("align","left");
-            msgMap2.put("text",aiReplyText.trim().replaceFirst("\\s*",""));
-            msgMap2.put("link","");
-            msgMap2.put("type","0");
-            msgMap2.put("time",chatReplySeconds);
-            //msgMapList.add(msgMap2);
-            //保存到redis里面 rightPush是从list列表尾部插入，先进后出
-            stringRedisTemplate.opsForList().rightPush(md5Content, JSONObject.toJSONString(msgMap1), JSONObject.toJSONString(msgMap2));
-        //}
-        stringRedisTemplate.expire(md5Content, 8, TimeUnit.HOURS);
-        chatgptLog.setUserName(fromUser);
-        chatgptLog.setUserIp(ip);
-        chatgptLog.setUserMac(mac);
-        //Date logDate= DateTimeUtils.getCurrentDate(LocalDate.now());
-        chatgptLog.setCreateTime(chatReplyDate);
-        chatgptLogService.insertChatgptLog(chatgptLog);
-        return mapMsg;
-    }
-
-    /**
-     * @Author geekplus
-     * @Description // Google Gemini AI 聊天/测试
-     * @Param
-     * @Throws
-     * @Return {@link }
-     */
-    public Map testGemini(String messageContent){
-        JSONObject jsonObject = JSONObject.parseObject(GeminiUtils.postGemini(messageContent,geminiApiKey));
-        return jsonObject;
-    }
-
-    /**
-     * @Author geekplus
-     * @Description // Google Gemini AI 聊天/图片
-     * @Param
-     * @Throws
-     * @Return {@link }
-     */
-    public Map getGeminiImage(String messageContent,String base64Image, String fromUser){
-        JSONObject jsonObject = JSONObject.parseObject(GeminiUtils.postImageGemini(messageContent,base64Image,geminiApiKey));
-        return jsonObject;
     }
 
     private String getChatReply(String url, String body,String openAiKey) {
@@ -402,14 +292,14 @@ public class ChatGPTService {
         JSONObject jsonObject = JSONObject.parseObject(textBody);
         JSONArray choices = jsonObject.getJSONArray("choices");
         String text = choices.getJSONObject(0).getString("text");
-        ChatgptLog chatgptLog=new ChatgptLog();
-        chatgptLog.setUserName(chatUser);
-        chatgptLog.setUserIp(ip);
-        chatgptLog.setUserMac(mac);
+        ChatAILog chatAILog =new ChatAILog();
+        chatAILog.setUserName(chatUser);
+        chatAILog.setUserIp(ip);
+        chatAILog.setUserMac(mac);
         Date date= DateTimeUtils.getCurrentDate(LocalDate.now());
-        chatgptLog.setCreateTime(date);
-        chatgptLog.setChatContent(prompt+"-Q&A-"+text);
-        chatgptLogService.insertChatgptLog(chatgptLog);
+        chatAILog.setCreateTime(date);
+        chatAILog.setChatContent(prompt+"-Q&A-"+text);
+        chatgptLogService.insertChatAILog(chatAILog);
         System.out.println(text);
         return text;
     }
@@ -474,12 +364,21 @@ public class ChatGPTService {
         userAId=userAgent.getId();
         osName=userAgent.getOperatingSystem().getName();
         browserName=userAgent.getBrowser().getName();
-        String contentPre = userName;
+        StringBuilder strPre=new StringBuilder();
+        strPre.append(userName);
         if("guest".equals(userName) || userName=="guest") {
-            contentPre = userName + "_" + ip + "_" + osName + "_" + browserName + "_" + userAId;
+            //strPre.append(userName + "_" + ip + "_" + osName + "_" + browserName + "_" + userAId);
+            strPre.append("_")
+                    .append(ip)
+                    .append("_")
+                    .append(osName)
+                    .append("_")
+                    .append(browserName)
+                    .append("_")
+                    .append(userAId);
         }
-        log.info("用户的临时tokenKey："+contentPre);
-        String md5Content = DigestUtils.md5DigestAsHex(contentPre.getBytes());
+        log.info("用户的临时tokenKey："+strPre.toString());
+        String md5Content = DigestUtils.md5DigestAsHex(strPre.toString().getBytes());
         // 如果存在key，拿出来
         if (Boolean.TRUE.equals(stringRedisTemplate.hasKey(md5Content))) {
             msgList = stringRedisTemplate.opsForList().range(md5Content, 0, -1);//获取所有值

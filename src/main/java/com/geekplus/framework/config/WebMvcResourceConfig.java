@@ -1,9 +1,3 @@
-/**
- * author     : geekplus
- * email      : geekcjj@gmail.com
- * date       : 6/26/23 03:44
- * description: 做什么的？
- */
 package com.geekplus.framework.config;
 
 import com.geekplus.common.config.WebAppConfig;
@@ -13,16 +7,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.task.AsyncTaskExecutor;
+import org.springframework.core.task.SimpleAsyncTaskExecutor;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import org.springframework.web.context.request.async.TimeoutCallableProcessingInterceptor;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.config.annotation.*;
 
 import javax.annotation.Resource;
 
+/**
+ * author     : geekplus
+ * email      : geekcjj@gmail.com
+ * date       : 6/26/23 03:44
+ * description: 做什么的？ extends WebMvcConfigurationSupport
+ */
 @Configuration
 public class WebMvcResourceConfig implements WebMvcConfigurer {
     //@Resource
@@ -92,6 +93,35 @@ public class WebMvcResourceConfig implements WebMvcConfigurer {
         // 设置监听器的优先级
         bean.setOrder(0);
         return bean;
+    }
+
+    //异步处理支持
+    @Override
+    public void configureAsyncSupport(final AsyncSupportConfigurer configurer) {
+        configurer.setDefaultTimeout(120 * 1000L);//设置响应时间 120s
+        configurer.registerCallableInterceptors(timeoutInterceptor());
+        configurer.setTaskExecutor(threadPoolTaskExecutor());
+    }
+
+    @Bean
+    public TimeoutCallableProcessingInterceptor timeoutInterceptor() {
+        return new TimeoutCallableProcessingInterceptor();
+    }
+
+//    @Bean
+//    public AsyncTaskExecutor asyncTaskExecutor() {
+//        // an implementaiton of AsyncTaskExecutor
+//        return new SimpleAsyncTaskExecutor("async");
+//    }
+
+    @Bean
+    public ThreadPoolTaskExecutor threadPoolTaskExecutor() {
+        ThreadPoolTaskExecutor t = new ThreadPoolTaskExecutor();
+        t.setCorePoolSize(11);
+        t.setMaxPoolSize(101);
+        t.setQueueCapacity(22);
+        t.setThreadNamePrefix("Plus-Thread-");
+        return t;
     }
 
 }

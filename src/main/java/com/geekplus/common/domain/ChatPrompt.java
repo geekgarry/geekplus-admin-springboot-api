@@ -17,8 +17,8 @@ public class ChatPrompt implements Serializable {
     private String chatData;
     //此前聊天内容
     private String preChatData;
-    //聊天图片
-    private String image;
+    //聊天媒体，图片/视频/音频
+    private Object mediaData;
     //聊天代码
     private String code;
 
@@ -56,12 +56,12 @@ public class ChatPrompt implements Serializable {
         this.preChatData = preChatData;
     }
 
-    public String getImage() {
-        return image;
+    public Object getMediaData() {
+        return mediaData;
     }
 
-    public void setImage(String image) {
-        this.image = image;
+    public void setMediaData(Object mediaData) {
+        this.mediaData = mediaData;
     }
 
     public String getCode() {

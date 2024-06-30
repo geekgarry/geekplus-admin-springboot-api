@@ -6,7 +6,7 @@
  */
 package com.geekplus.webapp.common;
 
-import com.geekplus.webapp.function.service.impl.ChatgptLogServiceImpl;
+import com.geekplus.webapp.function.service.impl.ChatAILogServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,7 @@ public class MkTimeTask {
 
     // 注入sysOperLogService ：实现操作的对象（接口）
     @Autowired
-    private ChatgptLogServiceImpl chatgptLogService;
+    private ChatAILogServiceImpl chatgptLogService;
 
     //@Scheduled(cron = "0 0 6 * * SUN") // 每周日早上6点触发一次
     @Scheduled(cron="0 0 2 3 * *") //表示：每月三号凌晨两点执行

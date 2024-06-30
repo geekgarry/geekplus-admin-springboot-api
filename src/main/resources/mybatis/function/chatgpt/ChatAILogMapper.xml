@@ -2,9 +2,9 @@
 <!DOCTYPE mapper
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.geekplus.webapp.function.mapper.ChatgptLogMapper">
+<mapper namespace="com.geekplus.webapp.function.mapper.ChatAILogMapper">
 
-    <resultMap type="ChatgptLog" id="ChatgptLogResult">
+    <resultMap type="ChatAILog" id="ChatAILogResult">
         <result property="id"    column="id"    />
         <result property="userId"    column="user_id"    />
         <result property="userName"    column="user_name"    />
@@ -14,12 +14,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="chatContent"    column="chat_content"    />
     </resultMap>
 
-    <sql id="selectChatgptLogVo">
-        select id, user_id, user_name, user_ip, user_mac, create_time, chat_content from chatgpt_log
+    <sql id="selectChatAILogVo">
+        select id, user_id, user_name, user_ip, user_mac, create_time, chat_content from chatAI_log
     </sql>
 
-    <select id="selectChatgptLogList" parameterType="ChatgptLog" resultMap="ChatgptLogResult">
-        <include refid="selectChatgptLogVo"/>
+    <select id="selectChatAILogList" parameterType="ChatAILog" resultMap="ChatAILogResult">
+        <include refid="selectChatAILogVo"/>
         <where>
             <if test="userId != null "> and user_id = #{userId}</if>
             <if test="userName != null  and userName != ''"> and user_name like concat('%', #{userName}, '%')</if>
@@ -29,13 +29,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </where>
     </select>
 
-    <select id="selectChatgptLogById" parameterType="Long" resultMap="ChatgptLogResult">
-        <include refid="selectChatgptLogVo"/>
+    <select id="selectChatAILogById" parameterType="Long" resultMap="ChatAILogResult">
+        <include refid="selectChatAILogVo"/>
         where id = #{id}
     </select>
 
-    <insert id="insertChatgptLog" parameterType="ChatgptLog" useGeneratedKeys="true" keyProperty="id">
-        insert into chatgpt_log
+    <insert id="insertChatAILog" parameterType="ChatAILog" useGeneratedKeys="true" keyProperty="id">
+        insert into chatAI_log
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="userId != null">user_id,</if>
             <if test="userName != null">user_name,</if>
@@ -54,8 +54,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          </trim>
     </insert>
 
-    <update id="updateChatgptLog" parameterType="ChatgptLog">
-        update chatgpt_log
+    <update id="updateChatAILog" parameterType="ChatAILog">
+        update chatAI_log
         <trim prefix="SET" suffixOverrides=",">
             <if test="userId != null">user_id = #{userId},</if>
             <if test="userName != null">user_name = #{userName},</if>
@@ -67,12 +67,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where id = #{id}
     </update>
 
-    <delete id="deleteChatgptLogById" parameterType="Long">
-        delete from chatgpt_log where id = #{id}
+    <delete id="deleteChatAILogById" parameterType="Long">
+        delete from chatAI_log where id = #{id}
     </delete>
 
-    <delete id="deleteChatgptLogByIds" parameterType="String">
-        delete from chatgpt_log where id in
+    <delete id="deleteChatAILogByIds" parameterType="String">
+        delete from chatAI_log where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
@@ -80,11 +80,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <delete id="removeTop35">
         #正序排序后删除表中前35条记录
-        DELETE FROM chatgpt_log order by id asc limit 35;
+        DELETE FROM chatAI_log order by id asc limit 35;
     </delete>
 
     <update id="removeAll">
-        truncate table chatgpt_log
+        truncate table chatAI_log
     </update>
 
 </mapper>

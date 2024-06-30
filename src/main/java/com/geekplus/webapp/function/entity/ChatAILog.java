@@ -6,13 +6,13 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
- * Chatgpt聊天记录日志
-对象 chatgpt_log
+ * ChatAI聊天记录日志
+对象 chatAI_log
  *
  * @author 佚名
  * @date 2023-02-25
  */
-public class ChatgptLog extends BaseEntity
+public class ChatAILog extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 

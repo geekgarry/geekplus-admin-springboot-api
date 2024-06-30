@@ -537,4 +537,19 @@ INSERT INTO `sys_user_role` VALUES (3, 4);
 INSERT INTO `sys_user_role` VALUES (4, 4);
 COMMIT;
 
+-- ----------------------------
+-- Table structure for chatAI_log
+-- ----------------------------
+DROP TABLE IF EXISTS `chatAI_log`;
+CREATE TABLE `chatAI_log` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `user_id` int(18) DEFAULT NULL COMMENT '用户ID',
+  `user_name` varchar(30) DEFAULT NULL COMMENT '用户名',
+  `user_ip` varchar(40) DEFAULT NULL COMMENT '用户IP',
+  `user_mac` varchar(100) DEFAULT NULL COMMENT '用户网络Mac地址',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `chat_content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_croatian_ci COMMENT '日志内容',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=450 DEFAULT CHARSET=utf8 COMMENT='ChatAI聊天记录日志';
+
 SET FOREIGN_KEY_CHECKS = 1;

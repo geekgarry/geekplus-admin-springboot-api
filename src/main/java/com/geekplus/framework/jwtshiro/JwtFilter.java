@@ -7,6 +7,7 @@ import com.geekplus.common.domain.Result;
 import com.geekplus.common.enums.ApiExceptionEnum;
 import com.geekplus.common.myexception.BusinessException;
 import com.geekplus.common.redis.RedisUtil;
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.web.filter.authc.BasicHttpAuthenticationFilter;
@@ -38,8 +39,18 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
     private RedisUtil redisUtil;
 
     @Override
+    protected void postHandle(ServletRequest request, ServletResponse response){
+        //设置一个标记位
+        //request.setAttribute("jwtFilter.FILTERED", true);
+    }
+
+    @Override
     protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) {
-        System.out.println("开始jwt 校验");
+        //System.out.println("开始jwt 校验");
+        //判断是不是第二次进入，是则直接返回
+        //Boolean afterFiltered = (Boolean)(request.getAttribute("jwtFilter.FILTERED"));
+        //if( BooleanUtils.isTrue(afterFiltered))
+        //    return true;
         //如果不是登录请求
         if (isLoginAttempt(request, response)) {
             try {
@@ -51,7 +62,7 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
                  *注意这里捕获的异常其实是在Realm抛出的，但是由于executeLogin（）方法抛出的异常是从login（）来的，
                  * login抛出的异常类型是AuthenticationException，所以要去获取它的子类异常才能获取到我们在Realm抛出的异常类型。
                  * */
-                System.out.println("刷新token");
+                //System.out.println("刷新token");
 //                Throwable cause = e.getCause();
 //                if (cause!=null&&cause instanceof TokenExpiredException){
 //                    //AccessToken过期，尝试去刷新token

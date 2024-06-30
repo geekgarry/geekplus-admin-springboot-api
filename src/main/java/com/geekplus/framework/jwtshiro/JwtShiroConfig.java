@@ -1,5 +1,6 @@
 package com.geekplus.framework.jwtshiro;
 
+import com.geekplus.webapp.common.service.GeminiChatService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.mgt.DefaultSessionStorageEvaluator;
 import org.apache.shiro.mgt.DefaultSubjectDAO;
@@ -16,8 +17,10 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
-import org.springframework.web.filter.CorsFilter;
+import org.springframework.web.filter.DelegatingFilterProxy;
 
+import javax.servlet.DispatcherType;
+import javax.servlet.Filter;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -113,6 +116,23 @@ public class JwtShiroConfig {
         //shiroFilterFactoryBean.setFilters(filter);
         shiroFilterFactoryBean.setFilterChainDefinitionMap(map);
         return shiroFilterFactoryBean;
+    }
+
+    @Bean
+    public FilterRegistrationBean filterRegistrationBean(DefaultWebSecurityManager securityManager) throws Exception{
+        FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean();
+//        DelegatingFilterProxy proxy = new DelegatingFilterProxy();
+//        proxy.setTargetFilterLifecycle(true);
+//        proxy.setTargetBeanName("jwtFilter");
+//        filterRegistrationBean.setFilter(proxy);
+//        filterRegistrationBean.setFilter((Filter)shiroFilterFactoryBean(securityManager, geminiChatService).getObject());
+        filterRegistrationBean.setFilter((Filter) shiroFilterFactoryBean(securityManager).getObject());
+        filterRegistrationBean.addInitParameter("targetFilterLifecycle", "true");
+        filterRegistrationBean.setAsyncSupported(true);
+        filterRegistrationBean.setEnabled(true);
+        //这里添加一下对DispatcherType.ASYNC的支持就可以了
+        filterRegistrationBean.setDispatcherTypes(DispatcherType.REQUEST,DispatcherType.ASYNC);
+        return filterRegistrationBean;
     }
 
     //jwt过滤器

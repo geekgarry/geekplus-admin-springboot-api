@@ -5,15 +5,20 @@ import com.geekplus.common.constant.Constant;
 import com.geekplus.common.myexception.file.FileNameLengthLimitExceededException;
 import com.geekplus.common.myexception.file.FileSizeLimitExceededException;
 import com.geekplus.common.myexception.file.InvalidExtensionException;
+import com.geekplus.common.util.Base64Util;
+import com.geekplus.common.util.DateTimeUtils;
 import com.geekplus.common.util.DateUtils;
 import com.geekplus.common.util.string.StringUtils;
 import com.geekplus.common.util.uuid.IdUtils;
-import com.geekplus.webapp.tool.generator.utils.JSONObjectUtil;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.net.InetAddress;
 import java.util.*;
 
 /**
@@ -291,6 +296,46 @@ public class FileUploadUtils
             extension = MimeTypeUtils.getExtension(file.getContentType());
         }
         return extension;
+    }
+
+    //base64文件上传到
+    public static String base64StrToFile(String baseStr) {
+        String path = WebAppConfig.getProfile();
+        //去除base64前缀
+        String newStr = Base64Util.getBase64Str(baseStr);
+        String fileExtension="."+Base64Util.getBase64FileType(baseStr);
+        // 图片分类路径+图片名+图片后缀
+        String fileName = DateTimeUtils.getCurrentTimeStr()+"-"+UUID.randomUUID().toString();
+        String imgFilePath = path.concat(File.separator+"chatData"+File.separator).concat(DateUtils.datePath()+File.separator).concat(fileName).concat(fileExtension);
+        if (baseStr == null)
+            return "上传失败";
+        //BASE64Decoder decoder = new BASE64Decoder();
+        try {
+            // 解密
+            //byte[] b = java.util.Base64.getDecoder().decode(newStr);
+            byte[] b = Base64.decodeBase64(newStr);
+            // 处理数据
+            for (int i = 0; i < b.length; ++i) {
+                if (b[i] < 0) {
+                    b[i] += 256;
+                }
+            }
+            //文件夹不存在则自动创建
+            File tempFile = new File(imgFilePath);
+            if (!tempFile.getParentFile().exists()) {
+                tempFile.getParentFile().mkdirs();
+            }
+            OutputStream out = new FileOutputStream(tempFile);
+            out.write(b);
+            out.flush();
+            out.close();
+            //获取本地ip
+            String hostAddress = InetAddress.getLocalHost().getHostAddress();
+            String urls = Constant.RESOURCE_PREFIX.concat(File.separator+"chatData"+File.separator).concat(DateUtils.datePath()+File.separator).concat(fileName).concat(fileExtension);
+            return urls;
+        } catch (Exception e) {
+            return "上传失败";
+        }
     }
 
     public static void main(String[] args) {
