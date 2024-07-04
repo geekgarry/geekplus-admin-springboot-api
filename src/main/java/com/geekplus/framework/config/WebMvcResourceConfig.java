@@ -16,7 +16,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 import org.springframework.web.servlet.config.annotation.*;
 
-import javax.annotation.Resource;
+import java.util.concurrent.ThreadPoolExecutor;
 
 /**
  * author     : geekplus
@@ -114,13 +114,23 @@ public class WebMvcResourceConfig implements WebMvcConfigurer {
 //        return new SimpleAsyncTaskExecutor("async");
 //    }
 
+    /**
+     * 配置线程池
+     * @return
+     */
     @Bean
     public ThreadPoolTaskExecutor threadPoolTaskExecutor() {
         ThreadPoolTaskExecutor t = new ThreadPoolTaskExecutor();
-        t.setCorePoolSize(11);
-        t.setMaxPoolSize(101);
-        t.setQueueCapacity(22);
-        t.setThreadNamePrefix("Plus-Thread-");
+        //此方法返回可用处理器的虚拟机的最大数量; 不小于1
+        int core = Runtime.getRuntime().availableProcessors();
+        t.setCorePoolSize(core);
+        t.setMaxPoolSize(core*2+2);
+        t.setQueueCapacity(25);
+        t.setKeepAliveSeconds(200);
+        t.setThreadNamePrefix("Plus-Thread-");//线程名称前缀
+        // 线程池对拒绝任务（无线程可用）的处理策略，目前只支持AbortPolicy、CallerRunsPolicy；默认为后者
+        t.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
+        t.initialize();
         return t;
     }
 

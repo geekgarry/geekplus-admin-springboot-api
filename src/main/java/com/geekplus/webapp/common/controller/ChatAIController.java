@@ -59,23 +59,23 @@ public class ChatAIController extends BaseController {
 //        HttpServletRequest request=ServletUtils.getRequest();
 //        AsyncContext asyncContext = request.startAsync();
         log.info("主线程开始");
-        return ()->{
-            log.info("副线程开始");
-            Thread.sleep(7000);
-            log.info("副线程返回");
-            return Result.success("返回成功数据！");
-        };
-//        Callable<String> result = new Callable<String>() {
-//            @Override
-//            public String call() throws Exception {
-//                log.info("副线程开始");
-//                /*这里沉睡1分钟,表示处理耗时业务执行*/
-//                Thread.sleep(10000);
-//                log.info("副线程返回");
-//                return "这是一个异步测试的例子";
-//            }
+//        return ()->{
+//            log.info("副线程开始");
+//            Thread.sleep(7000);
+//            log.info("副线程返回");
+//            return Result.success("返回成功数据！");
 //        };
-//        return result;
+//        Callable<String> result =
+          return new Callable<Result>() {
+            @Override
+            public Result call() throws Exception {
+                log.info("副线程开始");
+                /*这里沉睡1分钟,表示处理耗时业务执行*/
+                Thread.sleep(10000);
+                log.info("副线程返回");
+                return Result.success("这是一个异步测试的例子");
+            }
+        };
     }
 
     @PostMapping("/chatgpttest")

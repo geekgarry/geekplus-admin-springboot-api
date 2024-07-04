@@ -27,6 +27,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="userMac != null  and userMac != ''"> and user_mac = #{userMac}</if>
             <if test="chatContent != null  and chatContent != ''"> and chat_content = #{chatContent}</if>
         </where>
+        order by create_time desc
     </select>
 
     <select id="selectChatAILogById" parameterType="Long" resultMap="ChatAILogResult">

@@ -96,7 +96,7 @@ public class Result extends HashMap<String,Object> {
     }
 
     public static Result error(ApiExceptionEnum exceptionEnum){
-        return Result.error(exceptionEnum.code(),exceptionEnum.getMsg());
+        return Result.error(exceptionEnum.getCode(),exceptionEnum.getMsg());
     }
 
     public static Result error(BusinessException e){

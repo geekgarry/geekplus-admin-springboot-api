@@ -6,6 +6,8 @@ import com.geekplus.common.util.ServletUtils;
 import com.geekplus.common.util.music.ReadMusicInfo;
 import com.geekplus.common.util.string.StringUtils;
 import org.apache.commons.lang3.ArrayUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.activation.MimetypesFileTypeMap;
@@ -14,11 +16,11 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.*;
 
 /**
@@ -29,7 +31,7 @@ import java.util.*;
 public class FileUtils
 {
     public static String FILENAME_PATTERN = "[a-zA-Z0-9_\\-\\|\\.\\u4e00-\\u9fa5]+";
-
+    private static Logger log= LoggerFactory.getLogger(FileUtils.class);
     private MimetypesFileTypeMap mtftp;
 
     /**
@@ -637,6 +639,69 @@ public class FileUtils
                 }
             }
         }
+    }
+
+    /**
+      * @Author geekplus
+      * @Description // 删除制定日期时间戳之前的文件
+      * // 获取当前时间
+      * long currentTimeMillis = System.currentTimeMillis();
+      * // 计算七天前的时间戳
+      * long sevenDaysAgo = currentTimeMillis - (7 * 24 * 60 * 60 * 1000);
+      * @Param
+      * @Throws
+      * @Return {@link }
+      */
+    public static void deleteFilesOlderThan(File folder, long thresholdTime) {
+        // 获取文件夹中的所有文件和子文件夹
+        File[] files = folder.listFiles();
+
+        if (files != null) {
+            for (File file : files) {
+                if (file.isDirectory()) {
+                    // 如果是子文件夹，递归调用该方法
+                    if(file.listFiles().length>0){
+                        deleteFilesOlderThan(file, thresholdTime);
+                    }else{
+                        if (file.delete()) {
+                            log.info("已删除文件夹: " + file.getAbsolutePath());
+                        }
+                    }
+                } else {
+                    // 如果是文件，检查其最后修改时间是否早于阈值时间
+                    long lastModified = file.lastModified();
+                    if (lastModified < thresholdTime) {
+                        // 如果是早于阈值时间的文件，删除它
+                        if (file.delete()) {
+                            log.info("已删除文件: " + file.getAbsolutePath());
+                        } else {
+                            log.info("无法删除文件: " + file.getAbsolutePath());
+                        }
+                    }
+                }
+            }
+        }
+    }
+    //实现删除指定天数之前的文件及文件夹
+    public void deleteFilesBeforeDays(String path, int days) throws Exception {
+        LocalDate thresholdDate = LocalDate.now().minusDays(days);
+        Files.walkFileTree(Paths.get(path), EnumSet.of(FileVisitOption.FOLLOW_LINKS), Integer.MAX_VALUE, new SimpleFileVisitor<Path>() {
+            @Override
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                LocalDate lastModifiedDate = attrs.lastModifiedTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                if (lastModifiedDate.isBefore(thresholdDate)) {
+                    Files.delete(file);
+                }
+                return FileVisitResult.CONTINUE;
+            }
+            @Override
+            public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+                if (Files.list(dir).count() == 0) {
+                    Files.delete(dir);
+                }
+                return FileVisitResult.CONTINUE;
+            }
+        });
     }
 
 }

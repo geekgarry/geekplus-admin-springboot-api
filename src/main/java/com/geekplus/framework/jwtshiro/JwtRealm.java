@@ -1,6 +1,8 @@
 package com.geekplus.framework.jwtshiro;
 
+import com.geekplus.common.core.LoggerFactory;
 import com.geekplus.common.domain.LoginUser;
+import com.geekplus.common.util.DateTimeUtils;
 import com.geekplus.common.util.string.StringUtils;
 import com.geekplus.webapp.system.entity.SysMenu;
 import com.geekplus.webapp.system.entity.SysRole;
@@ -13,14 +15,15 @@ import org.apache.shiro.crypto.hash.SimpleHash;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.util.ByteSource;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@Slf4j
 public class JwtRealm extends AuthorizingRealm {
+    private static Logger log =  LoggerFactory.getLogger(JwtRealm.class.getName());
 
     @Autowired
     private UserTokenService tokenService;
@@ -65,7 +68,7 @@ public class JwtRealm extends AuthorizingRealm {
         //permSet2.remove("");
         simpleAuthorizationInfo.addRoles(roleSet2);
         simpleAuthorizationInfo.addStringPermissions(permSet2);
-        log.info("验证当前Subject用户为：{} 所属角色：{} ||| {}", loginUser.getUserName(),roleSet2,permSet2);
+        log.info("授权当前Subject用户为：{} 所属角色：{} ||| {}", loginUser.getUserName(),roleSet2,permSet2);
 //        userRolePermList.stream().forEach(rolePermMap -> {
 //        });
 //        numbersList.stream().distinct().collect(Collectors.toList());
@@ -103,17 +106,19 @@ public class JwtRealm extends AuthorizingRealm {
         LoginUser loginUser=tokenService.checkUserTokenGetLoginUser(token);
         // 进行验证
         SimpleAuthenticationInfo authenticationInfo = new SimpleAuthenticationInfo(loginUser, token, getName());
-        System.out.println("***************************##########****************************");
-        log.info("SysUser:"+authenticationInfo.getPrincipals()+" token:"+authenticationInfo.getCredentials());
+        log.info("认证用户SysUser:"+authenticationInfo.getPrincipals().getPrimaryPrincipal()+" token:"+authenticationInfo.getCredentials());
         return authenticationInfo;
     }
 
     public static void main(String[] args) {
-        String hashAlgorithmName = "MD5";
-        String credentials = "123456";
-        int hashIterations = 1024;
-        ByteSource credentialsSalt = ByteSource.Util.bytes("plus");
-        Object obj = new SimpleHash(hashAlgorithmName, credentials, credentialsSalt, hashIterations);
-        System.out.println(obj);
+//        String hashAlgorithmName = "MD5";
+//        String credentials = "123456";
+//        int hashIterations = 1024;
+//        ByteSource credentialsSalt = ByteSource.Util.bytes("plus");
+//        Object obj = new SimpleHash(hashAlgorithmName, credentials, credentialsSalt, hashIterations);
+//        System.out.println(obj);
+//        String value=null;
+//        System.out.println(StringUtils.isNoneBlank(value));
+//        System.out.println(StringUtils.isAnyBlank("fdhkhfd","ss",""));
     }
 }

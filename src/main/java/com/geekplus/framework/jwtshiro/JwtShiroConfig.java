@@ -1,6 +1,5 @@
 package com.geekplus.framework.jwtshiro;
 
-import com.geekplus.webapp.common.service.GeminiChatService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.mgt.DefaultSessionStorageEvaluator;
 import org.apache.shiro.mgt.DefaultSubjectDAO;
@@ -121,16 +120,16 @@ public class JwtShiroConfig {
     @Bean
     public FilterRegistrationBean filterRegistrationBean(DefaultWebSecurityManager securityManager) throws Exception{
         FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean();
-//        DelegatingFilterProxy proxy = new DelegatingFilterProxy();
-//        proxy.setTargetFilterLifecycle(true);
-//        proxy.setTargetBeanName("jwtFilter");
-//        filterRegistrationBean.setFilter(proxy);
-//        filterRegistrationBean.setFilter((Filter)shiroFilterFactoryBean(securityManager, geminiChatService).getObject());
-        filterRegistrationBean.setFilter((Filter) shiroFilterFactoryBean(securityManager).getObject());
-        filterRegistrationBean.addInitParameter("targetFilterLifecycle", "true");
+        DelegatingFilterProxy proxy = new DelegatingFilterProxy();
+        proxy.setTargetFilterLifecycle(true);
+        proxy.setTargetBeanName("shiroFilterFactoryBean");
+        filterRegistrationBean.setFilter(proxy);
+//        filterRegistrationBean.setFilter((Filter)shiroFilterFactoryBean(securityManager, xxxService).getObject());
+//        filterRegistrationBean.setFilter((Filter) shiroFilterFactoryBean(securityManager).getObject());
+//        filterRegistrationBean.addInitParameter("targetFilterLifecycle", "true");
         filterRegistrationBean.setAsyncSupported(true);
         filterRegistrationBean.setEnabled(true);
-        //这里添加一下对DispatcherType.ASYNC的支持就可以了
+        //这里添加一下对DispatcherType.ASYNC的支持就可以了,DispatcherType.FORWARD,DispatcherType.INCLUDE,DispatcherType.ERROR
         filterRegistrationBean.setDispatcherTypes(DispatcherType.REQUEST,DispatcherType.ASYNC);
         return filterRegistrationBean;
     }

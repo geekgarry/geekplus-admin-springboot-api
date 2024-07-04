@@ -1,14 +1,17 @@
 package com.geekplus.framework.jwtshiro;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.geekplus.common.constant.HttpStatusCode;
 import com.geekplus.common.domain.Result;
 import com.geekplus.common.enums.ApiExceptionEnum;
 import com.geekplus.common.myexception.BusinessException;
 import com.geekplus.common.redis.RedisUtil;
+import com.geekplus.common.util.DateTimeUtils;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.web.filter.authc.BasicHttpAuthenticationFilter;
 import org.apache.shiro.web.util.WebUtils;
@@ -33,24 +36,42 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
     // 登录标识 Authorization
     private static String LOGIN_SIGN = "Plus-Token";
 
-    private static final long exceedTime= 15 * 60 * 1000;
+    //private static final long exceedTime= 15 * 60 * 1000;
 
-    @Resource
-    private RedisUtil redisUtil;
+    /**
+     * 该方法将在过滤器执行完成后执行
+     * 当isAccessAllowed默认为true时必须实现该方法
+     * 在执行完请求后执行退出登录逻辑，否则下次请求时没有携带将可以直接访问接口，无须重新登录
+     * @param request
+     * @param response
+     * @throws Exception
+     */
+//    @Override
+//    protected void postHandle(ServletRequest request, ServletResponse response){
+//        //HttpServletRequest httpRequest = WebUtils.toHttp(request);
+//        logger.info("执行postHandle：—————————");
+//        //设置一个标记位
+//        request.setAttribute("jwtFilter.FILTERED", true);
+//    }
 
-    @Override
-    protected void postHandle(ServletRequest request, ServletResponse response){
-        //设置一个标记位
-        //request.setAttribute("jwtFilter.FILTERED", true);
-    }
-
+    /**
+     * 该方法返回值表示是否跳过认证，这里如果返回 true，则不会再走一遍认证流程
+     * 如果返回 false，则会执行 isAccessAllowed 方法，再执行isLoginAttempt方法，如果为false继续执行executeLogin
+     * 方法，如果没有执行executeLogin或者执行结果也是false，则将执行sendChallenge方法，表示认证失败。
+     * 返回 true 时，则必须在postHandle配置退出登录，这个方法将在执行完业务逻辑后执行，否则将导致下次没有携带token时直接使用上次的登录
+     * 结果，从而非法访问接口。
+     * 默认返回 false 时，isLoginAttempt这些方法将重复调用，所以不建议。如果要返回 false，建议复写 sendChallenge 方法，因为其响应内容为空。
+     *
+     * 也可以将 isAccessAllowed 作为纯判断是否需要认证，或者不复写该方法，本文不提供实现，如果有问题欢迎留言
+     */
     @Override
     protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) {
-        //System.out.println("开始jwt 校验");
+        logger.info("开始jwt 校验");
         //判断是不是第二次进入，是则直接返回
-        //Boolean afterFiltered = (Boolean)(request.getAttribute("jwtFilter.FILTERED"));
-        //if( BooleanUtils.isTrue(afterFiltered))
-        //    return true;
+//        Boolean afterFiltered = (boolean)(request.getAttribute("jwtFilter.FILTERED"));
+//        if( BooleanUtils.isTrue(afterFiltered)) {
+//            return true;
+//        }
         //如果不是登录请求
         if (isLoginAttempt(request, response)) {
             try {
@@ -79,6 +100,8 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
                 return false;
             }
         }
+        //如果请求头不存在 Token，则可能是执行登陆操作或者是游客状态访问，无需检查 token，直接返回 true
+        //我这里是需要登录认证授权才能进入系统所以不能返回true，而是交给super.isAccessAllowed再做判断，所以按照上面判断逻辑是false
         return super.isAccessAllowed(request,response,mappedValue);
     }
 
@@ -95,7 +118,6 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
         HttpServletRequest httpRequest = WebUtils.toHttp(request);
 
         String authorization = httpRequest.getHeader(LOGIN_SIGN);
-
         return StringUtils.isNoneBlank(authorization);
     }
 
@@ -166,6 +188,26 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
         }catch (IOException ioe){
             throw new BusinessException(ApiExceptionEnum.LOGIN_ACL);
         }
+    }
+
+    /**
+     * 当 isAccessAllowed 可能返回false时需要复写该接口，否则默认将返回空白界面
+     * @param request
+     * @param response
+     * @return
+     */
+    @Override
+    protected boolean sendChallenge(ServletRequest request, ServletResponse response) {
+        super.sendChallenge(request, response);
+        HttpServletResponse httpResponse = WebUtils.toHttp(response);
+        httpResponse.setContentType("application/json; charset=utf-8");
+        try {
+            response.getWriter().write(
+                    JSONObject.toJSONString(Result.error(ApiExceptionEnum.LOGIN_STATE_EXPIRE)));
+        } catch (IOException e) {
+            throw new BusinessException("登录状态已失效！");
+        }
+        return false;
     }
 
     //刷新token

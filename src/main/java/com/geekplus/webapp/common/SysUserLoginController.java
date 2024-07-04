@@ -1,13 +1,6 @@
-/**
- * author     : geekplus
- * email      : geekcjj@gmail.com
- * date       : 6/18/23 23:01
- * description: 做什么的？
- */
 package com.geekplus.webapp.common;
 
 import com.geekplus.common.annotation.RepeatLogin;
-import com.geekplus.common.annotation.RepeatSubmit;
 import com.geekplus.common.constant.Constant;
 import com.geekplus.common.core.controller.BaseController;
 import com.geekplus.common.domain.LoginUser;
@@ -35,12 +28,19 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * author     : geekplus
+ * email      : geekcjj@gmail.com
+ * date       : 6/18/23 23:01
+ * description: 做什么的？
+ */
 @Slf4j
 @RestController
 @RequestMapping("/sys/user")
@@ -62,7 +62,7 @@ public class SysUserLoginController extends BaseController {
 
     @PostMapping("/login")
     @RepeatLogin
-    public Result login(@RequestBody LoginUser loginUser){
+    public Result login(@RequestBody LoginUser loginUser, HttpServletResponse response){
         //添加用户认证信息
         Subject subject = SecurityUtils.getSubject();
         String validateCode=loginUser.getValidateCode();
@@ -124,7 +124,8 @@ public class SysUserLoginController extends BaseController {
             throw new BusinessException(ApiExceptionEnum.CODE_ERROR);
         }
         //SysUser sUser = (SysUser)subject.getPrincipal();
-        log.info("tokenId:"+token);
+        //response.addCookie(new Cookie("gp-token",token));
+        //log.info("tokenId:"+token);
         Map<String, Object> res = new HashMap<>();
         res.put("token", token);
         res.put("userName", sysUserInfo.getUserName());
