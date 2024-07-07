@@ -1,4 +1,4 @@
-package com.geekplus.common.util;
+package com.geekplus.common.util.base64;
 
 //import sun.misc.BASE64Decoder;
 

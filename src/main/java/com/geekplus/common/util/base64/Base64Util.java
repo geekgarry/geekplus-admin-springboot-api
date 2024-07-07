@@ -1,6 +1,7 @@
-package com.geekplus.common.util;
+package com.geekplus.common.util.base64;
 
 import cn.hutool.core.codec.Base64Decoder;
+import com.geekplus.common.enums.MimeTypeEnum;
 import org.apache.commons.codec.binary.Base64;
 
 import javax.imageio.ImageIO;
@@ -51,7 +52,7 @@ public class Base64Util {
         // 使用正则表达式提取base64数据
         if(isBase64(base64Str) && base64Str.indexOf("data")!=-1) {
             //Pattern pattern = Pattern.compile("data:(.*)/(.*);base64,(.*)");
-            Pattern pattern = Pattern.compile("data:(.*);base64,(.*)");
+            Pattern pattern = Pattern.compile("data:(.*?);base64,(.*)");
             Matcher matcher = pattern.matcher(base64Str);
 
             if (matcher.find()) {
@@ -74,11 +75,12 @@ public class Base64Util {
     }
 
     //获取base64文件的后缀文件类型
-    public static String getBase64FileType(String str){
+    public static String getBase64FileSuffix(String str){
         String fileType = "";
         if(isBase64(str) && str.indexOf("data")!=-1){
             String[] strArr=str.split(",");
             Pattern pattern = Pattern.compile("data:(.*)/(.*);base64");
+            //Pattern pattern = Pattern.compile("data:(.*?);base64");
             Matcher matcher = pattern.matcher(strArr[0]);
             //Matcher matcher = Pattern.compile("data:image/(.*?);base64").matcher(strArr[0]);
             if(matcher.find()) {

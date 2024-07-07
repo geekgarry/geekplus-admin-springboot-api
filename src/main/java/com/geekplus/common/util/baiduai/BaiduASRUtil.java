@@ -8,7 +8,7 @@ package com.geekplus.common.util.baiduai;
 
 import com.alibaba.fastjson.JSONObject;
 import com.geekplus.common.myexception.BaseException;
-import com.geekplus.common.util.Base64Util;
+import com.geekplus.common.util.base64.Base64Util;
 
 import java.io.File;
 import java.io.FileInputStream;

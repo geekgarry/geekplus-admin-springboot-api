@@ -2,7 +2,7 @@ package com.geekplus.common.util.google;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.geekplus.common.util.Base64Util;
+import com.geekplus.common.util.base64.Base64Util;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.http.HttpEntity;
