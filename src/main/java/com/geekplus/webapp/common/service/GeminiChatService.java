@@ -133,7 +133,7 @@ public class GeminiChatService {
         //保存到redis里面 rightPush是从list列表尾部插入，先进后出
         stringRedisTemplate.opsForList().rightPush(md5Content, JSONObject.toJSONString(msgMap1), JSONObject.toJSONString(msgMap2));
         //}
-        stringRedisTemplate.expire(md5Content, 8, TimeUnit.HOURS);
+        stringRedisTemplate.expire(md5Content, 12, TimeUnit.HOURS);
         chatAILog.setUserName(chatPrompt.getUsername());
         chatAILog.setUserIp(ip);
         chatAILog.setUserMac(mac);

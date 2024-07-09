@@ -23,7 +23,7 @@ public class MkTimeTask {
 
     // 注入sysOperLogService ：实现操作的对象（接口）
     @Autowired
-    private ChatAILogServiceImpl chatgptLogService;
+    private ChatAILogServiceImpl chatAILogService;
 
     //@Scheduled(cron = "0 0 6 * * SUN") // 每周日早上6点触发一次
     @Scheduled(cron="0 0 2 3 * *") //表示：每月三号凌晨两点执行
@@ -39,7 +39,7 @@ public class MkTimeTask {
     private void clearData() {
         try {
             //调用service层的方法 删除数据库数据
-            chatgptLogService.deleteAll();
+            chatAILogService.deleteAll();
         } catch (Exception e) {
             logger.error("清理数据失败，失败原因：" + e.getMessage());
         }
