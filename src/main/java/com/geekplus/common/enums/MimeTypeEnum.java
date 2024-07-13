@@ -11,6 +11,48 @@ import com.geekplus.common.util.string.StringUtils;
 public enum MimeTypeEnum {
     AAC("acc", "AAC音频", "audio/aac"),
 
+    ACP("acp", "acp音频", "audio/x-mei-aac"),
+
+    AIFF("aiff", "aiff音频", "audio/aiff"),
+
+    AIFC("aifc", "aifc音频", "audio/aiff"),
+
+    AIF("aif", "aif音频", "audio/aiff"),
+
+    AU("au", "au音频", "audio/basic"),
+
+    LA1("la1", "la1音频", "audio/x-liquid-file"),
+
+    LAVS("lavs", "lavs音频", "audio/x-liquid-secure"),
+
+    LMSFF("lmsff", "lmsff音频", "audio/x-la-lms"),
+
+    M4A("m4a", "M4A音频", "audio/x-m4a"),
+
+    M3U("m3u", "M3U音频", "audio/mpegurl"),
+
+    MP2("mp2", "MP2音频", "audio/mp2"),
+
+    FLAC("flac", "FLAC音频", "audio/flac"),
+
+    MP3("mp3", "MP3音频", "audio/mpeg"),
+
+    MP3_AUDIO("mp3", "MP3音频", "audio/mp3"),
+
+    MP4_AUDIO("mp4", "MP4音频", "audio/mp4"),
+
+    WAV("wav", "波形音频格式", "audio/wav"),
+
+    WMA("wma", "wma音频格式", "audio/x-ms-wma"),
+
+    WAX("wax", "wax音频格式", "audio/x-ms-wax"),
+
+    WEBA("weba", "WEBM音频", "audio/webm"),
+
+    MID("mid", "乐器数字接口（MIDI）", "audio/midi"),
+
+    MIDI("midi", "乐器数字接口（MIDI）", "audio/midi"),
+
     ABW("abw", "AbiWord文件", "application/x-abiword"),
 
     ARC("arc", "存档文件", "application/x-freearc"),
@@ -65,13 +107,7 @@ public enum MimeTypeEnum {
 
     JSONLD("jsonld", "JSON-LD格式", "application/ld+json"),
 
-    MID("mid", "乐器数字接口（MIDI）", "audio/midi"),
-
-    MIDI("midi", "乐器数字接口（MIDI）", "audio/midi"),
-
     MJS("mjs", "JavaScript模块", "text/javascript"),
-
-    MP3("mp3", "MP3音频", "audio/mpeg"),
 
     MPEG("mpeg", "MPEG视频", "video/mpeg"),
 
@@ -129,10 +165,6 @@ public enum MimeTypeEnum {
 
     VSD("vsd", "微软Visio", "application/vnd.visio"),
 
-    WAV("wav", "波形音频格式", "audio/wav"),
-
-    WEBA("weba", "WEBM音频", "audio/webm"),
-
     WEBM("webm", "WEBM视频", "video/webm"),
 
     WEBP("webp", "WEBP图像", "image/webp"),
@@ -161,7 +193,21 @@ public enum MimeTypeEnum {
 
     MIME_3G2_WITHOUT_VIDEO("3g2", "3GPP2 audio/video container  doesn't contain video", "audio/3gpp2"),
 
-    MIME_7Z("7z", "7-zip存档", "application/x-7z-compressed");
+    MIME_7Z("7z", "7-zip存档", "application/x-7z-compressed"),
+
+    MHTML("mhtml", "Message文件", "message/rfc822"),
+
+    NOS_TYPE("907", "907文件", "drawing/907"),
+
+    SLK_TYPE("907", "slk文件", "drawing/x-slk"),
+
+    TOP_TYPE("top", "top文件", "drawing/x-top"),
+
+    JAVA_TYPE("java", "Java文件", "java/*"),
+
+    CLAZZ_TYPE("class", "Java文件", "java/*"),
+
+    DWF("dwf", "dwf文件", "Model/vnd.dwf");
 
     //扩展名
     private final String extension;
@@ -212,18 +258,18 @@ public enum MimeTypeEnum {
     }
 
     /**
-     * 通过枚举类型获取扩展名
+     * 通过Mime类型获取扩展名
      *
      * @param mimeType mime类型
      * @return 枚举类
      */
-    public static MimeTypeEnum getExtensionByMimeType(String mimeType) {
+    public static String getExtensionByMimeType(String mimeType) {
         if (StringUtils.isEmpty(mimeType)) {
             return null;
         }
         for (MimeTypeEnum typesEnum : MimeTypeEnum.values()) {
             if (mimeType.equalsIgnoreCase(typesEnum.getMimeType())) {
-                return typesEnum;
+                return typesEnum.getExtension();
             }
         }
         return null;

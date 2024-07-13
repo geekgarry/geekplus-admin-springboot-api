@@ -15,7 +15,9 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 import org.springframework.web.servlet.config.annotation.*;
+import org.springframework.web.util.UrlPathHelper;
 
+import java.nio.charset.StandardCharsets;
 import java.util.concurrent.ThreadPoolExecutor;
 
 /**
@@ -28,6 +30,14 @@ import java.util.concurrent.ThreadPoolExecutor;
 public class WebMvcResourceConfig implements WebMvcConfigurer {
     //@Resource
     //private RepeatSubmitInterceptor repeatSubmitInterceptor;
+
+    @Override
+    public void configurePathMatch(PathMatchConfigurer configurer) {
+        UrlPathHelper urlPathHelper=new UrlPathHelper();
+        urlPathHelper.setUrlDecode(false);
+        urlPathHelper.setDefaultEncoding(StandardCharsets.UTF_8.name());
+        configurer.setUrlPathHelper(urlPathHelper);
+    }
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry)

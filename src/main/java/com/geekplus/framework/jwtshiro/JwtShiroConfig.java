@@ -6,6 +6,7 @@ import org.apache.shiro.mgt.DefaultSubjectDAO;
 import org.apache.shiro.spring.LifecycleBeanPostProcessor;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
+import org.apache.shiro.web.filter.InvalidRequestFilter;
 import org.apache.shiro.web.mgt.CookieRememberMeManager;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.apache.shiro.web.servlet.SimpleCookie;
@@ -70,6 +71,7 @@ public class JwtShiroConfig {
         ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
         shiroFilterFactoryBean.setSecurityManager(securityManager);
         shiroFilterFactoryBean.getFilters().put("jwt",jwtFilter());
+        shiroFilterFactoryBean.getFilters().put("invalidRequest", invalidRequestFilter());
         Map<String, String> map = new LinkedHashMap<>();
         //静态资源的过滤
         //map.put("/*.html","anon");
@@ -86,7 +88,7 @@ public class JwtShiroConfig {
         map.put("/AIBot/**","anon");
         map.put("/geekplusapp/**","anon");
         map.put("/websocket/**","anon");
-        map.put("/profile/**","anon");
+        map.put("/profile/**","invalidRequest,anon");
         map.put("/common/getQRCode**","anon");
         map.put("/common/download**","anon");
         map.put("/common/download/resource**","anon");
@@ -137,6 +139,14 @@ public class JwtShiroConfig {
     //jwt过滤器
     public JwtFilter jwtFilter(){
         return new JwtFilter();
+    }
+
+    //非法字符请求过滤，非法字符的请求Url
+    @Bean
+    public InvalidRequestFilter invalidRequestFilter(){
+        InvalidRequestFilter invalidRequestFilter = new InvalidRequestFilter();
+        invalidRequestFilter.setBlockNonAscii(false);
+        return invalidRequestFilter;
     }
 
     //授权
