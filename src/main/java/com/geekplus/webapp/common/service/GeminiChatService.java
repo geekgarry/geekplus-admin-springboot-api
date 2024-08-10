@@ -4,7 +4,9 @@ import com.alibaba.fastjson.JSONObject;
 import com.geekplus.common.domain.ChatPrompt;
 import com.geekplus.common.util.DateTimeUtils;
 import com.geekplus.common.util.ServletUtils;
+import com.geekplus.common.util.base64.Base64Util;
 import com.geekplus.common.util.file.FileUploadUtils;
+import com.geekplus.common.util.file.FileUtils;
 import com.geekplus.common.util.google.GeminiUtils;
 import com.geekplus.common.util.ip.IpUtils;
 import com.geekplus.common.util.openai.GetClientName;
@@ -12,14 +14,17 @@ import com.geekplus.webapp.function.entity.ChatAILog;
 import com.geekplus.webapp.function.service.IChatAILogService;
 import eu.bitwalker.useragentutils.UserAgent;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -60,10 +65,10 @@ public class GeminiChatService {
      * @Throws
      * @Return {@link }
      */
-    public Map getGeminiContent(ChatPrompt chatPrompt){
+    public Map getGeminiContent(ChatPrompt chatPrompt) throws IOException {
         // 默认信息
         ChatAILog chatAILog =new ChatAILog();
-        Map mapMsg = new HashMap();
+        Map<String,Object> mapMsg = new HashMap();
         String aiReplyText=null;
         //把msgcontent和fromuser转换成md5作为rediskey
         long chatDate= new Date().getTime();
@@ -92,31 +97,37 @@ public class GeminiChatService {
         log.info("加密的key："+md5Content);
 //        log.info("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
         String fileUrl = "";
-        if(chatPrompt.getMediaData() != null && !"".equals(chatPrompt.getMediaData())) {
-            fileUrl = FileUploadUtils.base64StrToFile(chatPrompt.getMediaData().toString());
+        if(!ObjectUtils.isEmpty(chatPrompt.getMediaData())) {
+            //&&当第一个表达式的值为false的时候，则不再计算第二个表达式,&则怎么样都执行
+            //||当第一个表达式的值为true，就不再计算后面的表达式，｜则也会都执行
+            if(FileUtils.isStringType(chatPrompt.getMediaData()) && Base64Util.isBase64(chatPrompt.getMediaData().toString())) {
+                fileUrl = FileUploadUtils.base64StrToFile(chatPrompt.getMediaData().toString());
+            }
             //chatPrompt.setMediaData(Base64Util.getBase64Str(chatPrompt.getMediaData().toString()));
         }
         //Gemini AI 返回内容
-        if(chatPrompt.getPreChatData()==null || "".equals(chatPrompt.getPreChatData())) {
-            aiReplyText = GeminiUtils.postGemini(chatPrompt.getChatData(), chatPrompt.getMediaData(), geminiApiKey);
+        if(null == chatPrompt.getHistoryChatData()) {//|| chatPrompt.getHistoryChatData().isEmpty()
+            aiReplyText = GeminiUtils.postGemini(chatPrompt, geminiApiKey);
         }else {
-            aiReplyText = GeminiUtils.postGeminiHistory(chatPrompt.getChatData(), chatPrompt.getPreChatData(), chatPrompt.getMediaData(), geminiApiKey);
+            aiReplyText = GeminiUtils.postGeminiHistory(chatPrompt, geminiApiKey);
         }
 
         //存储对话记录
         //if (aiReplyText != null){
         chatReplyDate = DateTimeUtils.getCurrentDateTime();//DateTimeUtils.getCurrentDate(LocalDate.now());
         long chatReplySeconds = new Date().getTime();
-        chatAILog.setChatContent(fileUrl+"\n"+chatPrompt.getChatData()+"-Q&A-"+aiReplyText.replaceAll("\\s*",""));
+        chatAILog.setChatContent(fileUrl+"\n"+chatPrompt.getChatMsg()+"-Q&A-"+aiReplyText.replaceAll("\\s*",""));
         mapMsg.put("msg_data",aiReplyText.trim().replaceFirst("\\s*",""));
         //消息类型，1代表图片，0代表普通文本
         mapMsg.put("msg_type","0");
         mapMsg.put("msg_date_time",chatReplySeconds);
         HashMap<String,Object> msgMap1=new HashMap<>();
         msgMap1.put("align","right");
-        msgMap1.put("text",chatPrompt.getChatData());
+        msgMap1.put("text",chatPrompt.getChatMsg());
         if(fileUrl!="") {
-            msgMap1.put("extraData", fileUrl);
+            msgMap1.put("mediaData", fileUrl);
+            msgMap1.put("mediaMimeType",chatPrompt.getMediaMimeType());
+            msgMap1.put("mediaFileName", chatPrompt.getMediaFileName());
         }
         msgMap1.put("link","");
         msgMap1.put("type","0");
@@ -150,26 +161,11 @@ public class GeminiChatService {
      * @Throws
      * @Return {@link }
      */
-    public Map testGemini(String messageContent){
-        JSONObject jsonObject = JSONObject.parseObject(GeminiUtils.postGemini(messageContent,null,geminiApiKey));
-        return jsonObject;
+    public Object testGemini(String messageContent){
+        ChatPrompt chatPrompt=new ChatPrompt();
+        chatPrompt.setChatMsg(messageContent);
+        return GeminiUtils.postStreamGemini(chatPrompt,geminiApiKey);
     }
-
-    /**
-     * @Author geekplus
-     * @Description // Google Gemini AI 聊天/图片
-     * @Param
-     * @Throws
-     * @Return {@link }
-     */
-    public String getGeminiImage(String messageContent,Object base64Image, String fromUser){
-        return GeminiUtils.postImageGemini(messageContent,base64Image.toString(),geminiApiKey);
-    }
-
-//    public Map getGeminiImageJson(String messageContent,String base64Image, String fromUser){
-//        JSONObject jsonObject = JSONObject.parseObject(GeminiUtils.postImageGemini(messageContent,base64Image,geminiApiKey));
-//        return jsonObject;
-//    }
 
     public List<String> getHistoryMsgList(String userName){
         List<String> msgList=new ArrayList<>();

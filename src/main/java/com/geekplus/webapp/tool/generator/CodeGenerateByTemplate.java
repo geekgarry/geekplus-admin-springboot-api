@@ -2,8 +2,6 @@ package com.geekplus.webapp.tool.generator;
 
 import com.geekplus.common.constant.Constant;
 import com.geekplus.common.constant.ProjectConstant;
-import com.geekplus.common.util.file.FileCompressUtils;
-import com.geekplus.common.util.json.JsonUtil;
 import com.geekplus.webapp.tool.generator.entity.TableInfo;
 import com.geekplus.webapp.tool.generator.utils.GenUtil;
 import com.geekplus.webapp.tool.generator.utils.MybatisUtil;
@@ -11,12 +9,7 @@ import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateExceptionHandler;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.ss.formula.functions.T;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
-import org.springframework.core.io.support.ResourcePatternResolver;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;

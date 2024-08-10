@@ -1,6 +1,6 @@
 package com.geekplus.common.util.poi;
 
-import com.geekplus.common.util.json.JsonUtil;
+import com.geekplus.common.util.json.JsonEscapeUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,7 +24,7 @@ public class TestTreePoi {
 //    } catch (IOException e) {
 //      e.printStackTrace();
 //    }
-    System.out.println("要导入的excel数据"+ JsonUtil.beanToJson(list));
+    System.out.println("要导入的excel数据"+ JsonEscapeUtil.beanToJson(list));
     //saveJsonFile(list,"E:/home/tdxx.json");
   }
   public static void saveJsonFile(List<?> list, String fileName){
@@ -39,7 +39,7 @@ public class TestTreePoi {
         file.delete();
       }
       file.createNewFile();
-      String jsonString=JsonUtil.beanToJson(list);
+      String jsonString= JsonEscapeUtil.beanToJson(list);
       // 将格式化后的字符串写入文件
       Writer write = new OutputStreamWriter(new FileOutputStream(file), "UTF-8");
       write.write(jsonString);

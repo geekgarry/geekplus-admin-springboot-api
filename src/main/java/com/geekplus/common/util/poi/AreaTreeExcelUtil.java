@@ -2,7 +2,7 @@ package com.geekplus.common.util.poi;
 
 import com.github.pagehelper.util.StringUtil;
 import com.geekplus.common.util.string.StringUtils;
-import com.geekplus.common.util.json.JsonUtil;
+import com.geekplus.common.util.json.JsonEscapeUtil;
 //import org.apache.poi.hssf.usermodel.DateUtil;
 import org.apache.poi.ss.usermodel.DateUtil;
 import org.apache.poi.ss.usermodel.*;
@@ -104,7 +104,7 @@ public class AreaTreeExcelUtil {
         titles.add(null);
       }
     }
-    System.out.println("数据字段列表"+ JsonUtil.beanToJson(titles));
+    System.out.println("数据字段列表"+ JsonEscapeUtil.beanToJson(titles));
     // 遍历首行前三列为发包方数据信息,固定第五行开始为数据行
     Row rowFbf =sheet.getRow(5);
     Map mapFbf=new HashMap();

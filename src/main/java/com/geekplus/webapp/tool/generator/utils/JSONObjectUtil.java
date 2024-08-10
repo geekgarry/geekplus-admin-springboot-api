@@ -57,6 +57,60 @@ public class JSONObjectUtil {
     }
 
     /**
+     * 将json结果集转化为对象
+     * @param jsonData json数据
+     * @return
+     */
+    public static Map jsonToMap(String jsonData) {
+        //第一种方式
+//        Map maps = (Map)JSON.parse(jsonData);
+//        System.out.println("这个是用JSON类来解析JSON字符串!!!");
+//        for (Object map : maps.entrySet()){
+//            System.out.println(((Map.Entry)map).getKey()+"     " + ((Map.Entry)map).getValue());
+//        }
+//        //第二种方式
+//        Map mapTypes = JSON.parseObject(jsonData);
+//        System.out.println("这个是用JSON类的parseObject来解析JSON字符串!!!");
+//        for (Object obj : mapTypes.keySet()){
+//            System.out.println("key为："+obj+"值为："+mapTypes.get(obj));
+//        }
+//        //第三种方式
+//        Map mapType = JSON.parseObject(jsonData,Map.class);
+//        System.out.println("这个是用JSON类,指定解析类型，来解析JSON字符串!!!");
+//        for (Object obj : mapType.keySet()){
+//            System.out.println("key为："+obj+"值为："+mapType.get(obj));
+//        }
+//        //第四种方式
+//        /**
+//         * JSONObject是Map接口的一个实现类
+//         */
+//        Map json = (Map) JSONObject.parse(jsonData);
+//        System.out.println("这个是用JSONObject类的parse方法来解析JSON字符串!!!");
+//        for (Object map : json.entrySet()){
+//            System.out.println(((Map.Entry)map).getKey()+"  "+((Map.Entry)map).getValue());
+//        }
+//        //第五种方式
+//        /**
+//         * JSONObject是Map接口的一个实现类
+//         */
+        JSONObject jsonObject = JSONObject.parseObject(jsonData);
+//        System.out.println("这个是用JSONObject的parseObject方法来解析JSON字符串!!!");
+//        for (Object map : json.entrySet()){
+//            System.out.println(((Map.Entry)map).getKey()+"  "+((Map.Entry)map).getValue());
+//        }
+//        //第六种方式
+//        /**
+//         * JSONObject是Map接口的一个实现类
+//         */
+//        Map mapObj = JSONObject.parseObject(jsonData,Map.class);
+//        System.out.println("这个是用JSONObject的parseObject方法并执行返回类型来解析JSON字符串!!!");
+//        for (Object map: json.entrySet()){
+//            System.out.println(((Map.Entry)map).getKey()+"  "+((Map.Entry)map).getValue());
+//        }
+        return jsonObject;
+    }
+
+    /**
      * 根据前端数据返回实体类对象
      * @return
      */

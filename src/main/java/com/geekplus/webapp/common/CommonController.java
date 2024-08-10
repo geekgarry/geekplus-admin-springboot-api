@@ -106,7 +106,7 @@ public class CommonController
             }
             // 上传并返回新文件名称
             //String fileName = FileUploadUtils.upload(filePath, file);
-            Map fileMap = FileUploadUtils.upload2(filePath, file);
+            Map fileMap = FileUploadUtils.upload2(filePath + File.separator + DateUtils.datePath(), file);
             //String url = serverConfig.getUrl() + fileName;
             Result ajax = Result.success();
             ajax.put("fileName", fileMap.get("fileName"));

@@ -1,6 +1,8 @@
 package com.geekplus.common.domain;
 
 import java.io.Serializable;
+import java.util.List;
+import java.util.Map;
 
 /**
  * author     : geekplus
@@ -13,16 +15,22 @@ public class ChatPrompt implements Serializable {
     private String userId;
     //聊天用户
     private String username;
-    //聊天内容
-    private String chatData;
+    //聊天消息内容
+    private String chatMsg;
     //此前聊天内容
-    private String preChatData;
+    private String preChatData;//字符串形式，用了historyChatDataList代替了
+    //历史聊天记录
+    private List<Map<String,Object>> historyChatData;
     //聊天媒体，图片/视频/音频
     private Object mediaData;
+    //媒体数据类型
+    private String mediaMimeType;
+    //媒体文件名称
+    private String mediaFileName;
     //聊天代码
-    private String code;
+    private String code;//没有被使用
 
-    private String openAiKey;
+    private String openAiKey;//没有被使用
 
     public String getUserId() {
         return userId;
@@ -40,12 +48,12 @@ public class ChatPrompt implements Serializable {
         this.username = username;
     }
 
-    public String getChatData() {
-        return chatData;
+    public String getChatMsg() {
+        return chatMsg;
     }
 
-    public void setChatData(String chatData) {
-        this.chatData = chatData;
+    public void setChatMsg(String chatMsg) {
+        this.chatMsg = chatMsg;
     }
 
     public String getPreChatData() {
@@ -56,12 +64,36 @@ public class ChatPrompt implements Serializable {
         this.preChatData = preChatData;
     }
 
+    public List<Map<String, Object>> getHistoryChatData() {
+        return historyChatData;
+    }
+
+    public void setHistoryChatData(List<Map<String, Object>> historyChatData) {
+        this.historyChatData = historyChatData;
+    }
+
     public Object getMediaData() {
         return mediaData;
     }
 
     public void setMediaData(Object mediaData) {
         this.mediaData = mediaData;
+    }
+
+    public String getMediaMimeType() {
+        return mediaMimeType;
+    }
+
+    public void setMediaMimeType(String mediaMimeType) {
+        this.mediaMimeType = mediaMimeType;
+    }
+
+    public String getMediaFileName() {
+        return mediaFileName;
+    }
+
+    public void setMediaFileName(String mediaFileName) {
+        this.mediaFileName = mediaFileName;
     }
 
     public String getCode() {

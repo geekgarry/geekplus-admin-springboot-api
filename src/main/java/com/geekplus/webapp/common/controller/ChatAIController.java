@@ -5,6 +5,7 @@ import com.geekplus.common.core.controller.BaseController;
 import com.geekplus.common.domain.Result;
 import com.geekplus.common.domain.ChatPrompt;
 import com.geekplus.common.util.ServletUtils;
+import com.geekplus.common.util.file.FileUtils;
 import com.geekplus.webapp.common.service.ChatGPTService;
 import com.geekplus.webapp.common.service.GeminiChatService;
 import lombok.extern.slf4j.Slf4j;
@@ -78,37 +79,23 @@ public class ChatAIController extends BaseController {
         };
     }
 
-    @PostMapping("/chatgpttest")
-    public Result getChat(@RequestBody ChatPrompt chatPrompt) {
-        String text = chatGPTService.getChatContent("",chatPrompt.getChatData(),chatPrompt.getUsername(),chatPrompt.getOpenAiKey());
-        return Result.success(text);
-    }
-
-    @PostMapping("/getchatgpt")
-    public Result getChatGPTV1(@RequestBody ChatPrompt chatPrompt) throws SocketException, UnknownHostException {
-        Map text = chatGPTService.reply(chatPrompt.getChatData(),chatPrompt.getUsername(),chatPrompt.getOpenAiKey());
-        return Result.success(text);
-    }
-
     /**
       * @Author geekplus
-      * @Description //重要Gemini的发送消息和接收，此模式中仅需要接收到重要的消息内容chatData
+      * @Description //重要Gemini的发送消息和接收，此模式中仅需要接收到重要的消息内容chatData, @RequestBody 支持是以application/json，multipart/form-data不支持，直接以对象为名
       * @Param
       * @Throws
       * @Return {@link }
       */
     @PostMapping("/getGeminiContent")
-    public Callable<Result> getGeminiContent(MultipartFile file, @RequestBody ChatPrompt chatPrompt) throws SocketException, UnknownHostException {
+    public Callable<Result> getGeminiContent(@RequestBody ChatPrompt chatPrompt) throws SocketException, UnknownHostException {
         log.info("主线程开始");
-        return ()->{
+        return () -> {
             log.info("副线程开始");
             //Thread.sleep(5000);
             Map text = geminiService.getGeminiContent(chatPrompt);
             log.info("副线程返回");
             return Result.success(text);
         };
-//        Map text = geminiService.getGeminiContent(chatPrompt);
-//        return Result.success(text);
     }
 
     /**
@@ -120,9 +107,41 @@ public class ChatAIController extends BaseController {
      * @Return {@link }
      */
     @PostMapping("/getGeminiChat")
-    public Callable<Result> getGeminiChat(MultipartFile file, @RequestBody ChatPrompt chatPrompt) throws SocketException, UnknownHostException {
+    public Callable<Result> getGeminiChat(@RequestBody ChatPrompt chatPrompt) throws SocketException, UnknownHostException {
         log.info("主线程开始");
-        return ()->{
+        return () -> {
+            log.info("副线程开始");
+            //Thread.sleep(5000);
+            Map text = geminiService.getGeminiContent(chatPrompt);
+            log.info("副线程返回");
+            return Result.success(text);
+        };
+    }
+
+    /**
+     * @Author geekplus
+     * @Description //发送文件, @RequestBody 支持是以application/json，multipart/form-data不支持，直接以对象为名
+     * @Param
+     * @Throws
+     * @Return {@link }
+     */
+    @PostMapping("/getGeminiWithFile")
+    public Callable<Result> getGeminiWithFile(@RequestPart(value = "file", required = false) MultipartFile file, ChatPrompt chatPrompt) throws SocketException, UnknownHostException {
+        log.info("主线程开始");
+        try {
+            String fileName = "";
+            // 上传并获取文件名称
+            if(!FileUtils.isFileEmpty(file)) {
+                fileName = file.getOriginalFilename();
+                //String url = serverConfig.getUrl() + fileName;
+                byte[] fileByte = file.getBytes();
+                chatPrompt.setMediaData(fileByte);
+                chatPrompt.setMediaFileName(fileName);
+            }
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+        return () -> {
             log.info("副线程开始");
             //Thread.sleep(5000);
             Map text = geminiService.getGeminiContent(chatPrompt);
@@ -133,15 +152,9 @@ public class ChatAIController extends BaseController {
 //        return Result.success(text);
     }
 
-    @PostMapping("/getImageGeminiContent")
-    public Result getImageGeminiContent(@RequestBody ChatPrompt chatPrompt) throws SocketException, UnknownHostException {
-        String text = geminiService.getGeminiImage(chatPrompt.getChatData(),chatPrompt.getMediaData(),chatPrompt.getUsername());
-        return Result.success(text);
-    }
-
     @PostMapping("/testGeminiContent")
     public Result testImageGeminiContent(@RequestBody ChatPrompt chatPrompt) throws SocketException, UnknownHostException {
-        Map text = geminiService.testGemini(chatPrompt.getChatData());
+        Object text = geminiService.testGemini(chatPrompt.getChatMsg());
         return Result.success(text);
     }
 

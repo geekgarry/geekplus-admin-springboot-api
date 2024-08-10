@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
 /**
  * @ClassName RegexUtil
  * @Description 正则表达式工具类
- * @Author Zheng
+ * @Author GeekPlus
  * @Date 2017年10月6日 下午8:29:34
  */
 @Component

@@ -703,5 +703,19 @@ public class FileUtils
             }
         });
     }
+    //判断文件类型是否为byte字节
+    public static boolean isStringType(Object object){
 
+        // 步骤 1: 获取对象类型
+        Class<?> objectClass = object.getClass();
+
+        // 步骤 2: 判断是否为String类型
+        boolean isString = String.class.isAssignableFrom(objectClass);
+        //if (obj.getClass() == String.class){}
+        return isString;
+    }
+    //判断上传的文件是否为空
+    public static boolean isFileEmpty(MultipartFile file) {
+        return file.isEmpty();
+    }
 }
