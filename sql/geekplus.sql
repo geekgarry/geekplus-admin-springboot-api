@@ -547,8 +547,9 @@ CREATE TABLE `chatAI_log` (
   `user_name` varchar(30) DEFAULT NULL COMMENT '用户名',
   `user_ip` varchar(40) DEFAULT NULL COMMENT '用户IP',
   `user_mac` varchar(100) DEFAULT NULL COMMENT '用户网络Mac地址',
+  `ask_content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_croatian_ci COMMENT '询问内容',
+  `reply_content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_croatian_ci COMMENT '回复内容',
   `create_time` datetime DEFAULT NULL COMMENT '创建时间',
-  `chat_content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_croatian_ci COMMENT '日志内容',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=450 DEFAULT CHARSET=utf8 COMMENT='ChatAI聊天记录日志';
 

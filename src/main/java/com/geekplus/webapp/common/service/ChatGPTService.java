@@ -151,7 +151,8 @@ public class ChatGPTService {
                         stringRedisTemplate.opsForList().rightPush(md5Content, JSONObject.toJSONString(msgMap1), JSONObject.toJSONString(msgMap2));
                         //封装消息
                         //Map<String,Object> map=new HashMap();
-                        chatAILog.setChatContent(messageContent+"-Q&A-"+message.replaceAll("\\s*",""));
+                        chatAILog.setAskContent(messageContent);
+                        chatAILog.setReplyContent(message.trim());//replaceAll("\\s*","")//替换内容中所有的空格空白字符制表符，换页符
                         mapMsg.put("msg_data",message);
                         //消息类型，1代表图片，0代表普通文本
                         mapMsg.put("msg_type","1");
@@ -197,7 +198,8 @@ public class ChatGPTService {
                         stringRedisTemplate.opsForList().rightPush(md5Content, JSONObject.toJSONString(msgMap1), JSONObject.toJSONString(msgMap2));
                         //封装消息
                         //Map<String,Object> map=new HashMap();
-                        chatAILog.setChatContent(messageContent+"-Q&A-"+message.replaceAll("\\s*",""));
+                        chatAILog.setAskContent(messageContent);
+                        chatAILog.setReplyContent(message.trim());//replaceAll("\\s*","")
                         mapMsg.put("msg_data",message);
                         //消息类型，1代表图片，0代表普通文本
                         mapMsg.put("msg_type","1");
@@ -227,7 +229,8 @@ public class ChatGPTService {
                 String text = choices.getJSONObject(0).getString("text");
                 //String messagepre = messageResponseBody.getChoices().get(0).getText();
                 message = text.substring(2);
-                chatAILog.setChatContent(messageContent+"-Q&A-"+text.replaceAll("\\s*",""));
+                chatAILog.setAskContent(messageContent);
+                chatAILog.setReplyContent(text.trim());//replaceAll("\\s*","")//替换内容中所有的空格空白字符制表符，换页符
                 mapMsg.put("msg_data",text.trim().replaceFirst("\\s*",""));
                 //消息类型，1代表图片，0代表普通文本
                 mapMsg.put("msg_type","0");
@@ -298,7 +301,8 @@ public class ChatGPTService {
         chatAILog.setUserMac(mac);
         Date date= DateTimeUtils.getCurrentDate(LocalDate.now());
         chatAILog.setCreateTime(date);
-        chatAILog.setChatContent(prompt+"-Q&A-"+text);
+        chatAILog.setAskContent(prompt);
+        chatAILog.setReplyContent(text);
         chatgptLogService.insertChatAILog(chatAILog);
         System.out.println(text);
         return text;

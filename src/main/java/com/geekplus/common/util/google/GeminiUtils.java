@@ -20,6 +20,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import java.io.*;
 import java.util.*;
@@ -188,7 +189,7 @@ public class GeminiUtils {
     }
 
     //Gemini AI Chat请求方法
-    public static Object postStreamGemini(ChatPrompt chatPrompt,String apiKey) {
+    public static Object postStreamGemini(ChatPrompt chatPrompt, String apiKey) throws IOException {
         String geminiReply="";
         //https://generativelanguage.googleapis.com/v1beta/{model=models/*}:streamGenerateContent
         String url="https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:streamGenerateContent?alt=sse&key="+apiKey;
@@ -197,44 +198,56 @@ public class GeminiUtils {
         //httpHeaders.setAll(headerMap);
         //httpHeaders.add("Authorization", "Bearer "+apiKey);
         httpHeaders.add("Content-Type", "application/json"); // 传递请求体时必须设置
-        String requestJson="{"+ safetySettings +
-                "\"contents\":[\n" +
-                "{\"parts\":[" +
-                "{\"text\":\""+chatPrompt.getChatMsg()+"\"}\n" +
-                "]}\n" +
-                "]}";
-        if(chatPrompt.getMediaData() != null && !"".equals(chatPrompt.getMediaData())){
-            //Base64Util.isBase64(mediaData.toString()) && Base64Util.isImageFromBase64(mediaData.toString())
-            String mimeType= chatPrompt.getMediaMimeType();//Base64Util.getFileMimeType(chatPrompt.getMediaData().toString())
-            if(FileUtils.isStringType(chatPrompt.getMediaData())) {
-                chatPrompt.setMediaData(Base64Util.getBase64Str(chatPrompt.getMediaData().toString()));
-                requestJson="{"+ safetySettings +
-                        "\"contents\":[\n" +
-                        "{\"parts\":[\n" +
-                        "{\"text\":\""+chatPrompt.getChatMsg()+"\"},\n" +
-                        "{\"inline_data\":\n" +
-                        "{\"mime_type\": \""+mimeType+"\",\n" +
-                        "\"data\": \""+chatPrompt.getMediaData().toString()+"\"\n" +
-                        "}}\n" +
-                        "]}\n" +
-                "]}";
-            }else {
-                requestJson="{"+ safetySettings +
-                        "\"contents\":[\n" +
-                        "{\"parts\":[\n" +
-                        "{\"text\":\""+chatPrompt.getChatMsg()+"\"},\n" +
-                        "{\"inline_data\":\n" +
-                        "{\"mime_type\": \""+mimeType+"\",\n" +
-                        "\"data\": \""+chatPrompt.getMediaData()+"\"\n" +
-                        "}}\n" +
-                        "]}\n" +
-                "]}";
+        HttpEntity<?> entity;
+        //历史消息列表
+        List<Map<String,Object>> historyChatDataList = chatPrompt.getHistoryChatData();
+        //构造了最外层的一个包含所有Json的key:value的包裹Map
+        Map<String,Object> finalChatPromptMap = new HashMap<>();
+        //首先向包裹填装基本不变的安全设置Map
+        finalChatPromptMap.putAll(createSafetySettingsMap());//put("safetySettings",null);
+        // 判断消息提示中是否带有媒体文件的数据内容，为空测没有，表示是一次普通的文本消息请求，
+        // 否则就是带有文件数据，具体再分析数据类型
+        if(ObjectUtils.isEmpty(chatPrompt.getMediaData())){
+            //为发送的消息构造一个消息内容Map
+            Map<String,Object> commonMsgDataMap = createMsgPromptMap("user", chatPrompt.getChatMsg(),null,null);
+            //因为是聊天模式，所以向历史消息列表添加这个新构造的消息Map
+            historyChatDataList.add(commonMsgDataMap);
+            //最后把消息主题内容添加到key为contents的Map
+            finalChatPromptMap.put("contents",historyChatDataList);
+            //最后把构造的Map消息放入entity请求体，这里就相当于前端的json放入RequestBody
+            entity = new HttpEntity<>(finalChatPromptMap, httpHeaders);
+        }else{
+            String mimeType= chatPrompt.getMediaMimeType();//Base64Util.getFileMimeType(chatPrompt.getMediaData().toString());
+            //判断是否是字符串形式的数据类型，因为前端发送的是base64字符串编码后的文件
+            if(chatPrompt.getMediaData() instanceof String || FileUtils.isStringType(chatPrompt.getMediaData())) {
+                //因为发送消息携带base64文件，为发送的消息构造一个消息内容Map，里面再次添加inline_data等所需要的内容，这里重新设置一个新的消息Map，因为这个是携带媒体文件数据的消息
+                Map<String,Object> msgMediaDataMap = createMsgPromptMap("user", chatPrompt.getChatMsg(), mimeType, Base64Util.getBase64Str(chatPrompt.getMediaData().toString()));
+                //还是一样添加到所有聊天记录list
+                historyChatDataList.add(msgMediaDataMap);
+                //同样添加到最外的构造消息请求体的Map
+                finalChatPromptMap.put("contents", historyChatDataList);
+                entity = new HttpEntity<>(finalChatPromptMap, httpHeaders);
+            }else{
+                httpHeaders.set("Content-Type", "multipart/form-data"); // 传递请求体时必须设置
+//                byte[] fileToByte = (byte[]) chatPrompt.getMediaData();
+//                ByteArrayResource resource = new ByteArrayResource(fileToByte);
+                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
+                objectOutputStream.writeObject(chatPrompt.getMediaData());
+                objectOutputStream.flush();
+                byte[] byteStream = byteArrayOutputStream.toByteArray();
+                //这里与上面一样，就是类型变成MultiValueMap，这是上传大型文件
+                MultiValueMap<String, Object> formChatPromptMap = new LinkedMultiValueMap<>();
+                formChatPromptMap.setAll(createSafetySettingsMap());
+                Map<String,Object> msgByteDataMap = createMsgPromptMap("user", chatPrompt.getChatMsg(), mimeType, byteStream);
+                historyChatDataList.add(msgByteDataMap);
+                formChatPromptMap.addAll("contents", historyChatDataList);
+                //formChatPromptMap.setAll(JSONObject.parseObject(requestJson));
+                entity = new HttpEntity<MultiValueMap<String,Object>>(formChatPromptMap, httpHeaders);
             }
         }
-        HttpEntity<String> entity = new HttpEntity<>(requestJson, httpHeaders);
         ResponseEntity<String> response = client.exchange(url, HttpMethod.POST, entity, String.class);
         String candidatesPart=response.getBody();
-        //System.out.println(response.getBody());
         log.info("响应数据 {}",response.getBody());
         //JSONObject jsonObject = JSONObject.parseObject(candidatesPart);
 //        if (!CollectionUtils.isEmpty(jsonObject.getJSONArray("candidates"))) {

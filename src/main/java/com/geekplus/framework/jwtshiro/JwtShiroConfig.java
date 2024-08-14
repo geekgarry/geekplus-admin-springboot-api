@@ -88,6 +88,9 @@ public class JwtShiroConfig {
         map.put("/AIBot/**","anon");
         map.put("/geekplusapp/**","anon");
         map.put("/websocket/**","anon");
+        map.put("/chatAIWS/**","anon");
+        map.put("/chatAIApp/**","anon");
+        map.put("/chatAITopic/**","anon");
         map.put("/profile/**","invalidRequest,anon");
         map.put("/common/getQRCode**","anon");
         map.put("/common/download**","anon");

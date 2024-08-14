@@ -15,7 +15,7 @@ public class ChatPrompt implements Serializable {
     private String userId;
     //聊天用户
     private String username;
-    //聊天消息内容
+    //聊天消息文本内容
     private String chatMsg;
     //此前聊天内容
     private String preChatData;//字符串形式，用了historyChatDataList代替了
@@ -27,8 +27,8 @@ public class ChatPrompt implements Serializable {
     private String mediaMimeType;
     //媒体文件名称
     private String mediaFileName;
-    //聊天代码
-    private String code;//没有被使用
+    //历史聊天记录ID
+    private String historyId;
 
     private String openAiKey;//没有被使用
 
@@ -96,12 +96,12 @@ public class ChatPrompt implements Serializable {
         this.mediaFileName = mediaFileName;
     }
 
-    public String getCode() {
-        return code;
+    public String getHistoryId() {
+        return historyId;
     }
 
-    public void setCode(String code) {
-        this.code = code;
+    public void setHistoryId(String historyId) {
+        this.historyId = historyId;
     }
 
     public String getOpenAiKey() {

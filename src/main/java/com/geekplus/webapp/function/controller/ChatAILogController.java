@@ -23,7 +23,7 @@ Controller
  * @date 2023-02-25
  */
 @RestController
-@RequestMapping("/geekplus/chatgptlog")
+@RequestMapping("/geekplus/chatAILog")
 public class ChatAILogController extends BaseController
 {
     @Autowired

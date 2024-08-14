@@ -36,8 +36,12 @@ public class ChatAILog extends BaseEntity
     private String userMac;
 
     /** 日志内容 */
-    @Excel(name = "日志内容")
-    private String chatContent;
+    @Excel(name = "询问内容")
+    private String askContent;
+
+    /** 日志内容 */
+    @Excel(name = "回复内容")
+    private String replyContent;
 
     public void setId(Long id)
     {
@@ -84,14 +88,21 @@ public class ChatAILog extends BaseEntity
     {
         return userMac;
     }
-    public void setChatContent(String chatContent)
-    {
-        this.chatContent = chatContent;
+
+    public String getAskContent() {
+        return askContent;
     }
 
-    public String getChatContent()
-    {
-        return chatContent;
+    public void setAskContent(String askContent) {
+        this.askContent = askContent;
+    }
+
+    public String getReplyContent() {
+        return replyContent;
+    }
+
+    public void setReplyContent(String replyContent) {
+        this.replyContent = replyContent;
     }
 
     @Override
@@ -103,7 +114,8 @@ public class ChatAILog extends BaseEntity
             .append("userIp", getUserIp())
             .append("userMac", getUserMac())
             .append("createTime", getCreateTime())
-            .append("chatContent", getChatContent())
+            .append("askContent", getAskContent())
+            .append("replyContent", getReplyContent())
             .toString();
     }
 }
