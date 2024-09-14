@@ -537,7 +537,7 @@ public class FileUtils
                         String systemPrimaryFile = f.getParentFile().getParent();
                         mapKV.put("fileName", f.getName());
                         mapKV.put("filePath", fileAbPathName.replaceAll(systemPrimaryFile, ""));
-                        mapKV.put("fileUrl", f.getPath().replaceAll(WebAppConfig.getProfile(), ""));
+                        mapKV.put("fileUrl", Constant.RESOURCE_PREFIX + f.getPath().replaceAll(WebAppConfig.getProfile(), ""));
                         //if (isFolder == 1)
                         mapKV.put("fileType", MimeTypeUtils.getFileExtensionType(f.getName()));
                         //mapKV.put("isFolder", isFolder);

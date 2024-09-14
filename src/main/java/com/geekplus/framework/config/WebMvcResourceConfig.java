@@ -68,6 +68,7 @@ public class WebMvcResourceConfig implements WebMvcConfigurer {
         registry.addMapping("/**")
                 //.allowedOrigins("*")
                 .allowedOriginPatterns("*")
+//                .allowedMethods("GET","POST","PUT","DELETE","HEAD","OPTIONS")  //应许那些方法来请求
                 .allowedMethods("*")
                 .allowedHeaders("*")
                 //设置是否允许跨域传cookie

@@ -2,18 +2,16 @@ package com.geekplus.common.redis;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.BoundListOperations;
+import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
- * @ Program       :  com.ljnt.redis.utils.RedisUtil
+ * @ Program       :  com.geekplus.common.redis.RedisUtil
  * @ Description   :  redis工具类
  * @ Author        :  garryPlus
  * @ CreateDate    :  2020-6-6 22:08
@@ -812,6 +810,38 @@ public class RedisUtil {
         //绑定操作
         BoundListOperations<String, Object> boundValueOperations = redisTemplate.boundListOps(listKey);
         return boundValueOperations.rightPop();
+    }
+
+    /**
+      * @Author geekplus
+      * @Description // 获取redis创建时间
+      * @Param
+      * @Throws
+      * @Return {@link }
+      */
+    public Long getKeyCreationTime(String key) {
+        long createTime = 0;
+        if(!hasNotKeyExpired(key)) {
+            // 获取过期时间，单位为秒
+            Long expireTime = redisTemplate.getExpire(key, TimeUnit.SECONDS);
+            // 获取当前时间的时间戳，单位为毫秒
+            long currentTime = System.currentTimeMillis();
+            // 计算创建时间，单位为毫秒
+            createTime = currentTime - expireTime * 1000;
+        }
+        return createTime;
+    }
+
+    /**
+      * @Author geekplus
+      * @Description //判断key是否是有过期时间,如果键的剩余生存时间为-1，表示键永不过期；如果为-2，表示键已经过期。
+      * @Param
+      * @Throws
+      * @Return {@link }
+      */
+    public boolean hasNotKeyExpired(String key) {
+        Long ttl = redisTemplate.getExpire(key, TimeUnit.SECONDS);
+        return ttl != null && ttl == -1;
     }
 
 }

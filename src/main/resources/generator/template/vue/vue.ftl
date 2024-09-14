@@ -75,7 +75,7 @@
             <#if allColumn?exists>
             <#list allColumn as column>
             <#if column.javaType == 'Date'>
-            <el-table-column label="${column.columnComment}" align="center" prop="${column.smallColumnName}" width="100" show-overflow-tooltip >
+            <el-table-column label="${column.columnComment}" align="center" prop="${column.smallColumnName}" width="100" :show-overflow-tooltip="true" >
                 <template slot-scope="scope">
                     <span>{{ dateFormat(scope.row.${column.smallColumnName}) }}</span>
                 </template>
