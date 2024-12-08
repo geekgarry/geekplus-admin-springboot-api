@@ -1,6 +1,8 @@
 package com.geekplus.webapp.system.mapper;
 
+import com.geekplus.common.annotation.Log;
 import com.geekplus.common.domain.LoginUser;
+import com.geekplus.framework.domain.server.Sys;
 import com.geekplus.webapp.system.entity.SysMenu;
 import com.geekplus.webapp.system.entity.SysRole;
 import com.geekplus.webapp.system.entity.SysUser;
@@ -78,11 +80,15 @@ public interface SysUserMapper {
     /** 根据用户名查询用户的角色和菜单*/
     //List<Map<String,Object>> getRoleMenuByUsername(SysUser sysUser);
 
-    //用户信息和菜单获取获取
-    LoginUser selectSysUser(SysUser sysUser);
+    //用户信息和角色获取
+    SysUser sysUserLoginBy(String userName);
 
-    //用户信息菜单权限和角色
-    LoginUser selectUserAllInfo(String userName);
+    //用户信息和角色
+    SysUser getSysUserInfoBy(String userName);
+
+    SysUser getSysUserInfoByPhone(String userName);
+
+    SysUser getSysUserInfoByEmail(String userName);
 
     List<SysRole> selectUserRoles(Long userId);
 

@@ -49,7 +49,7 @@ public class RedisUtil {
      * @param time 时间(秒)
      * @return
      */
-    public boolean expire(String key,long time, TimeUnit timeUnit){
+    public boolean expire(String key, long time, TimeUnit timeUnit){
         try {
             if(time>0){
                 redisTemplate.expire(key, time, timeUnit);
@@ -149,6 +149,17 @@ public class RedisUtil {
             }else{
                 set(key, value);
             }
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    //加上设置时间类型
+    public boolean set(String key, Object value, long time, TimeUnit timeUnit){
+        try {
+            redisTemplate.opsForValue().set(key, value, time, timeUnit);
             return true;
         } catch (Exception e) {
             e.printStackTrace();

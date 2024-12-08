@@ -2,23 +2,18 @@ package com.geekplus.common.util.image;
 
 import com.geekplus.common.config.WebAppConfig;
 import com.geekplus.common.constant.Constant;
-import com.geekplus.common.util.DateUtils;
+import com.geekplus.common.util.datetime.DateUtil;
 import com.geekplus.common.util.file.FileUploadUtils;
 import com.geekplus.common.util.html.ArticleUtil;
-import com.geekplus.common.util.uuid.IdUtils;
+import com.geekplus.common.util.uuid.UUIDUtil;
 import net.coobird.thumbnailator.Thumbnails;
-import org.apache.commons.io.FilenameUtils;
-import org.springframework.util.StringUtils;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Base64;
 import java.util.Random;
 import java.util.Set;
@@ -145,12 +140,12 @@ public class ThumbnailUtils {
         String serverImgPath;
         String suffixExtension=".png";//getThumbnailSuffixExtension(imgPath);
         try {
-            if(imgPath.contains("geekplus.xyz")){
+            if(imgPath.contains("geekplus")){
                 String prefixUrl=imgPath.substring(0,imgPath.indexOf(Constant.RESOURCE_PREFIX));
                 //System.out.println("服务器图片地址url："+imgPath);
                 serverImgPath=imgPath.substring(imgPath.indexOf(Constant.RESOURCE_PREFIX)).replaceAll(Constant.RESOURCE_PREFIX, WebAppConfig.getProfile());
                 BufferedImage originalImage = ImageIO.read(new File(serverImgPath));
-                String thumbnailPath=File.separator+"thumbnail"+File.separator + DateUtils.datePath() + File.separator + IdUtils.fastUUID() + suffixExtension;
+                String thumbnailPath=File.separator+"thumbnail"+File.separator + DateUtil.datePath() + File.separator + UUIDUtil.getBase64UUID("thumbnail") + suffixExtension;
                 //String serverThumbnailPath=WebAppConfig.getProfile()+thumbnailPath;
                 File serverDesc = FileUploadUtils.getAbsoluteFile(WebAppConfig.getProfile(), thumbnailPath);
                 if(ImageUtil.calculateSharpness(originalImage)>=60) {

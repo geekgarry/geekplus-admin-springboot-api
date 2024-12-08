@@ -4,13 +4,13 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.geekplus.common.util.http.ServletUtil;
 import com.geekplus.webapp.function.entity.ChatAILog;
-import com.geekplus.common.util.DateTimeUtils;
-import com.geekplus.common.util.ServletUtils;
-import com.geekplus.common.util.baiduai.BaiduASRUtil;
-import com.geekplus.common.util.baiduai.BaiduTTSUtil;
-import com.geekplus.common.util.ip.IPAndMACUtils;
-import com.geekplus.common.util.ip.IpUtils;
+import com.geekplus.common.util.datetime.DateTimeUtils;
+import com.geekplus.common.util.baidu.BaiduASRUtil;
+import com.geekplus.common.util.baidu.BaiduTTSUtil;
+import com.geekplus.common.util.http.IPAndMACUtils;
+import com.geekplus.common.util.http.IPUtils;
 import com.geekplus.common.util.openai.ChatGPTUtils;
 import com.geekplus.common.util.openai.GetClientName;
 import com.geekplus.webapp.function.service.IChatAILogService;
@@ -81,8 +81,8 @@ public class ChatGPTService {
         String message="";
         //把msgcontent和fromuser转换成md5作为rediskey
         //获取用户的IP和MAC地址
-        httpServletRequest=ServletUtils.getRequest();
-        ip=IpUtils.getIpAddr(httpServletRequest);
+        httpServletRequest= ServletUtil.getRequest();
+        ip= IPUtils.getIpAddr(httpServletRequest);
         userAgent=GetClientName.getBrowser(httpServletRequest);
         userAId=userAgent.getId();
         osName=userAgent.getOperatingSystem().getName();
@@ -284,7 +284,7 @@ public class ChatGPTService {
       * @Return {@link String}
       */
     public String getChatContent(String url,String prompt,String chatUser,String openAiKey) {
-        String ip= IpUtils.getIpAddr(ServletUtils.getRequest());
+        String ip= IPUtils.getIpAddr(ServletUtil.getRequest());
         String mac=IPAndMACUtils.getAddressMac();
         Map<String, String> httpHeaders = new HashMap();
         httpHeaders.put("Authorization", "Bearer "+openAiKey);
@@ -362,8 +362,8 @@ public class ChatGPTService {
         List<String> msgList=new ArrayList<>();
         //String msg=null;
         //获取用户的IP和MAC地址
-        httpServletRequest=ServletUtils.getRequest();
-        ip=IpUtils.getIpAddr(httpServletRequest);
+        httpServletRequest=ServletUtil.getRequest();
+        ip= IPUtils.getIpAddr(httpServletRequest);
         userAgent=GetClientName.getBrowser(httpServletRequest);
         userAId=userAgent.getId();
         osName=userAgent.getOperatingSystem().getName();

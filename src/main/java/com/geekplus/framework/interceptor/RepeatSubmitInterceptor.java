@@ -1,14 +1,11 @@
 package com.geekplus.framework.interceptor;
 
-import com.alibaba.fastjson.JSONObject;
 import com.geekplus.common.annotation.RepeatSubmit;
-import com.geekplus.common.domain.Result;
 import com.geekplus.common.enums.ApiExceptionEnum;
 import com.geekplus.common.myexception.BusinessException;
 import com.geekplus.common.redis.RedisUtil;
-import com.geekplus.common.util.ServletUtils;
+import com.geekplus.common.util.http.ServletUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -59,7 +56,7 @@ public class RepeatSubmitInterceptor implements HandlerInterceptor
 
             //组合判断条件，这里仅仅是演示，实际项目中根据架构组合条件
             //请求的URI
-            String userName=ServletUtils.getParameter("userName");
+            String userName = ServletUtil.getParameter("userName");
             String uriKey = request.getRequestURI();
             String redisValue=Objects.nonNull(repeatSubmitByMethod) ? repeatSubmitByMethod.value() : repeatSubmitByCls.value();
             //存在即返回false，不存在即返回true

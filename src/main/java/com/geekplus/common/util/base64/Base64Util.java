@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
 /**
  * Base64 编码和解码。
  *
- * @author jiangshuai
+ * @author geekplus
  * @date 2016年10月03日
  */
 public class Base64Util {
@@ -126,7 +126,7 @@ public class Base64Util {
     /**
      * 功能：编码字符串
      *
-     * @author jiangshuai
+     * @author geekplus
      * @date 2016年10月03日
      * @param data
      *            源字符串
@@ -139,7 +139,7 @@ public class Base64Util {
     /**
      * 功能：解码字符串
      *
-     * @author jiangshuai
+     * @author geekplus
      * @date 2016年10月03日
      * @param data
      *            源字符串
@@ -152,7 +152,7 @@ public class Base64Util {
     /**
      * 功能：编码byte[]
      *
-     * @author jiangshuai
+     * @author geekplus
      * @date 2016年10月03日
      * @param data
      *            源
@@ -189,7 +189,7 @@ public class Base64Util {
     /**
      * 功能：解码
      *
-     * @author jiangshuai
+     * @author geekplus
      * @date 2016年10月03日
      * @param data
      *            编码后的字符数组
@@ -250,7 +250,7 @@ public class Base64Util {
     /**
      * 功能：编码文件
      *
-     * @author jiangshuai
+     * @author geekplus
      * @date 2016年10月03日
      * @param file
      *            源文件
@@ -271,7 +271,7 @@ public class Base64Util {
     /**
      * 功能：解码文件。
      *
-     * @author jiangshuai
+     * @author geekplus
      * @date 2016年10月03日
      * @param file
      *            源文件

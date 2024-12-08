@@ -6,8 +6,7 @@
  */
 package com.geekplus.webapp.tool.generator.service.impl;
 
-import com.geekplus.common.util.file.FileCompressUtils;
-import com.geekplus.webapp.system.service.UserTokenService;
+import com.geekplus.webapp.common.service.SysUserTokenService;
 import com.geekplus.webapp.tool.generator.CodeGenerateByTemplate;
 import com.geekplus.webapp.tool.generator.entity.TableColumnInfo;
 import com.geekplus.webapp.tool.generator.entity.TableInfo;
@@ -17,8 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletResponse;
-import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -29,7 +26,7 @@ public class GenCodeServiceImpl implements GenCodeService {
     @Resource
     private TableMapper tableMapper;
     @Resource
-    private UserTokenService tokenService;
+    private SysUserTokenService tokenService;
 
     /**
      * @Author geekplus

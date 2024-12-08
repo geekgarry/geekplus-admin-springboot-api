@@ -66,4 +66,5 @@ public interface SysRoleService {
     public SysRole selectSysRoleAndMenuTreeById(Long roleId);
 
     List<SysRole> getRolesByUserId(String userId);
+    List<SysRole> getRolesByUserName(String userName);
 }

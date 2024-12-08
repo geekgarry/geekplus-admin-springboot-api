@@ -4,6 +4,7 @@ import com.geekplus.common.annotation.Excel;
 import com.geekplus.common.domain.BaseEntity;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.springframework.data.annotation.Transient;
 
 import java.util.Date;
 import java.util.List;
@@ -17,7 +18,6 @@ import java.util.List;
 public class SysUser extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
-
 
     /**
      * 系统用户表 系统用户表
@@ -59,7 +59,7 @@ public class SysUser extends BaseEntity
      * 系统用户表 系统用户表
      */
 	@Excel(name = "手机号")
-    private String phoneunmber;
+    private String phoneNumber;
 
     /**
      * 系统用户表 系统用户表
@@ -127,8 +127,8 @@ public class SysUser extends BaseEntity
      */
     private String remark;
 
+    private SysDept sysDept;
 	private List<SysRole> sysRoleList;
-	private List<SysMenu> sysMenuList;
 
 	/**
 	 *获取用户ID
@@ -211,15 +211,15 @@ public class SysUser extends BaseEntity
 	/**
 	 *获取手机号
 	 */
-	public String getPhoneunmber(){
-		return phoneunmber;
+	public String getPhoneNumber(){
+		return phoneNumber;
 	}
 
 	/**
 	 *设置手机号
 	 */
-	public void setPhoneunmber(String phoneunmber){
-		this.phoneunmber = phoneunmber;
+	public void setPhoneNumber(String phoneNumber){
+		this.phoneNumber = phoneNumber;
 	}
 	/**
 	 *获取性别（0为女，1为男，2为未知）
@@ -378,20 +378,20 @@ public class SysUser extends BaseEntity
 		this.remark = remark;
 	}
 
+	public SysDept getSysDept() {
+		return sysDept;
+	}
+
+	public void setSysDept(SysDept sysDept) {
+		this.sysDept = sysDept;
+	}
+
 	public List<SysRole> getSysRoleList() {
 		return sysRoleList;
 	}
 
 	public void setSysRoleList(List<SysRole> sysRoleList) {
 		this.sysRoleList = sysRoleList;
-	}
-
-	public List<SysMenu> getSysMenuList() {
-		return sysMenuList;
-	}
-
-	public void setSysMenuList(List<SysMenu> sysMenuList) {
-		this.sysMenuList = sysMenuList;
 	}
 
 	@Override
@@ -403,7 +403,7 @@ public class SysUser extends BaseEntity
             .append("nickName", getNickName())
             .append("userType", getUserType())
             .append("email", getEmail())
-            .append("phoneunmber", getPhoneunmber())
+            .append("phoneNumber", getPhoneNumber())
             .append("gender", getGender())
             .append("avatar", getAvatar())
             .append("password", getPassword())

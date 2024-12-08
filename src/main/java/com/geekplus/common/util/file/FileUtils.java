@@ -2,8 +2,7 @@ package com.geekplus.common.util.file;
 
 import com.geekplus.common.config.WebAppConfig;
 import com.geekplus.common.constant.Constant;
-import com.geekplus.common.util.ServletUtils;
-import com.geekplus.common.util.music.ReadMusicInfo;
+import com.geekplus.common.util.http.ServletUtil;
 import com.geekplus.common.util.string.StringUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.slf4j.Logger;
@@ -359,7 +358,7 @@ public class FileUtils
         String fileExtension=FileTypeUtils.getFileType(fileNameOriginal);
         boolean isImage1=false;
         boolean isImage2=false;
-        String mimeType = ServletUtils.getRequest().getServletContext().getMimeType(fileNameOriginal);
+        String mimeType = ServletUtil.getRequest().getServletContext().getMimeType(fileNameOriginal);
         if (mimeType.startsWith("image/")) {
             // It's an image.
             isImage1=true;

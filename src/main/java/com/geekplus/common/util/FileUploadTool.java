@@ -1,7 +1,7 @@
 package com.geekplus.common.util;
 
 import com.geekplus.common.domain.FileEntity;
-import com.geekplus.common.util.string.StringUtil;
+import com.geekplus.common.util.uuid.UUIDUtil;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -82,7 +82,7 @@ public class FileUploadTool {
 			System.out.println("文件为空");
 		}
 		if (bflag) {
-			String newFileName = StringUtil.getRndString2() + this.getFileExt(fileName);
+			String newFileName = UUIDUtil.getEncryptFileUUID() + this.getFileExt(fileName);
 			try {
 				ObjectStorageUtil.simpleUploadFile(multipartFile.getInputStream(), "/upload/" + newFileName,multipartFile.getSize());
 				entity.setSize(this.getSize(multipartFile.getSize()));

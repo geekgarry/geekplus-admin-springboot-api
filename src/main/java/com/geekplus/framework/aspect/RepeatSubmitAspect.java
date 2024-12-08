@@ -5,7 +5,7 @@ import com.geekplus.common.enums.ApiExceptionEnum;
 import com.geekplus.common.myexception.BusinessException;
 import com.geekplus.common.redis.RedisUtil;
 import com.geekplus.common.util.string.StringUtils;
-import com.geekplus.framework.jwtshiro.JwtTokenUtil;
+import com.geekplus.framework.jwtshiro.JwtUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -19,7 +19,6 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
-import java.util.concurrent.TimeUnit;
 
 /**
  * author     : geekplus
@@ -40,7 +39,7 @@ public class RepeatSubmitAspect {
     @Resource
     RedisUtil redisUtil;
     @Resource
-    JwtTokenUtil jwtTokenUtil;
+    JwtUtil jwtUtil;
     /**
      * 定义切点
      */
@@ -71,7 +70,7 @@ public class RepeatSubmitAspect {
          */
         String redisKey = annotation.value()
                 .concat(url).concat(":")
-                .concat(jwtTokenUtil.getTokenIdFromToken(token));
+                .concat(jwtUtil.getTokenIdFromToken(token));
         log.info("==========redisKey ====== {}",redisKey);
 
         if (!redisUtil.hasKey(redisKey)) {

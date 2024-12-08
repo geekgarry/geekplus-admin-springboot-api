@@ -1,13 +1,13 @@
+package com.geekplus.framework.jwtshiro;
+
+import org.apache.shiro.authc.AuthenticationToken;
+
 /**
  * author     : geekplus
  * email      : geekcjj@gmail.com
  * date       : 2022/4/24 9:55 下午
  * description: 做什么的？
  */
-package com.geekplus.framework.jwtshiro;
-
-import org.apache.shiro.authc.AuthenticationToken;
-
 public class JwtToken implements AuthenticationToken {
     private static final long serialVersionUID = -2564928913725078138L;
 
@@ -27,11 +27,12 @@ public class JwtToken implements AuthenticationToken {
     public Object getCredentials() {
         return token;
     }
+
 //    private LoginType type;
-//    public CustomToken() {
+//    public JwtToken() {
 //        super();
 //    }
-//    public CustomToken(String username, String password, LoginType type, boolean rememberMe, String host) {
+//    public JwtToken(String username, String password, LoginType type, boolean rememberMe, String host) {
 //        super(username, password, rememberMe,  host);
 //        this.type = type;
 //    }
@@ -45,7 +46,7 @@ public class JwtToken implements AuthenticationToken {
 //     * 免密登录
 //     * @param username
 //     */
-//    public CustomToken(String username) {
+//    public JwtToken(String username) {
 //        super(username, "", false, null);
 //        this.type = LoginType.NOPASSWORD;
 //    }
@@ -55,7 +56,7 @@ public class JwtToken implements AuthenticationToken {
 //     * @param username
 //     * @param pwd
 //     */
-//    public CustomToken(String username, String pwd) {
+//    public JwtToken(String username, String pwd) {
 //        super(username, pwd, false, null);
 //        this.type = LoginType.PASSWORD;
 //    }

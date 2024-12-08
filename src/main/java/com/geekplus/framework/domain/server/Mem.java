@@ -1,14 +1,13 @@
+package com.geekplus.framework.domain.server;
+
+import com.geekplus.common.util.math.Arith;
+
 /**
  * author     : geekplus
  * email      : geekcjj@gmail.com
  * date       : 2022/5/31 9:50 上午
- * description: 做什么的？
+ * description: //內存相关信息
  */
-package com.geekplus.framework.domain.server;
-
-import com.geekplus.common.util.Arith;
-
-//內存相关信息
 public class Mem {
     /**
      * 内存总量

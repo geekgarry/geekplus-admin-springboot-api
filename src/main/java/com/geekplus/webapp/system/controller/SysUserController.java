@@ -9,16 +9,17 @@ import com.geekplus.common.domain.LoginUser;
 import com.geekplus.common.domain.Result;
 import com.geekplus.common.enums.BusinessType;
 import com.geekplus.common.enums.OperatorType;
-import com.geekplus.common.myexception.BusinessException;
 import com.geekplus.common.page.PageDataInfo;
-import com.geekplus.common.util.ServletUtils;
+import com.geekplus.common.util.http.ServletUtil;
 import com.geekplus.common.util.file.FileUploadUtils;
 import com.geekplus.common.util.file.FileUtils;
 import com.geekplus.common.util.poi.ExcelUtil;
-import com.geekplus.framework.jwtshiro.JwtTokenUtil;
+import com.geekplus.common.util.string.StringUtils;
+import com.geekplus.framework.domain.server.Sys;
+import com.geekplus.framework.jwtshiro.JwtUtil;
 import com.geekplus.webapp.system.entity.SysRole;
 import com.geekplus.webapp.system.entity.SysUser;
-import com.geekplus.webapp.system.service.UserTokenService;
+import com.geekplus.webapp.common.service.SysUserTokenService;
 import com.geekplus.webapp.system.service.SysMenuService;
 import com.geekplus.webapp.system.service.SysRoleService;
 import com.geekplus.webapp.system.service.SysUserService;
@@ -47,9 +48,9 @@ public class SysUserController extends BaseController {
     @Resource
     private SysRoleService sysRoleService;
     @Resource
-    private UserTokenService userTokenService;
+    private SysUserTokenService sysUserTokenService;
     @Resource
-    private JwtTokenUtil jwtTokenUtil;
+    private JwtUtil jwtUtil;
 
     /**
      * 增加 系统用户表
@@ -103,6 +104,19 @@ public class SysUserController extends BaseController {
     }
 
     /**
+     * 更新 系统用户表
+     */
+    @RequiresPermissions("system:user:update")
+    @Log(title = "更新用户信息",businessType = BusinessType.UPDATE,operatorType = OperatorType.MANAGE)
+    @GetMapping("/updateUserProfile")
+    public Result updateUserProfile(@RequestBody SysUser sysUser) {
+        LoginUser loginUser = sysUserTokenService.getLoginUser(ServletUtil.getRequest());
+        loginUser.setSysUser(sysUser);
+        sysUserTokenService.setLoginUser(loginUser);
+        return toResult(sysUserService.updateSysUser(sysUser));
+    }
+
+    /**
      * 管理员重置系统用户密码
      */
     @RequiresPermissions("system:user:resetPwd")
@@ -123,7 +137,7 @@ public class SysUserController extends BaseController {
         //Session session= SecurityUtils.getSubject().getSession();
         //Long userId=Long.parseLong(session.getAttribute("userId").toString());
         SysUser sysUser=new SysUser();
-        sysUser.setUserId(userTokenService.getSysUserId(ServletUtils.getRequest()));
+        sysUser.setUserId(sysUserTokenService.getSysUserId(ServletUtil.getRequest()));
         sysUser.setPassword(oldPassword);
         if(sysUserService.selectSysUserByPassword(sysUser)!=null){
             sysUser.setPassword(newPassword);
@@ -150,12 +164,17 @@ public class SysUserController extends BaseController {
      */
     @GetMapping("/userProfile")
     public Result userProfile() {
-        LoginUser sysUser=new LoginUser();
-        String token = userTokenService.getToken(ServletUtils.getRequest());
-        if(token!= null) {
-            if (jwtTokenUtil.verify(token)) {
-                sysUser = userTokenService.getUserInfo(ServletUtils.getRequest());
-            }
+        //LoginUser loginUser = new LoginUser();
+        SysUser sysUser = null;
+        String token = sysUserTokenService.getToken(ServletUtil.getRequest());
+        if(StringUtils.isNotEmpty(token)) {
+            //if (jwtUtil.verify(token)) {
+                //sysUser = sysUserTokenService.getLoginUser(ServletUtil.getRequest());
+            //}
+            String userName= jwtUtil.getUserNameFromToken(token);
+            sysUser = sysUserService.getSysUserInfoBy(userName);
+            //SysUser sysUser = sysUserService.selectSysUserById(userId);
+
         }
         return Result.success(sysUser);
     }
@@ -165,8 +184,13 @@ public class SysUserController extends BaseController {
      */
     @GetMapping("/updateAvatar")
     public Result updateAvatar(String avatar) {
-        String userName=userTokenService.getSysUserName();
+        String userName= sysUserTokenService.getSysUserName();
         boolean isUpdate=sysUserService.updateUserAvatar(userName,avatar);
+        LoginUser loginUser = sysUserTokenService.getLoginUser(ServletUtil.getRequest());
+        SysUser sysUser = loginUser.getSysUser();
+        sysUser.setAvatar(avatar);
+        loginUser.setSysUser(sysUser);
+        sysUserTokenService.setLoginUser(loginUser);
         return isUpdate?Result.success((Object)avatar):Result.error();
     }
 
@@ -179,15 +203,17 @@ public class SysUserController extends BaseController {
     {
         if (!file.isEmpty())
         {
-            LoginUser loginUser = userTokenService.getUserInfo(ServletUtils.getRequest());
+            LoginUser loginUser = sysUserTokenService.getLoginUser(ServletUtil.getRequest());
+            SysUser sysUser = loginUser.getSysUser();
             String avatar = FileUploadUtils.upload(WebAppConfig.getAvatarPath(), file);
-            if (sysUserService.updateUserAvatar(loginUser.getUserName(), avatar))
+            if (sysUserService.updateUserAvatar(sysUser.getUserName(), avatar))
             {
                 Result ajax = Result.success();
                 ajax.put("imgUrl", avatar);
                 // 更新缓存用户头像
-                loginUser.setAvatar(avatar);
-                //loginUserTokenService.setLoginUser(loginUser);
+                sysUser.setAvatar(avatar);
+                loginUser.setSysUser(sysUser);
+                sysUserTokenService.setLoginUser(loginUser);
                 return ajax;
             }
         }

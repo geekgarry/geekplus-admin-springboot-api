@@ -1,13 +1,12 @@
 package com.geekplus.framework.aspect;
 
 import com.geekplus.common.annotation.RepeatLogin;
-import com.geekplus.common.annotation.RepeatSubmit;
+import com.geekplus.common.domain.LoginBody;
 import com.geekplus.common.domain.LoginUser;
 import com.geekplus.common.enums.ApiExceptionEnum;
 import com.geekplus.common.myexception.BusinessException;
 import com.geekplus.common.redis.RedisUtil;
 import com.geekplus.common.util.string.StringUtils;
-import com.geekplus.framework.jwtshiro.JwtTokenUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -62,10 +61,10 @@ public class RepeatLoginAspect {
         //log.info("代理的是哪一个方法："+signature.getName());
         Object[] obj = joinPoint.getArgs();
         log.info("获取目标方法的参数信息："+ Arrays.asList(obj));
-        LoginUser loginUser=(LoginUser)Arrays.asList(obj).get(0);
+        LoginBody loginBody=(LoginBody)Arrays.asList(obj).get(0);
         //log.info("获取目标方法的参数信息："+ loginUser.getUserName());
         // 获取token当做key
-        String userName = loginUser.getUserName();//request.getHeader("token");
+        String userName = loginBody.getUserName();//request.getHeader("token");
         if (StringUtils.isBlank(userName)) {
             throw new BusinessException(ApiExceptionEnum.LOGIN_AUTH);
         }

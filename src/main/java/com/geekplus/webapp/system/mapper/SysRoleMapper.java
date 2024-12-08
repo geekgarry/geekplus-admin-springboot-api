@@ -65,4 +65,6 @@ public interface SysRoleMapper {
     SysRole selectSysRoleAndMenuTreeById(Long roleId);
 
     List<SysRole> selectRolesByUserId(String userId);
+
+    List<SysRole> selectRolesByUserName(String userName);
 }

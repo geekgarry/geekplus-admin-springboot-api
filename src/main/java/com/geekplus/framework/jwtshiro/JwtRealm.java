@@ -2,19 +2,16 @@ package com.geekplus.framework.jwtshiro;
 
 import com.geekplus.common.core.LoggerFactory;
 import com.geekplus.common.domain.LoginUser;
-import com.geekplus.common.util.DateTimeUtils;
 import com.geekplus.common.util.string.StringUtils;
+import com.geekplus.webapp.common.service.SysUserTokenService;
 import com.geekplus.webapp.system.entity.SysMenu;
 import com.geekplus.webapp.system.entity.SysRole;
-import com.geekplus.webapp.system.service.*;
-import lombok.extern.slf4j.Slf4j;
+import com.geekplus.webapp.system.entity.SysUser;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
-import org.apache.shiro.crypto.hash.SimpleHash;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
-import org.apache.shiro.util.ByteSource;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -26,7 +23,7 @@ public class JwtRealm extends AuthorizingRealm {
     private static Logger log =  LoggerFactory.getLogger(JwtRealm.class.getName());
 
     @Autowired
-    private UserTokenService tokenService;
+    private SysUserTokenService tokenService;
 
 //    @Autowired
 //    private SysUserService sysUserService;
@@ -48,11 +45,10 @@ public class JwtRealm extends AuthorizingRealm {
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
         //获取登录用户名
         LoginUser loginUser = (LoginUser) principalCollection.getPrimaryPrincipal();
-        //String userId = JwtTokenUtil.verifyResult(token).getClaim("userId").asString();
         //log.info("用户的信息{}", loginUser.getUserId());
-        List<SysRole> roles = loginUser.getSysRoleList();
+        SysUser sysUser = loginUser.getSysUser();
+        List<SysRole> roles = sysUser.getSysRoleList();
         //log.info("用户角色{}", roles);
-        List<SysMenu> menus = loginUser.getSysMenuList();
         // 去重操作
 //        Set set = new HashSet();
 //        set.addAll(menus);
@@ -61,14 +57,14 @@ public class JwtRealm extends AuthorizingRealm {
         //添加角色和权限
         SimpleAuthorizationInfo simpleAuthorizationInfo = new SimpleAuthorizationInfo();
 
-//        Set roleSet=userRolePermList.stream().map(map->map.get("roleKey").toString()).collect(Collectors.toSet());
-//        Set permSet=userRolePermList.stream().map(map->map.get("permName").toString()).collect(Collectors.toSet());
-        Set roleSet2=roles.stream().filter(sysRole -> !StringUtils.isEmpty(sysRole.getRoleKey())).map(SysRole::getRoleKey).collect(Collectors.toSet());
-        Set permSet2=menus.stream().filter(sysMenu -> !StringUtils.isEmpty(sysMenu.getPerms())).map(SysMenu::getPerms).collect(Collectors.toSet());
-        //permSet2.remove("");
-        simpleAuthorizationInfo.addRoles(roleSet2);
-        simpleAuthorizationInfo.addStringPermissions(permSet2);
-        log.info("授权当前Subject用户为：{} 所属角色：{} ||| {}", loginUser.getUserName(),roleSet2,permSet2);
+        //Set roleSet=userRolePermList.stream().map(map->map.get("roleKey").toString()).collect(Collectors.toSet());
+        //Set permSet=userRolePermList.stream().map(map->map.get("permName").toString()).collect(Collectors.toSet());
+        Set roleSet=roles.stream().filter(sysRole -> !StringUtils.isEmpty(sysRole.getRoleKey())).map(SysRole::getRoleKey).collect(Collectors.toSet());
+        //Set permSet=menus.stream().filter(sysMenu -> !StringUtils.isEmpty(sysMenu.getPerms())).map(SysMenu::getPerms).collect(Collectors.toSet());
+        Set<String> permSet = loginUser.getSysMenuList();
+        simpleAuthorizationInfo.addRoles(roleSet);
+        simpleAuthorizationInfo.addStringPermissions(permSet);
+        log.info("授权当前Subject用户为：{} 所属角色：{} ||| {}", sysUser.getUserName(), roleSet, permSet);
 //        userRolePermList.stream().forEach(rolePermMap -> {
 //        });
 //        numbersList.stream().distinct().collect(Collectors.toList());
@@ -97,7 +93,7 @@ public class JwtRealm extends AuthorizingRealm {
         //String username = (String) authenticationToken.getPrincipal();
         //String password = new String((char[]) authenticationToken.getCredentials());
         //System.out.println("用户："+username);
-        // 第二种方式（推荐第一种）c
+        // 第二种方式（推荐第一种）
         // UsernamePasswordToken usernamePasswordToken = (UsernamePasswordToken) authenticationToken;
         // String username = usernamePasswordToken.getUsername();
         // String password = new String(usernamePasswordToken.getPassword());
@@ -110,15 +106,13 @@ public class JwtRealm extends AuthorizingRealm {
         return authenticationInfo;
     }
 
-    public static void main(String[] args) {
-//        String hashAlgorithmName = "MD5";
-//        String credentials = "123456";
-//        int hashIterations = 1024;
-//        ByteSource credentialsSalt = ByteSource.Util.bytes("plus");
-//        Object obj = new SimpleHash(hashAlgorithmName, credentials, credentialsSalt, hashIterations);
-//        System.out.println(obj);
-//        String value=null;
-//        System.out.println(StringUtils.isNoneBlank(value));
-//        System.out.println(StringUtils.isAnyBlank("fdhkhfd","ss",""));
+    /**
+     * 清除当前用户的权限认证缓存
+     *
+     * @param principals 权限信息
+     */
+    @Override
+    public void clearCache(PrincipalCollection principals) {
+        super.clearCache(principals);
     }
 }

@@ -15,7 +15,7 @@ import java.util.Random;
 /**
  * @ClassName QRGenerate
  * @Description 二维码生成/解析工具
- * @Author Zheng
+ * @Author GeekPlus
  * @Date 2017年10月31日 下午4:52:37
  */
 public class QRUtil {

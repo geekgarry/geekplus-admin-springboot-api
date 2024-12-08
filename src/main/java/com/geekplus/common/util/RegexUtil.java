@@ -40,6 +40,29 @@ public class RegexUtil {
 	//移动设备正则匹配：手机端、平板
 	public static Pattern phonePat = Pattern.compile(phoneReg, Pattern.CASE_INSENSITIVE);
 	public static Pattern tablePat = Pattern.compile(tableReg, Pattern.CASE_INSENSITIVE);
+
+	/**
+	 * 正则表达式验证
+	 * @param valStr 将要验证的字符
+	 * @return true: 正确 满足表达式约束   false:不合法
+	 */
+	public static boolean isPhoneNumber(String valStr){
+		Pattern pattern = Pattern.compile(IS_PHONE_NUMBER_PATTERN);
+		Matcher matcher = pattern.matcher(valStr);
+		return matcher.matches();
+	}
+
+	/**
+	 * 正则表达式验证
+	 * @param valStr 将要验证的字符
+	 * @return true: 正确 满足表达式约束   false:不合法
+	 */
+	public static boolean isEmail(String valStr){
+		Pattern pattern = Pattern.compile(IS_EMAIL_PATTERN);
+		Matcher matcher = pattern.matcher(valStr);
+		return matcher.matches();
+	}
+
     /**
      * 正则表达式验证
      * @param valStr 将要验证的字符

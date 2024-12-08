@@ -1,17 +1,16 @@
+package com.geekplus.framework.domain.server;
+
+import com.geekplus.common.util.math.Arith;
+import com.geekplus.common.util.datetime.DateUtil;
+
+import java.lang.management.ManagementFactory;
+
 /**
  * author     : geekplus
  * email      : geekcjj@gmail.com
  * date       : 2022/5/31 9:51 上午
- * description: 做什么的？
+ * description: //JVM相关参数
  */
-package com.geekplus.framework.domain.server;
-
-import com.geekplus.common.util.Arith;
-import com.geekplus.common.util.DateUtils;
-
-import java.lang.management.ManagementFactory;
-
-//JVM相关参数
 public class Jvm {
     /**
      * 当前JVM占用的内存总数(M)
@@ -111,7 +110,7 @@ public class Jvm {
      */
     public String getStartTime()
     {
-        return DateUtils.parseDateToStr(DateUtils.YYYY_MM_DD_HH_MM_SS, DateUtils.getServerStartDate());
+        return DateUtil.parseDateToStr(DateUtil.YYYY_MM_DD_HH_MM_SS, DateUtil.getServerStartDate());
     }
 
     /**
@@ -119,6 +118,6 @@ public class Jvm {
      */
     public String getRunTime()
     {
-        return DateUtils.getDatePoor(DateUtils.getNowDate(), DateUtils.getServerStartDate());
+        return DateUtil.getDatePoor(DateUtil.getNowDate(), DateUtil.getServerStartDate());
     }
 }

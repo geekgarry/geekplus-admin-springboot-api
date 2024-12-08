@@ -1,10 +1,9 @@
 package com.geekplus.common.util.reflect;
 
 import com.geekplus.common.core.text.Convert;
-import com.geekplus.common.util.DateUtils;
+import com.geekplus.common.util.datetime.DateUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
-import org.apache.poi.ss.usermodel.DateUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -193,11 +192,11 @@ public class ReflectUtils
                     {
                         if (args[i] instanceof String)
                         {
-                            args[i] = DateUtils.parseDate(args[i]);
+                            args[i] = DateUtil.parseDate(args[i]);
                         }
                         else
                         {
-                            args[i] = DateUtil.getJavaDate((Double) args[i]);
+                            args[i] = org.apache.poi.ss.usermodel.DateUtil.getJavaDate((Double) args[i]);
                         }
                     }
                 }

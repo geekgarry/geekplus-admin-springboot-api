@@ -17,7 +17,7 @@ import java.io.File;
  *
  * @ClassName MailUtil
  * @Description 邮件工具
- * @Author Zheng
+ * @Author Plus
  * @Date 2018年5月23日 上午9:41:24
  */
 @Component

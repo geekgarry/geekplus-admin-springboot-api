@@ -2,7 +2,7 @@ package com.geekplus.webapp.function.service.impl;
 
 import com.geekplus.webapp.function.entity.ChatAILog;
 import com.geekplus.webapp.function.mapper.ChatAILogMapper;
-import com.geekplus.common.util.DateUtils;
+import com.geekplus.common.util.datetime.DateUtil;
 import com.geekplus.webapp.function.service.IChatAILogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -63,7 +63,7 @@ ID
     @Override
     public int insertChatAILog(ChatAILog chatAILog)
     {
-        chatAILog.setCreateTime(DateUtils.getNowDate());
+        chatAILog.setCreateTime(DateUtil.getNowDate());
         return chatAILogMapper.insertChatAILog(chatAILog);
     }
 

@@ -12,7 +12,7 @@
             <result property="nickName" column="nick_name" jdbcType="VARCHAR" />
             <result property="userType" column="user_type" jdbcType="VARCHAR" />
             <result property="email" column="email" jdbcType="VARCHAR" />
-            <result property="phoneunmber" column="phoneunmber" jdbcType="VARCHAR" />
+            <result property="phoneNumber" column="phone_number" jdbcType="VARCHAR" />
             <result property="gender" column="gender" jdbcType="CHAR" />
             <result property="avatar" column="avatar" jdbcType="VARCHAR" />
             <result property="password" column="password" jdbcType="VARCHAR" />
@@ -25,102 +25,94 @@
             <result property="updateBy" column="update_by" jdbcType="VARCHAR" />
             <result property="updateTime" column="update_time" jdbcType="TIMESTAMP" />
             <result property="remark" column="remark" jdbcType="VARCHAR" />
+            <association property="sysDept" column="dept_id" javaType="SysDept" resultMap="sysDeptResultMap"/>
+            <collection property="sysRoleList" javaType="java.util.List" ofType="SysRole" resultMap="roleResultMap"/>
     </resultMap>
 
-    <resultMap id="UserLoginInfo" type="com.geekplus.common.domain.LoginUser">
+    <resultMap id="UserLoginInfo" type="com.geekplus.webapp.system.entity.SysUser">
         <id column="user_id" jdbcType="BIGINT" property="userId" />
         <result column="dept_id" jdbcType="INTEGER" property="deptId" />
-        <result column="dept_name" jdbcType="INTEGER" property="deptName" />
+<!--        <result column="dept_name" jdbcType="INTEGER" property="deptName" />-->
         <result column="user_name" jdbcType="VARCHAR" property="userName" />
         <result column="nick_name" jdbcType="VARCHAR" property="nickName" />
         <result column="user_type" jdbcType="VARCHAR" property="userType" />
-<!--        <result column="email" jdbcType="VARCHAR" property="email" />-->
-<!--        <result column="phoneunmber" jdbcType="VARCHAR" property="phoneunmber" />-->
-<!--        <result column="gender" jdbcType="CHAR" property="gender" />-->
+        <result column="email" jdbcType="VARCHAR" property="email" />
+        <result column="phone_number" jdbcType="VARCHAR" property="phoneNumber" />
+        <result column="gender" jdbcType="CHAR" property="gender" />
         <result column="avatar" jdbcType="VARCHAR" property="avatar" />
         <result column="password" jdbcType="VARCHAR" property="password" />
         <result column="status" jdbcType="CHAR" property="status" />
-<!--        <result column="del_flag" jdbcType="CHAR" property="delFlag" />-->
+        <result column="del_flag" jdbcType="CHAR" property="delFlag" />
         <result column="login_ip" jdbcType="VARCHAR" property="loginIp" />
         <result column="login_time" jdbcType="TIMESTAMP" property="loginTime" />
-<!--        <result column="create_by" jdbcType="VARCHAR" property="createBy" />-->
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
-<!--        <result column="update_by" jdbcType="VARCHAR" property="updateBy" />-->
-<!--        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />-->
-<!--        <result column="remark" jdbcType="VARCHAR" property="remark" />-->
     </resultMap>
 
-    <resultMap id="UserLoginInfoResultMap" type="com.geekplus.common.domain.LoginUser">
-        <id column="user_id" jdbcType="BIGINT" property="userId" />
-        <result column="dept_id" jdbcType="INTEGER" property="deptId" />
-        <result column="dept_name" jdbcType="VARCHAR" property="deptName" />
-        <result column="user_name" jdbcType="VARCHAR" property="userName" />
+    <!--这里是需要存在cache缓存中的数据-->
+<!--    <resultMap id="UserLoginInfoResultMap" type="com.geekplus.common.domain.LoginUser">-->
+<!--        <result column="dept_name" jdbcType="VARCHAR" property="deptName" />-->
+<!--        <result column="user_name" jdbcType="VARCHAR" property="userName" />-->
 <!--        <result column="nick_name" jdbcType="VARCHAR" property="nickName" />-->
-<!--        <result column="user_type" jdbcType="VARCHAR" property="userType" />-->
-<!--        <result column="email" jdbcType="VARCHAR" property="email" />-->
-<!--        <result column="phoneunmber" jdbcType="VARCHAR" property="phoneunmber" />-->
-<!--        <result column="gender" jdbcType="CHAR" property="gender" />-->
-<!--        <result column="avatar" jdbcType="VARCHAR" property="avatar" />-->
-        <result column="password" jdbcType="VARCHAR" property="password" />
-        <result column="status" jdbcType="CHAR" property="status" />
-<!--        <result column="del_flag" jdbcType="CHAR" property="delFlag" />-->
-        <result column="login_ip" jdbcType="VARCHAR" property="loginIp" />
-        <result column="login_time" jdbcType="TIMESTAMP" property="loginTime" />
-<!--        <result column="create_by" jdbcType="VARCHAR" property="createBy" />-->
-        <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
-<!--        <result column="update_by" jdbcType="VARCHAR" property="updateBy" />-->
-<!--        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />-->
-<!--        <result column="remark" jdbcType="VARCHAR" property="remark" />-->
-        <collection property="sysRoleList" javaType="java.util.ArrayList"
-                    ofType="SysRole"
-                    select="selectUserRoles" column="{userId=user_id}" />
-        <collection property="sysMenuList" javaType="java.util.ArrayList"
-                    ofType="SysMenu"
-                    select="selectUserMenus" column="{userId=user_id}" />
+<!--        <result column="password" jdbcType="VARCHAR" property="password" />-->
+<!--        <result column="status" jdbcType="CHAR" property="status" />-->
+<!--        <result column="login_ip" jdbcType="VARCHAR" property="loginIp" />-->
+<!--        <result column="login_time" jdbcType="TIMESTAMP" property="loginTime" />-->
+<!--        <collection property="sysRoleList" javaType="java.util.ArrayList"-->
+<!--                    ofType="SysRole"-->
+<!--                    select="selectUserRoles" column="{userId=user_id}" />-->
+<!--        <collection property="sysMenuList" javaType="java.util.ArrayList"-->
+<!--                    ofType="SysMenu"-->
+<!--                    select="selectUserMenus" column="{userId=user_id}" />-->
+<!--    </resultMap>-->
+
+    <resultMap id="sysDeptResultMap" type="com.geekplus.webapp.system.entity.SysDept">
+        <result property="deptId" column="dept_id" jdbcType="INTEGER" />
+        <result property="parentId" column="parent_id" jdbcType="INTEGER" />
+        <result property="deptName" column="dept_name" jdbcType="VARCHAR" />
+        <result property="leader" column="leader" jdbcType="VARCHAR" />
+        <result property="phone" column="phone" jdbcType="VARCHAR" />
+        <result property="email" column="email" jdbcType="VARCHAR" />
     </resultMap>
 
     <resultMap id="roleResultMap" type="com.geekplus.webapp.system.entity.SysRole" >
-<!--        <id column="role_id" jdbcType="BIGINT" property="roleId" />-->
-<!--        <result column="role_name" jdbcType="VARCHAR" property="roleName" />-->
+        <result property="roleId" column="role_id" jdbcType="INTEGER" />
+        <result property="roleName" column="role_name" jdbcType="VARCHAR" />
         <result column="role_key" jdbcType="VARCHAR" property="roleKey" />
-<!--        <result column="role_sort" jdbcType="INTEGER" property="roleSort" />-->
-<!--        <result column="data_scope" jdbcType="CHAR" property="dataScope" />-->
-<!--        <result column="menu_check_strictly" jdbcType="BIT" property="menuCheckStrictly" />-->
-<!--        <result column="dept_check_strictly" jdbcType="BIT" property="deptCheckStrictly" />-->
-<!--        <result column="status" jdbcType="CHAR" property="status" />-->
-<!--        <result column="remark" jdbcType="VARCHAR" property="remark" />-->
     </resultMap>
 
     <resultMap id="menuResultMap" type="com.geekplus.webapp.system.entity.SysMenu" >
-<!--        <id column="menu_id" jdbcType="BIGINT" property="menuId" />-->
-<!--        <result column="menu_name" jdbcType="VARCHAR" property="menuName" />-->
-<!--        <result column="parent_id" jdbcType="BIGINT" property="parentId" />-->
-<!--        <result column="order_num" jdbcType="INTEGER" property="orderNum" />-->
-<!--        <result column="path" jdbcType="VARCHAR" property="path" />-->
-<!--        <result column="component" jdbcType="VARCHAR" property="component" />-->
-<!--        <result column="is_frame" jdbcType="INTEGER" property="isFrame" />-->
-<!--        <result column="is_cache" jdbcType="INTEGER" property="isCache" />-->
-<!--        <result column="menu_type" jdbcType="CHAR" property="menuType" />-->
-<!--        <result column="visible" jdbcType="CHAR" property="visible" />-->
-<!--        <result column="status" jdbcType="CHAR" property="status" />-->
+        <result property="menuId" column="menu_id" jdbcType="INTEGER" />
+        <result property="menuName" column="menu_name" jdbcType="VARCHAR" />
+        <result property="parentId" column="parent_id" jdbcType="INTEGER" />
+        <result property="orderNum" column="order_num" jdbcType="INTEGER" />
+        <result property="path" column="path" jdbcType="VARCHAR" />
         <result column="perms" jdbcType="VARCHAR" property="perms" />
-<!--        <result column="icon" jdbcType="VARCHAR" property="icon" />-->
-<!--        <result column="remark" jdbcType="VARCHAR" property="remark" />-->
     </resultMap>
 
     <!--系统用户表-->
     <!--基础查询语句-->
     <sql id="baseSelectVo">
         select
-        user_id,dept_id,user_name,nick_name,user_type,email,phoneunmber,gender,avatar,password,status,del_flag,login_ip,login_time,create_by,create_time,update_by,update_time,remark
+        user_id,dept_id,user_name,nick_name,user_type,email,phone_number,gender,avatar,password,status,del_flag,login_ip,login_time,create_by,create_time,update_by,update_time,remark
          from sys_user
     </sql>
 
     <!--基础查询语句2,用作联合查询使用-->
     <sql id="selectSysUserVo">
         select
-            su.user_id,su.dept_id,su.user_name,su.nick_name,su.user_type,su.email,su.phoneunmber,su.gender,su.avatar,su.password,su.status,su.del_flag,su.login_ip,su.login_time,su.create_by,su.create_time,su.update_by,su.update_time,su.remark
+            su.user_id,su.dept_id,su.user_name,su.nick_name,su.user_type,su.email,su.phone_number,su.gender,su.avatar,su.password,su.status,su.del_flag,su.login_ip,su.login_time,su.create_by,su.create_time,su.update_by,su.update_time,su.remark
          from sys_user su
+    </sql>
+
+    <sql id="selectSysUserRoleDept">
+        select su.user_id,su.dept_id,su.user_name,su.nick_name,su.user_type,su.email,su.phone_number,su.gender,su.avatar,
+        su.password,su.status,su.del_flag,su.login_ip,su.login_time,su.create_by,su.create_time,su.update_by,su.update_time,su.remark,
+        sd.dept_id,sd.dept_name,sd.parent_id,sd.leader,sd.phone,sd.email,
+        sr.role_id,sr.role_name,sr.role_key
+        from sys_user su
+        left join sys_dept sd on su.dept_id=sd.dept_id
+        left join sys_user_role sur on sur.user_id = su.user_id
+        left join sys_role sr on sr.role_id = sur.role_id
     </sql>
 
     <!--数据查询操作SQL(非联合查询)-->
@@ -145,8 +137,8 @@
                     <if test="email !=null and email != ''">
                         AND email = #{email}
                     </if>
-                    <if test="phoneunmber !=null and phoneunmber != ''">
-                        AND phoneunmber = #{phoneunmber}
+                    <if test="phoneNumber !=null and phoneNumber != ''">
+                        AND phone_number = #{phoneNumber}
                     </if>
                     <if test="gender !=null">
                         AND gender = #{gender}
@@ -209,8 +201,8 @@
             <if test="email !=null and email != ''">
                 AND email = #{email}
             </if>
-            <if test="phoneunmber !=null and phoneunmber != ''">
-                AND phoneunmber = #{phoneunmber}
+            <if test="phoneNumber !=null and phoneNumber != ''">
+                AND phone_number = #{phoneNumber}
             </if>
             <if test="gender !=null">
                 AND gender = #{gender}
@@ -270,8 +262,8 @@
                     <if test="email !=null">
                         AND su.email = #{email}
                     </if>
-                    <if test="phoneunmber !=null">
-                        AND su.phoneunmber = #{phoneunmber}
+                    <if test="phoneNumber !=null">
+                        AND su.phone_number = #{phoneNumber}
                     </if>
                     <if test="gender !=null">
                         AND su.gender = #{gender}
@@ -328,7 +320,7 @@
                         <if test="nickName != null  and nickName != ''">nick_name,</if>
                         <if test="userType != null  and userType != ''">user_type,</if>
                         <if test="email != null  and email != ''">email,</if>
-                        <if test="phoneunmber != null  and phoneunmber != ''">phoneunmber,</if>
+                        <if test="phoneNumber != null  and phoneNumber != ''">phone_number,</if>
                         <if test="gender != null  and gender != ''">gender,</if>
                         <if test="avatar != null  and avatar != ''">avatar,</if>
                         <if test="password != null  and password != ''">password,</if>
@@ -348,7 +340,7 @@
                         <if test="nickName != null  and nickName != ''">#{nickName},</if>
                         <if test="userType != null  and userType != ''">#{userType},</if>
                         <if test="email != null  and email != ''">#{email},</if>
-                        <if test="phoneunmber != null  and phoneunmber != ''">#{phoneunmber},</if>
+                        <if test="phoneNumber != null  and phoneNumber != ''">#{phoneNumber},</if>
                         <if test="gender != null  and gender != ''">#{gender},</if>
                         <if test="avatar != null  and avatar != ''">#{avatar},</if>
                         <if test="password != null  and password != ''">#{password},</if>
@@ -368,12 +360,12 @@
     <insert id="batchInsertSysUserList" parameterType="java.util.List">
         insert into sys_user
         (
-         dept_id,user_name,nick_name,user_type,email,phoneunmber,gender,avatar,password,status,del_flag,login_ip,login_time,create_by,create_time,update_by,update_time,remark
+         dept_id,user_name,nick_name,user_type,email,phone_number,gender,avatar,password,status,del_flag,login_ip,login_time,create_by,create_time,update_by,update_time,remark
         )
          values
         <foreach collection="list" item="item" index="index" separator=",">
         (
-         #{item.deptId},#{item.userName},#{item.nickName},#{item.userType},#{item.email},#{item.phoneunmber},#{item.gender},#{item.avatar},#{item.password},#{item.status},#{item.delFlag},#{item.loginIp},#{item.loginTime},#{item.createBy},sysdate(),#{item.updateBy},#{item.updateTime},#{item.remark}
+         #{item.deptId},#{item.userName},#{item.nickName},#{item.userType},#{item.email},#{item.phoneNumber},#{item.gender},#{item.avatar},#{item.password},#{item.status},#{item.delFlag},#{item.loginIp},#{item.loginTime},#{item.createBy},sysdate(),#{item.updateBy},#{item.updateTime},#{item.remark}
         )
         </foreach>
     </insert>
@@ -413,7 +405,7 @@
                     <if test="nickName != null  and nickName != ''">nick_name = #{nickName},</if>
                     <if test="userType != null  and userType != ''">user_type = #{userType},</if>
                     <if test="email != null  and email != ''">email = #{email},</if>
-                    <if test="phoneunmber != null  and phoneunmber != ''">phoneunmber = #{phoneunmber},</if>
+                    <if test="phoneNumber != null  and phoneNumber != ''">phone_number = #{phoneNumber},</if>
                     <if test="gender != null  and gender != ''">gender = #{gender},</if>
                     <if test="avatar != null  and avatar != ''">avatar = #{avatar},</if>
                     <if test="password != null  and password != ''">password = #{password},</if>
@@ -438,7 +430,7 @@
             <if test="nickName != null  and nickName != ''">nick_name = #{nickName},</if>
             <if test="userType != null  and userType != ''">user_type = #{userType},</if>
             <if test="email != null  and email != ''">email = #{email},</if>
-            <if test="phoneunmber != null  and phoneunmber != ''">phoneunmber = #{phoneunmber},</if>
+            <if test="phoneNumber != null  and phoneNumber != ''">phone_number = #{phoneNumber},</if>
             <if test="gender != null  and gender != ''">gender = #{gender},</if>
             <if test="avatar != null  and avatar != ''">avatar = #{avatar},</if>
             <if test="password != null  and password != ''">password = #{password},</if>
@@ -458,39 +450,57 @@
     <!--批量更新某个字段-->
     <update id="batchUpdateSysUserList" >
         update sys_user set
-            user_id='',dept_id='',user_name='',nick_name='',user_type='',email='',phoneunmber='',gender='',avatar='',password='',status='',del_flag='',login_ip='',login_time='',create_by='',create_time='',update_by='',update_time='',remark=''
+            user_id='',dept_id='',user_name='',nick_name='',user_type='',email='',phone_number='',gender='',avatar='',password='',status='',del_flag='',login_ip='',login_time='',create_by='',create_time='',update_by='',update_time='',remark=''
          where user_id in
         <foreach collection="array" item="item"  open="(" close=")" separator=",">
             #{item}
         </foreach>
     </update>
 
-    <select id="getRoleMenuByUsername" resultType="Map" parameterType="SysUser" >
+    <select id="getRoleMenuByUserName" resultType="Map" parameterType="SysUser" >
     SELECT * from sys_user suser LEFT JOIN sys_user_role urole on suser.user_id=urole.user_id
     LEFT JOIN sys_role srole on srole.role_id=urole.role_id
     where suser.user_name=#{userName}
     </select>
 
     <!--用户实体信息下携带用户名查询用户信息-->
-    <select id="selectSysUser" parameterType="SysUser" resultMap="UserLoginInfo">
+    <select id="sysUserLoginBy" resultMap="UserLoginInfo" parameterType="String">
         <!--
           WARNING - @mbg.generated
           This element is automatically generated by MyBatis Generator, do not modify.
           This element was generated on Mon Apr 25 23:09:21 CST 2022.
         -->
-    select su.user_id,su.dept_id,sd.dept_name,su.user_name,su.nick_name,su.user_type,su.email,su.phoneunmber,su.gender,su.avatar,
+    select su.user_id,su.dept_id,sd.dept_name,su.user_name,su.nick_name,su.user_type,su.email,su.phone_number,su.gender,su.avatar,
         su.password,su.status,su.del_flag,su.login_ip,su.login_time,su.create_by,su.create_time,su.update_by,su.update_time,su.remark
         from sys_user su left join sys_dept sd on su.dept_id=sd.dept_id
         where su.user_name = #{userName}
     </select>
 
-    <!--用户名查询用户信息-->
-    <select id="selectUserAllInfo" resultMap="UserLoginInfoResultMap" parameterType="String">
-    select su.user_id,su.dept_id,sd.dept_name,su.user_name,su.nick_name,su.user_type,su.email,su.phoneunmber,su.gender,su.avatar,
-        su.password,su.status,su.del_flag,su.login_ip,su.login_time,su.create_by,su.create_time,su.update_by,su.update_time,su.remark
-        from sys_user su left join sys_dept sd on su.dept_id=sd.dept_id
-    where su.user_name=#{userName}
+    <!--用户实体信息下携带用户名查询用户信息-->
+    <select id="getSysUserInfoBy" resultMap="BaseResultMap" parameterType="String">
+        <include refid="selectSysUserRoleDept" />
+        where su.user_name = #{userName}
     </select>
+
+    <!--用户实体信息下携带用户名查询用户信息-->
+    <select id="getSysUserInfoByPhone" resultMap="BaseResultMap" parameterType="String">
+        <include refid="selectSysUserRoleDept" />
+        where su.phone_number = #{phoneNumber}
+    </select>
+
+    <!--用户实体信息下携带用户名查询用户信息-->
+    <select id="getSysUserInfoByEmail" resultMap="BaseResultMap" parameterType="String">
+        <include refid="selectSysUserRoleDept" />
+        where su.email = #{email}
+    </select>
+
+    <!--用户名查询用户信息-->
+<!--    <select id="sysUserLoginAllInfo" resultMap="UserLoginInfoResultMap" parameterType="String">-->
+<!--    select su.user_id,su.dept_id,sd.dept_name,su.user_name,su.nick_name,su.user_type,su.email,su.phone_number,su.gender,su.avatar,-->
+<!--        su.password,su.status,su.del_flag,su.login_ip,su.login_time,su.create_by,su.create_time,su.update_by,su.update_time,su.remark-->
+<!--        from sys_user su left join sys_dept sd on su.dept_id=sd.dept_id-->
+<!--    where su.user_name=#{userName}-->
+<!--    </select>-->
 
     <select id="selectUserRoles" resultMap="roleResultMap" >
     SELECT srole.* from sys_role srole LEFT JOIN sys_user_role urole on srole.role_id=urole.role_id left join sys_user suser on suser.user_id=urole.user_id

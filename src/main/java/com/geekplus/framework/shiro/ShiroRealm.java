@@ -1,7 +1,7 @@
 //package com.geekplus.framework.shiro;
 //
 //import com.geekplus.common.domain.LoginUser;
-//import com.geekplus.common.util.ServletUtil;
+//import com.geekplus.common.util.http.ServletUtil;
 //import com.geekplus.webapp.system.pojo.SysMenu;
 //import com.geekplus.webapp.system.pojo.SysRole;
 //import com.geekplus.webapp.system.pojo.SysUser;

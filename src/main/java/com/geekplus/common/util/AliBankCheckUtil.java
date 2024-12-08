@@ -1,5 +1,6 @@
 package com.geekplus.common.util;
 
+import com.geekplus.common.util.http.HttpRequestUtil;
 import com.geekplus.common.util.json.JsonObjectUtil;
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
@@ -48,7 +49,7 @@ public class AliBankCheckUtil {
 		    	* 相应的依赖请参照
 		    	* https://github.com/aliyun/api-gateway-demo-sign-java/blob/master/pom.xml
 		    	*/
-		    	HttpResponse response = HttpUtils.doPost(host, path, method, headers, querys, bodys);
+		    	HttpResponse response = HttpRequestUtil.doPost(host, path, method, headers, querys, bodys);
 		    	System.out.println(response.toString());
 		    	//获取response的body
 		    	String jsonBody = EntityUtils.toString(response.getEntity());

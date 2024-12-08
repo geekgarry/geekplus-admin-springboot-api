@@ -5,6 +5,10 @@ import com.geekplus.common.domain.ValidBase64CodeVO;
 import com.geekplus.common.enums.ApiExceptionEnum;
 import com.geekplus.common.myexception.BusinessException;
 import com.geekplus.common.util.CaptchaImageUtil;
+import com.geekplus.common.util.http.ServletUtil;
+import com.geekplus.common.util.http.IPUtils;
+import com.geekplus.common.util.uuid.IdUtils;
+import com.geekplus.common.util.uuid.UUIDUtil;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +23,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.imageio.ImageIO;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -51,8 +54,8 @@ public class CaptchaImageController {
 
         CaptchaImageUtil instance = CaptchaImageUtil.getInstance();
         // 验证码标识
-        String key = "GP" + System.currentTimeMillis() + (10000 + new Random().nextInt(89999));
-        //String cacheKey = CacheKeyUtil.getImageValidateCodeCacheKey(key);
+        String key = UUIDUtil.getUUIDTimeStamp() + IdUtils.createCount();
+        //(10000 + new Random().nextInt(89999));
         redisTemplate.opsForValue().set(key, instance.getCode(), expireTime, TimeUnit.SECONDS);
         // 将图像输出到Servlet输出流中。
         ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -73,9 +76,9 @@ public class CaptchaImageController {
     @GetMapping(value = "/captchaImage")
     public ResponseEntity<byte[]> getCaptchaCode() {
         CaptchaImageUtil instance = CaptchaImageUtil.getInstance();
+        String ip = IPUtils.getIp(ServletUtil.getRequest());
         // 验证码标识
-        String key = "GP" + System.currentTimeMillis() + (10000 + new Random().nextInt(89999));
-        //String cacheKey = CacheKeyUtil.getImageValidateCodeCacheKey(key);
+        String key = UUIDUtil.getUUIDTimeStamp() + IdUtils.createCount();
         redisTemplate.opsForValue().set(key, instance.getCode(), expireTime, TimeUnit.SECONDS);
         // 将图像输出到Servlet输出流中。
         ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -95,4 +98,7 @@ public class CaptchaImageController {
         }
     }
 
+    public static void main(String[] args) {
+        System.out.println(IPUtils.getIp(ServletUtil.getRequest()));
+    }
 }

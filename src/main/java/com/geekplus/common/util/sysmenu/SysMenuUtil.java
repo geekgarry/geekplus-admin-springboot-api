@@ -91,9 +91,9 @@ public class SysMenuUtil {
         list.stream().forEach(menu ->{
             //SysMenu menu = lt.next();
             if (menu.getParentId() == 0) {
-                log.info("==========>数据"+menuList);
                 menu.setChildren(getChild(list, menu.getMenuId()));
                 menuList.add(menu);
+                //log.info("==========>所有菜单数据列表"+menuList.size());
             }
         });
         return menuList;
@@ -103,10 +103,9 @@ public class SysMenuUtil {
         for (Iterator<SysMenu> iterator = list.iterator(); iterator.hasNext();){
             SysMenu menu = iterator.next();
             if (menu.getParentId().equals(menuId)){
-                log.info("==========>数据"+menu);
+                //log.info("==========>子级菜单数据"+menu);
                 menu.setChildren(getChild(list, menu.getMenuId()));
                 childList.add(menu);
-                log.info("==========>数据"+childList);
             }
         }
 //        for (SysMenu menu:childList) {

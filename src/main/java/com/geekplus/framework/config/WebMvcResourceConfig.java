@@ -68,7 +68,7 @@ public class WebMvcResourceConfig implements WebMvcConfigurer {
         registry.addMapping("/**")
                 //.allowedOrigins("*")
                 .allowedOriginPatterns("*")
-//                .allowedMethods("GET","POST","PUT","DELETE","HEAD","OPTIONS")  //应许那些方法来请求
+                //.allowedMethods("GET","POST","PUT","DELETE","HEAD","OPTIONS")  //应许那些方法来请求
                 .allowedMethods("*")
                 .allowedHeaders("*")
                 //设置是否允许跨域传cookie
@@ -84,7 +84,7 @@ public class WebMvcResourceConfig implements WebMvcConfigurer {
         // 允许cookies跨域
         config.setAllowCredentials(true);
         // #允许向该服务器提交请求的URI，*表示全部允许，在SpringMVC中，如果设成*，会自动转成当前请求头中的Origin
-//        config.addAllowedOrigin("*");
+        //config.addAllowedOrigin("*");
         config.addAllowedOriginPattern("*");
         // #允许访问的头信息,*表示全部
         config.addAllowedHeader("*");

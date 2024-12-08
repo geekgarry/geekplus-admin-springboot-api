@@ -1,8 +1,8 @@
 package com.geekplus.webapp.system.service;
-import com.geekplus.common.domain.LoginUser;
 import com.geekplus.webapp.system.entity.SysUser;
 //import com.geekplus.core.Service;
 import java.util.List;
+import java.util.Set;
 
 
 /**
@@ -88,9 +88,11 @@ public interface SysUserService {
     */
     public SysUser selectSysUserById(Long userId);
 
-    public LoginUser selectUserBy(SysUser sysUser);
+    public SysUser sysUserLoginBy(String userName);
 
-    public LoginUser selectUserAllInfo(String userName);
+    public SysUser getSysUserInfoBy(String userName);
+
+    Set<String> getSysUserMenuPerms(Long userId);
 
     public int updateSysUserByUserName(String userName, String loginIp);
 }

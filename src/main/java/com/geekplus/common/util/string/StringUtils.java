@@ -148,6 +148,24 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils
     }
 
     /**
+      * @Author geekplus
+      * @Description //判断是否为整型
+      * @Param
+      * @Throws
+      * @Return {@link }
+      */
+    public static boolean isNotNull(Integer params) {
+        boolean flag = true;
+        /**
+         * 判断是否为null
+         */
+        if(null == params|| params < 1){
+            flag = false;
+        }
+        return flag;
+    }
+
+    /**
      * * 判断一个对象是否是数组类型（Java基本型别的数组）
      *
      * @param object 对象

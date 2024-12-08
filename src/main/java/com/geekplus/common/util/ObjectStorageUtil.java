@@ -1,7 +1,8 @@
 package com.geekplus.common.util;
 
 
-import com.geekplus.common.util.string.StringUtil;
+import com.geekplus.common.util.string.StringUtils;
+import com.geekplus.common.util.uuid.IdUtils;
 import com.qcloud.cos.COSClient;
 import com.qcloud.cos.ClientConfig;
 import com.qcloud.cos.auth.BasicCOSCredentials;
@@ -70,7 +71,7 @@ public class ObjectStorageUtil {
 		metadata.setHeader("Content-Length", contentLength);
 		metadata.setHeader("Accept-Language", "zh-CN,zh;q=0.8");
 		metadata.setHeader("Accept-Encoding", "gzip, deflate, br");
-		metadata.setHeader("Content-Type", "multipart/form-data; boundary=----"+ StringUtil.getRndStr(10));
+		metadata.setHeader("Content-Type", "multipart/form-data; boundary=----"+ IdUtils.getRndStr(10));
 		PutObjectRequest putObjectRequest = new PutObjectRequest(BUCKET_NAME, key, fileStream,metadata);
 		PutObjectResult putObjectResult = cosClient.putObject(putObjectRequest);
 		logger.info(putObjectResult.toString());

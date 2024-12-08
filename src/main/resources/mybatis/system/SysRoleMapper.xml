@@ -290,4 +290,16 @@
         </where>
     </select>
 
+    <select id="selectRolesByUserName" resultMap="BaseResultMap" parameterType="String">
+        SELECT sr.* from sys_role sr
+        LEFT JOIN sys_user_role sur on sur.role_id=sr.role_id
+        left join sys_user su on su.user_id = sur.user_id
+        <where>
+            1=1
+            <if test="userId!=null">
+                and su.user_name=#{userName}
+            </if>
+        </where>
+    </select>
+
 </mapper>

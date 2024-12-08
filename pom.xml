@@ -19,7 +19,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <!--自定义默认的时间格式 年-月-日-时-分 -->
         <maven.build.timestamp.format>yyyy-MM-dd_HH_mm</maven.build.timestamp.format>
-        <jwt.version>4.2.1</jwt.version>
+        <jwt.version>4.4.0</jwt.version>
     </properties>
     <dependencies>
 <!--        <dependency>-->
@@ -238,7 +238,7 @@
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt</artifactId>
-            <version>0.9.1</version>
+            <version>0.12.6</version>
         </dependency>
         <!-- JWT -->
         <dependency>
@@ -409,6 +409,17 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
+        </dependency>
+        <!-- IP地址转归属地 -->
+        <dependency>
+            <groupId>org.lionsoul</groupId>
+            <artifactId>ip2region</artifactId>
+            <version>2.6.4</version>
+        </dependency>
+        <dependency>
+            <groupId>com.plusplus</groupId>
+            <artifactId>jwt-plus</artifactId>
+            <version>1.0.0</version>
         </dependency>
     </dependencies>
 

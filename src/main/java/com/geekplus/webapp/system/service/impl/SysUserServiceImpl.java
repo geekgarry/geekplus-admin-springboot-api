@@ -1,19 +1,20 @@
 package com.geekplus.webapp.system.service.impl;
 
-import com.geekplus.common.domain.LoginUser;
 import com.geekplus.common.myexception.BusinessException;
-import com.geekplus.common.util.shiro.ShiroEncrypt;
+import com.geekplus.common.util.encrypt.EncryptUtil;
+import com.geekplus.common.util.string.StringUtils;
+import com.geekplus.webapp.system.entity.SysMenu;
 import com.geekplus.webapp.system.mapper.SysUserMapper;
 import com.geekplus.webapp.system.entity.SysUser;
 import com.geekplus.webapp.system.service.SysUserService;
 //import com.geekplus.core.AbstractService;
-import org.apache.shiro.crypto.hash.SimpleHash;
-import org.apache.shiro.util.ByteSource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 
@@ -35,7 +36,7 @@ public class SysUserServiceImpl implements SysUserService {
     @Override
     @Transactional
     public Integer insertSysUser(SysUser sysUser){
-        boolean hasUserInfo=sysUserMapper.selectSysUser(sysUser)!=null?true:false;
+        boolean hasUserInfo=sysUserMapper.selectSysUserByPassword(sysUser)!=null?true:false;
         if(hasUserInfo){
             throw new BusinessException("当前用户名已经存在！");
         }
@@ -45,9 +46,8 @@ public class SysUserServiceImpl implements SysUserService {
     @Override
     @Transactional
     public Integer insertSysUserEnCodePwd(SysUser sysUser) {
-        String passWord= ShiroEncrypt.md5EncryptPwd(sysUser.getPassword());
-        sysUser.setPassword(passWord);
-        boolean hasUserInfo=sysUserMapper.selectSysUser(sysUser)!=null?true:false;
+        sysUser.setPassword(EncryptUtil.md5EncryptPwd(sysUser.getPassword()));
+        boolean hasUserInfo=sysUserMapper.selectSysUserByPassword(sysUser)!=null?true:false;
         if(hasUserInfo){
             throw new BusinessException("当前用户名已经存在！");
         }
@@ -88,12 +88,7 @@ public class SysUserServiceImpl implements SysUserService {
 
     @Override
     public Integer updateSysUserPwd(SysUser sysUser) {
-        String hashAlgorithmName = "MD5";
-        String credentials = sysUser.getPassword();
-        int hashIterations = 1024;
-        ByteSource credentialsSalt = ByteSource.Util.bytes("plus");
-        Object obj = new SimpleHash(hashAlgorithmName, credentials, credentialsSalt, hashIterations);
-        sysUser.setPassword(obj.toString());
+        sysUser.setPassword(EncryptUtil.md5EncryptPwd(sysUser.getPassword()));
         return sysUserMapper.updateSysUser(sysUser);
     }
 
@@ -123,12 +118,7 @@ public class SysUserServiceImpl implements SysUserService {
 
     @Override
     public SysUser selectSysUserByPassword(SysUser sysUser) {
-        String hashAlgorithmName = "MD5";
-        String credentials = sysUser.getPassword();
-        int hashIterations = 1024;
-        ByteSource credentialsSalt = ByteSource.Util.bytes("plus");
-        Object obj = new SimpleHash(hashAlgorithmName, credentials, credentialsSalt, hashIterations);
-        sysUser.setPassword(obj.toString());
+        sysUser.setPassword(EncryptUtil.md5EncryptPwd(sysUser.getPassword()));
         return sysUserMapper.selectSysUserByPassword(sysUser);
     }
 
@@ -151,13 +141,19 @@ public class SysUserServiceImpl implements SysUserService {
     *通过username查询用户
      */
     @Override
-    public LoginUser selectUserBy(SysUser sysUser) {
-        return sysUserMapper.selectSysUser(sysUser);
+    public SysUser sysUserLoginBy(String userName) {
+        return sysUserMapper.sysUserLoginBy(userName);
     }
 
     @Override
-    public LoginUser selectUserAllInfo(String userName) {
-        return sysUserMapper.selectUserAllInfo(userName);
+    public SysUser getSysUserInfoBy(String userName) {
+        return sysUserMapper.getSysUserInfoBy(userName);
+    }
+
+    @Override
+    public Set<String> getSysUserMenuPerms(Long userId) {
+        List<SysMenu> sysMenus = sysUserMapper.selectUserMenus(userId);
+        return sysMenus.stream().filter(sysMenu -> !StringUtils.isEmpty(sysMenu.getPerms())).map(SysMenu::getPerms).collect(Collectors.toSet());
     }
 
     @Override

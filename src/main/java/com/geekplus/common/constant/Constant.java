@@ -9,6 +9,8 @@ package com.geekplus.common.constant;
  */
 public interface Constant {
 
+	//通用过期时间
+	public long EXPIRE_TIME = 30 * 60 * 1000;
 	/**
 	 * 根据地址请求经纬度
 	 */
@@ -20,27 +22,52 @@ public interface Constant {
 	/**
 	 * app的标识字符
 	 */
-	public String APP_MAIN_ID_KEY = "geekcjj";
+	public String APP_MAIN_ID_KEY = "GeekPlus";
 	/**
 	 * app官方名称 梦极客园
 	 */
-	public String APP_MAIN_NAME = "梦极客园";
+	public String APP_MAIN_NAME = "GeekPlus";
 
 	/**
-	 * token_id
+	 * 客户前端的customer_token_id，redis中的前缀
 	 */
-	public String LOGIN_USER_TOKEN = "token_id:";
+	public String PRE_REDIS_CUSTOMER_TOKEN = "customer_tk_id:";
 
 	/**
-	 * token_id
+	 * 客户前端的请求header中的token名称
+	 */
+	public String CUSTOMER_HEADER_TOKEN = "Customer-Tk";
+
+	/**
+	 * 客户前端的cookie，备用。目前使用CUSTOMER_HEADER_TOKEN，因为cookie的存储key和header一样
+	 */
+	public String C_TOKEN_COOKIE = "Customer-Tk";
+
+	/**
+	 * 系统后端的token_id，redis中的前缀
+	 */
+	public String PRE_REDIS_USER_TOKEN = "plus_token_id:";
+
+	/**
+	 * 系统后端的请求header中的token名称，和配置文件yml中的token.header的值一样
+	 */
+	public String USER_HEADER_TOKEN = "Plus-Token";
+
+	/**
+	 * 系统后端的cookie，备用。目前使用USER_HEADER_TOKEN，因为和cookie的key的值一样
+	 */
+	public String S_TOKEN_COOKIE = "Plus-Token";
+
+	/**
+	 * 前端的请求header中的token前缀
 	 */
 	public String AUTHENTICATION_PREFIX = "Bearer ";
 
 	/**
 	 * 分享出去页面的根域名
 	 */
-	public String APP_SHARE_ROOT = "http://h5.geekcjj.top/user/";
-	public String APP_SHARE_NORMAL = "http://h5.geekcjj.top/user/Ndetail.html";
+	public String APP_SHARE_ROOT = "http://h5.xxx.xxx/user/";
+	public String APP_SHARE_NORMAL = "http://h5.xxx.xxx/user/Ndetail.html";
 	/**
 	 * 分享页面 相对地址 详情
 	 */
@@ -200,4 +227,5 @@ public interface Constant {
     String GBK = "GB2312";
     String SYS_DICT_KEY = "sysDictKey";
     int QRCODE_SIZE = 440;
+	int COOKIE_MAX_AGE = 24 * 60 * 60;
 }

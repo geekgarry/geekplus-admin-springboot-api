@@ -487,7 +487,7 @@ CREATE TABLE `sys_user` (
   `nick_name` varchar(33) NOT NULL COMMENT '用户昵称',
   `user_type` tinyint(2) DEFAULT NULL COMMENT '用户类型，是否为管理员',
   `email` varchar(50) DEFAULT NULL COMMENT '用户邮件',
-  `phoneunmber` varchar(13) DEFAULT NULL COMMENT '手机号',
+  `phone_number` varchar(13) DEFAULT NULL COMMENT '手机号',
   `gender` char(1) DEFAULT NULL COMMENT '性别（0为女，1为男，2为未知）',
   `avatar` varchar(101) DEFAULT NULL COMMENT '头像地址',
   `password` varchar(101) DEFAULT NULL COMMENT '密码',

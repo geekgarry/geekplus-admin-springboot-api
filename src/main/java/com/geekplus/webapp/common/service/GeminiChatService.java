@@ -2,14 +2,13 @@ package com.geekplus.webapp.common.service;
 
 import com.alibaba.fastjson.JSONObject;
 import com.geekplus.common.domain.ChatPrompt;
-import com.geekplus.common.redis.RedisUtil;
-import com.geekplus.common.util.DateTimeUtils;
-import com.geekplus.common.util.ServletUtils;
+import com.geekplus.common.util.datetime.DateTimeUtils;
+import com.geekplus.common.util.http.ServletUtil;
 import com.geekplus.common.util.base64.Base64Util;
 import com.geekplus.common.util.file.FileUploadUtils;
 import com.geekplus.common.util.file.FileUtils;
 import com.geekplus.common.util.google.GeminiUtils;
-import com.geekplus.common.util.ip.IpUtils;
+import com.geekplus.common.util.http.IPUtils;
 import com.geekplus.common.util.openai.GetClientName;
 import com.geekplus.webapp.function.entity.ChatAILog;
 import com.geekplus.webapp.function.service.IChatAILogService;
@@ -21,8 +20,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.reactive.function.client.WebClient;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -75,8 +72,8 @@ public class GeminiChatService {
         //把msgcontent和fromuser转换成md5作为rediskey
         long chatDate= new Date().getTime();
         //获取用户的IP和MAC地址
-        httpServletRequest=ServletUtils.getRequest();
-        ip=IpUtils.getIpAddr(httpServletRequest);
+        httpServletRequest= ServletUtil.getRequest();
+        ip= IPUtils.getIpAddr(httpServletRequest);
         userAgent=GetClientName.getBrowser(httpServletRequest);
         userAId=userAgent.getId();
         osName=userAgent.getOperatingSystem().getName();
@@ -199,8 +196,8 @@ public class GeminiChatService {
         StringBuilder strPreKey=new StringBuilder("GeekPlus");
         //String contentPre = userName;
         //获取用户的IP和MAC地址
-        httpServletRequest=ServletUtils.getRequest();
-        ip=IpUtils.getIpAddr(httpServletRequest);
+        httpServletRequest=ServletUtil.getRequest();
+        ip= IPUtils.getIpAddr(httpServletRequest);
         userAgent=GetClientName.getBrowser(httpServletRequest);
         userAId=userAgent.getId();
         osName=userAgent.getOperatingSystem().getName();
@@ -242,8 +239,8 @@ public class GeminiChatService {
         StringBuilder strPreKey=new StringBuilder("GeekPlus");
         //String contentPre = userName;
         //获取用户的IP和MAC地址
-        httpServletRequest=ServletUtils.getRequest();
-        ip=IpUtils.getIpAddr(httpServletRequest);
+        httpServletRequest=ServletUtil.getRequest();
+        ip= IPUtils.getIpAddr(httpServletRequest);
         userAgent=GetClientName.getBrowser(httpServletRequest);
         userAId=userAgent.getId();
         osName=userAgent.getOperatingSystem().getName();

@@ -1,14 +1,10 @@
-/**
- * author     : geekplus
- * email      : geekcjj@gmail.com
- * date       : 2022/6/6 9:32 上午
- * description: 做什么的？
- */
 package com.geekplus.common.util;
 
 import com.geekplus.common.constant.Constant;
-import com.geekplus.common.domain.LoginUser;
-import com.geekplus.common.util.ip.IpUtils;
+import com.geekplus.common.domain.LoginBody;
+import com.geekplus.common.util.http.IPUtils;
+import com.geekplus.common.util.http.IpAddressUtil;
+import com.geekplus.common.util.http.ServletUtil;
 import com.geekplus.webapp.system.entity.SysLoginLog;
 import com.geekplus.webapp.system.service.SysLoginLogService;
 import eu.bitwalker.useragentutils.UserAgent;
@@ -33,14 +29,14 @@ public class LogUtil
         return "[" + msg.toString() + "]";
     }
 
-    public static void recordLoginInfo(LoginUser sysUser, String status, String msg){
+    public static void recordLoginInfo(LoginBody loginBody, String status, String msg){
         final UserAgent userAgent = UserAgent.parseUserAgentString(ServletUtil.getRequest().getHeader("User-Agent"));
-        final String ip = IpUtils.getIpAddr(ServletUtil.getRequest());
-        String address = AddressUtil.getRealAddressByIP(ip);
+        final String ip = IPUtils.getIpAddr(ServletUtil.getRequest());
+        String address = IpAddressUtil.getRealAddressByIP(ip);
         StringBuilder s = new StringBuilder();
         s.append(getBlock(ip));
         s.append(address);
-        s.append(getBlock(sysUser.getUserName()));
+        s.append(getBlock(loginBody.getUserName()));
         s.append(getBlock(status));
         s.append(getBlock(msg));
         // 打印信息到日志
@@ -51,7 +47,7 @@ public class LogUtil
         String browser = userAgent.getBrowser().getName();
         // 封装对象
         SysLoginLog loginLog = new SysLoginLog();
-        loginLog.setLogUserName(sysUser.getUserName());
+        loginLog.setLogUserName(loginBody.getUserName());
         loginLog.setLogLoginIp(ip);
         loginLog.setLoginLocation(address);
         loginLog.setLogBrowser(browser);

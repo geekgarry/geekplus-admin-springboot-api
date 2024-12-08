@@ -6,7 +6,7 @@
  */
 package com.geekplus.common.config;
 
-import com.geekplus.common.util.ServletUtils;
+import com.geekplus.common.util.http.ServletUtil;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
@@ -112,7 +112,7 @@ public class WebAppConfig {
      */
     public String getUrl()
     {
-        HttpServletRequest request = ServletUtils.getRequest();
+        HttpServletRequest request = ServletUtil.getRequest();
         return getDomain(request);
     }
 

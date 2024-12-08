@@ -3,15 +3,13 @@ package com.geekplus.framework.jwtshiro;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.geekplus.common.constant.Constant;
 import com.geekplus.common.constant.HttpStatusCode;
 import com.geekplus.common.domain.Result;
 import com.geekplus.common.enums.ApiExceptionEnum;
 import com.geekplus.common.myexception.BusinessException;
-import com.geekplus.common.redis.RedisUtil;
-import com.geekplus.common.util.DateTimeUtils;
-import org.apache.commons.lang3.BooleanUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.shiro.SecurityUtils;
+import com.geekplus.common.util.http.CookieUtil;
+import com.geekplus.common.util.string.StringUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.web.filter.authc.BasicHttpAuthenticationFilter;
 import org.apache.shiro.web.util.WebUtils;
@@ -20,9 +18,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import javax.annotation.Resource;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -34,8 +32,8 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     // 登录标识 Authorization
-    private static String LOGIN_SIGN = "Plus-Token";
-
+    //private static String LOGIN_SIGN = "Plus-Token";
+    //过期时间，过期超出时间
     //private static final long exceedTime= 15 * 60 * 1000;
 
     /**
@@ -117,14 +115,22 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
     protected boolean isLoginAttempt(ServletRequest request, ServletResponse response) {
         HttpServletRequest httpRequest = WebUtils.toHttp(request);
 
-        String authorization = httpRequest.getHeader(LOGIN_SIGN);
+        String authorization = httpRequest.getHeader(Constant.USER_HEADER_TOKEN);
+        //同时支持cookie，设置cookie的httpOnly为true
+//        if(StringUtils.isEmpty(authorization)){
+//            authorization = CookieUtil.getCookieValue(httpRequest, Constant.USER_HEADER_TOKEN);
+//        }
         return StringUtils.isNoneBlank(authorization);
     }
 
     @Override
     protected boolean executeLogin(ServletRequest request, ServletResponse response) {
         HttpServletRequest httpRequest = WebUtils.toHttp(request);
-        String token = httpRequest.getHeader(LOGIN_SIGN);
+        String token = httpRequest.getHeader(Constant.USER_HEADER_TOKEN);
+        //同时支持cookie，设置cookie的httpOnly为true
+//        if(StringUtils.isEmpty(token)){
+//            token = CookieUtil.getCookieValue(httpRequest, Constant.USER_HEADER_TOKEN);
+//        }
         JwtToken jwtToken = new JwtToken(token);
         //提交给realm进行登录，如果错误会怕熬出异常并被捕获，如果没有抛出异常则返回true
         getSubject(request, response).login(jwtToken);
@@ -141,10 +147,9 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
         System.out.println("token验证失败，没权限访问");
         PrintWriter out = httpResponse.getWriter();
         Map<String,Object> map=new HashMap<>();
-        String urlPath = httpRequest.getRequestURI();
+        //String urlPath = httpRequest.getRequestURI();
         map.put("code", HttpStatusCode.FORBIDDEN);
-        map.put("msg","请求访问："+urlPath+"，认证失败，无法访问系统资源,请登录后访问");//登录状态已失效，请重新登录！
-        //hSResponse.sendRedirect("/login");	//重定向到登陆界面
+        map.put("msg","认证失败，无法访问系统，请登录后访问");//登录状态已失效，请重新登录！
         out.write(JSON.toJSONString(map));
         out.flush();
         out.close();

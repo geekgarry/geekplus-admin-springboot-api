@@ -1,7 +1,7 @@
 package com.geekplus.common.util;
 
 import com.geekplus.common.domain.FontText;
-import com.geekplus.common.util.string.StringUtil;
+import com.geekplus.common.util.encrypt.EncryptUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -644,6 +644,6 @@ public class PictureMerge {
     	sb.append(logoImgPath);
     	sb.append('_');
     	sb.append(productPath);
-    	return StringUtil.MD5(sb.toString());
+    	return EncryptUtil.MD5(sb.toString());
     }
 }

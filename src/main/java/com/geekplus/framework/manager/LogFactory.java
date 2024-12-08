@@ -2,10 +2,10 @@ package com.geekplus.framework.manager;
 
 import cn.hutool.extra.spring.SpringUtil;
 import com.geekplus.common.constant.Constant;
-import com.geekplus.common.util.AddressUtil;
-import com.geekplus.common.util.IPUtils;
 import com.geekplus.common.util.LogUtil;
-import com.geekplus.common.util.ServletUtil;
+import com.geekplus.common.util.http.IpAddressUtil;
+import com.geekplus.common.util.http.ServletUtil;
+import com.geekplus.common.util.http.IPUtils;
 import com.geekplus.webapp.system.entity.SysLoginLog;
 import com.geekplus.webapp.system.entity.SysOperLog;
 import com.geekplus.webapp.system.service.SysLoginLogService;
@@ -42,7 +42,7 @@ public class LogFactory {
             @Override
             public void run()
             {
-                String address = AddressUtil.getRealAddressByIP(ip);
+                String address = IpAddressUtil.getRealAddressByIP(ip);
                 StringBuilder s = new StringBuilder();
                 s.append(LogUtil.getBlock(ip));
                 s.append(address);
@@ -92,7 +92,7 @@ public class LogFactory {
             public void run()
             {
                 // 远程查询操作地点
-                operLog.setOperLocation(AddressUtil.getRealAddressByIP(operLog.getOperIp()));
+                operLog.setOperLocation(IpAddressUtil.getRealAddressByIP(operLog.getOperIp()));
                 SpringUtil.getBean(SysOperLogService.class).insertSysOperLog(operLog);
             }
         };

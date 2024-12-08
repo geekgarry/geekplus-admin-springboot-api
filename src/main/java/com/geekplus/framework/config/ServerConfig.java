@@ -1,6 +1,6 @@
 package com.geekplus.framework.config;
 
-import com.geekplus.common.util.ServletUtils;
+import com.geekplus.common.util.http.ServletUtil;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
@@ -20,7 +20,7 @@ public class ServerConfig
      */
     public String getUrl()
     {
-        HttpServletRequest request = ServletUtils.getRequest();
+        HttpServletRequest request = ServletUtil.getRequest();
         return getDomain(request);
     }
 

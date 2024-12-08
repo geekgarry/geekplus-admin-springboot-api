@@ -1,11 +1,11 @@
+package com.geekplus.framework.domain;
+
 /**
  * author     : geekplus
  * email      : geekcjj@gmail.com
  * date       : 10/14/23 00:02
  * description: 做什么的？
  */
-package com.geekplus.framework.domain;
-
 import io.netty.channel.Channel;
 
 public class UserInfo {

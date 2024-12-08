@@ -6,8 +6,7 @@
  */
 package com.geekplus.common.page;
 
-import com.geekplus.common.util.ServletUtil;
-import com.geekplus.common.util.ServletUtils;
+import com.geekplus.common.util.http.ServletUtil;
 
 public class TableDataSupport {
 

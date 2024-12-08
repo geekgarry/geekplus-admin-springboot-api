@@ -6,12 +6,11 @@ import com.geekplus.common.config.WebAppConfig;
 import com.geekplus.common.domain.Result;
 import com.geekplus.common.core.text.Convert;
 import com.geekplus.common.myexception.BusinessException;
-import com.geekplus.common.util.DateUtils;
+import com.geekplus.common.util.datetime.DateUtil;
 import com.geekplus.common.util.DictUtils;
 import com.geekplus.common.util.string.StringUtils;
 import com.geekplus.common.util.reflect.ReflectUtils;
 //import org.apache.poi.hssf.usermodel.DateUtil;
-import org.apache.poi.ss.usermodel.DateUtil;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddressList;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
@@ -239,11 +238,11 @@ public class ExcelUtil<T>
                     {
                         if (val instanceof String)
                         {
-                            val = DateUtils.parseDate(val);
+                            val = DateUtil.parseDate(val);
                         }
                         else if (val instanceof Double)
                         {
-                            val = DateUtil.getJavaDate((Double) val);
+                            val = org.apache.poi.ss.usermodel.DateUtil.getJavaDate((Double) val);
                         }
                     }
                     if (StringUtils.isNotNull(fieldType))
@@ -533,7 +532,7 @@ public class ExcelUtil<T>
                 String dictType = attr.dictType();
                 if (StringUtils.isNotEmpty(dateFormat) && StringUtils.isNotNull(value))
                 {
-                    cell.setCellValue(DateUtils.parseDateToStr(dateFormat, (Date) value));
+                    cell.setCellValue(DateUtil.parseDateToStr(dateFormat, (Date) value));
                 }
                 else if (StringUtils.isNotEmpty(readConverterExp) && StringUtils.isNotNull(value))
                 {
@@ -935,9 +934,9 @@ public class ExcelUtil<T>
                 if (cell.getCellType() == CellType.NUMERIC || cell.getCellType() == CellType.FORMULA)
                 {
                     val = cell.getNumericCellValue();
-                    if (DateUtil.isCellDateFormatted(cell))
+                    if (org.apache.poi.ss.usermodel.DateUtil.isCellDateFormatted(cell))
                     {
-                        val = DateUtil.getJavaDate((Double) val); // POI Excel 日期格式转换
+                        val = org.apache.poi.ss.usermodel.DateUtil.getJavaDate((Double) val); // POI Excel 日期格式转换
                     }
                     else
                     {

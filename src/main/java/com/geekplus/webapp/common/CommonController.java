@@ -6,13 +6,13 @@ import com.geekplus.common.config.WebAppConfig;
 import com.geekplus.common.constant.Constant;
 import com.geekplus.common.domain.Result;
 import com.geekplus.common.enums.BusinessType;
-import com.geekplus.common.util.DateUtils;
+import com.geekplus.common.util.datetime.DateUtil;
 import com.geekplus.common.util.google.TranslateTTS;
 import com.geekplus.common.util.string.StringUtils;
 import com.geekplus.common.util.file.FileUploadUtils;
 import com.geekplus.common.util.file.FileUtils;
 import com.geekplus.common.util.translate.TranslatorUtil;
-import com.geekplus.common.util.uuid.IdUtils;
+import com.geekplus.common.util.uuid.UUIDUtil;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
 import com.google.zxing.MultiFormatWriter;
@@ -106,7 +106,7 @@ public class CommonController
             }
             // 上传并返回新文件名称
             //String fileName = FileUploadUtils.upload(filePath, file);
-            Map fileMap = FileUploadUtils.upload2(filePath + File.separator + DateUtils.datePath(), file);
+            Map fileMap = FileUploadUtils.upload2(filePath + File.separator + DateUtil.datePath(), file);
             //String url = serverConfig.getUrl() + fileName;
             Result ajax = Result.success();
             ajax.put("fileName", fileMap.get("fileName"));
@@ -135,13 +135,13 @@ public class CommonController
             //String filePath = WebAppConfig.getUploadPath();
             String realFilePath;
             if(FileUtils.isImageFile(file)){
-                realFilePath= File.separator+"article"+File.separator+ DateUtils.datePath();
+                realFilePath= File.separator+"article"+File.separator+ DateUtil.datePath();
             }else if(FileUtils.isVideoFile(file)){
-                realFilePath=File.separator+"video"+File.separator+DateUtils.datePath();
+                realFilePath=File.separator+"video"+File.separator+ DateUtil.datePath();
             }else if(FileUtils.isAudioFile(file)){
-                realFilePath=File.separator+"music"+File.separator+DateUtils.datePath();
+                realFilePath=File.separator+"music"+File.separator+ DateUtil.datePath();
             }else {
-                realFilePath=File.separator+"document"+File.separator+DateUtils.datePath();
+                realFilePath=File.separator+"document"+File.separator+ DateUtil.datePath();
             }
 
             String uploadDir= WebAppConfig.getProfile()+realFilePath;
@@ -154,7 +154,7 @@ public class CommonController
             //File dest = new File(uploadDir + "head_img" ,uuidFileName);
             //保存文件
             //file.transferTo(dest);
-            fileName = IdUtils.fastUUID() + "." + extension;
+            fileName = UUIDUtil.getEncryptFileUUID() + "." + extension;
 
             // 上传并返回新文件名称
             //String fileName = FileUploadUtils.upload(filePath, file);
@@ -276,8 +276,7 @@ public class CommonController
     @GetMapping("/common/getQRCode")
     public Result getQRCodeImg(@RequestParam String qrCodeText){
         String base64 = "";
-        // 需要生成的二维码的文字、地址
-        String QrCodeStr = qrCodeText;
+        // 需要生成的二维码的文字、地址 qrCodeText
         // 创建二维码
         try {
             Map<EncodeHintType, String> character = new HashMap<>();
@@ -285,7 +284,7 @@ public class CommonController
             character.put(EncodeHintType.CHARACTER_SET, "UTF-8");
             // 设置二维码的四个参数
             // 需要生成的字符串，类型设置为二维码，二维码宽度，二维码高度，字符串字符集
-            BitMatrix bitMatrix = new MultiFormatWriter().encode(QrCodeStr,
+            BitMatrix bitMatrix = new MultiFormatWriter().encode(qrCodeText,
                     BarcodeFormat.QR_CODE, Constant.QRCODE_SIZE, Constant.QRCODE_SIZE, character);
             // 二维码像素，也就是上面设置的 500
             int width = bitMatrix.getWidth();

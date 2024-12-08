@@ -1,13 +1,7 @@
-/**
- * author     : geekplus
- * email      : geekcjj@gmail.com
- * date       : 2022/5/30 10:23 上午
- * description: 做什么的？
- */
 package com.geekplus.framework.domain;
 
-import com.geekplus.common.util.Arith;
-import com.geekplus.common.util.IPUtils;
+import com.geekplus.common.util.math.Arith;
+import com.geekplus.common.util.http.IPUtils;
 import com.geekplus.framework.domain.server.*;
 import oshi.SystemInfo;
 import oshi.hardware.CentralProcessor;
@@ -24,6 +18,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 
+/**
+ * author     : geekplus
+ * email      : geekcjj@gmail.com
+ * date       : 2022/5/30 10:23 上午
+ * description: 做什么的？
+ */
 public class Server {
     private static final int OSHI_WAIT_SECOND = 1000;
 

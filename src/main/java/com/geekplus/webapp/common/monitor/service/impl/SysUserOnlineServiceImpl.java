@@ -1,7 +1,7 @@
 package com.geekplus.webapp.common.monitor.service.impl;
 
 import com.geekplus.common.domain.LoginUser;
-import com.geekplus.common.util.AddressUtil;
+import com.geekplus.common.util.http.IpAddressUtil;
 import com.geekplus.common.util.string.StringUtils;
 import com.geekplus.webapp.common.monitor.entity.SysUserOnline;
 import com.geekplus.webapp.common.monitor.service.ISysUserOnlineService;
@@ -42,7 +42,7 @@ public class SysUserOnlineServiceImpl implements ISysUserOnlineService
     @Override
     public SysUserOnline selectOnlineByUserName(String userName, LoginUser user)
     {
-        if (StringUtils.equals(userName, user.getUserName()))
+        if (StringUtils.equals(userName, user.getSysUser().getUserName()))
         {
             return loginUserToUserOnline(user);
         }
@@ -60,7 +60,7 @@ public class SysUserOnlineServiceImpl implements ISysUserOnlineService
     @Override
     public SysUserOnline selectOnlineByInfo(String ipaddr, String userName, LoginUser user)
     {
-        if (StringUtils.equals(ipaddr, user.getLoginIp()) && StringUtils.equals(userName, user.getUserName()))
+        if (StringUtils.equals(ipaddr, user.getLoginIp()) && StringUtils.equals(userName, user.getSysUser().getUserName()))
         {
             return loginUserToUserOnline(user);
         }
@@ -94,7 +94,7 @@ public class SysUserOnlineServiceImpl implements ISysUserOnlineService
     {
         //UserAgent userAgent = UserAgent.parseUserAgentString(ServletUtil.getRequest().getHeader("User-Agent"));
         String ip=user.getLoginIp();
-        String address = AddressUtil.getRealAddressByIP(ip);
+        String address = IpAddressUtil.getRealAddressByIP(ip);
         //StringBuilder s = new StringBuilder();
         // 获取客户端操作系统
         //String os = userAgent.getOperatingSystem().getName();
@@ -106,7 +106,7 @@ public class SysUserOnlineServiceImpl implements ISysUserOnlineService
         }
         SysUserOnline sysUserOnline = new SysUserOnline();
         sysUserOnline.setTokenId(user.getTokenId());
-        sysUserOnline.setUserName(user.getUserName());
+        sysUserOnline.setUserName(user.getSysUser().getUserName());
         sysUserOnline.setIpaddr(ip);
         sysUserOnline.setLoginLocation(address);
         sysUserOnline.setBrowser(user.getBrowser());

@@ -30,6 +30,7 @@ public enum ApiExceptionEnum {
     CODE_IS_EXPIRE(2102, "验证码已过期"),
     LOGIN_USERNAME_ERROR(2111, "账号不存在"),
     LOGIN_PASSWORD_ERROR(2112, "密码不正确"),
+    LOGIN_USER_ERROR(2111, "账号或密码错误"),
     LOGIN_DISABLED_ERROR(212, "该用户已被禁用"),
     REGISTER_MOBLE_ERROR(213, "手机号已被使用"),
     LOGIN_MUST(214, "用户需要登录"),

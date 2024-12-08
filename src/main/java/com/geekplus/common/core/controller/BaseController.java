@@ -11,7 +11,7 @@ import com.geekplus.common.domain.Result;
 import com.geekplus.common.page.PageData;
 import com.geekplus.common.page.PageDataInfo;
 import com.geekplus.common.page.TableDataSupport;
-import com.geekplus.common.util.string.StringUtil;
+import com.geekplus.common.util.string.StringUtils;
 import com.geekplus.webapp.system.entity.SysMenu;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -26,7 +26,7 @@ public class BaseController {
         PageData pageDomain = TableDataSupport.buildPageRequest();
         Integer pageNum = pageDomain.getPageNum();
         Integer pageSize = pageDomain.getPageSize();
-        if (StringUtil.isNotNull(pageNum) && StringUtil.isNotNull(pageSize))
+        if (StringUtils.isNotNull(pageNum) && StringUtils.isNotNull(pageSize))
         {
 //            String orderBy = SqlUtil.escapeOrderBySql(pageDomain.getOrderBy());
             PageHelper.startPage(pageNum, pageSize);

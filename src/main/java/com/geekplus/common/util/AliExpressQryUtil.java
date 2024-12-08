@@ -1,5 +1,6 @@
 package com.geekplus.common.util;
 
+import com.geekplus.common.util.http.HttpRequestUtil;
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
 
@@ -26,7 +27,7 @@ public class AliExpressQryUtil {
 	        querys.put("type", type);// !!! 请求参数
 	        //JDK 1.8示例代码请在这里下载：  http://code.fegine.com/Tools.zip
 	        try {
-	                HttpResponse response = HttpUtils.doGet(EXPRESS_HOST, REAL_PATH, REQ_METHOD, headers, querys);
+	                HttpResponse response = HttpRequestUtil.doGet(EXPRESS_HOST, REAL_PATH, REQ_METHOD, headers, querys);
 	                //System.out.println(response.toString()); //输出头部
 	                bodyJson = EntityUtils.toString(response.getEntity());
 	         // System.out.println(bodyJson); //输出json

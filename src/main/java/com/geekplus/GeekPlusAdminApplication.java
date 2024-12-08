@@ -40,6 +40,7 @@ public class GeekPlusAdminApplication {
 //        restTemplate.getMessageConverters().set(1, new StringHttpMessageConverter(StandardCharsets.UTF_8));
 //        return restTemplate;
 //    }
+
     @Bean
     //@LoadBalanced
     public RestTemplate restTemplate() {

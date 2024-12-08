@@ -7,10 +7,10 @@ import com.geekplus.common.myexception.file.FileNameLengthLimitExceededException
 import com.geekplus.common.myexception.file.FileSizeLimitExceededException;
 import com.geekplus.common.myexception.file.InvalidExtensionException;
 import com.geekplus.common.util.base64.Base64Util;
-import com.geekplus.common.util.DateTimeUtils;
-import com.geekplus.common.util.DateUtils;
+import com.geekplus.common.util.datetime.DateTimeUtils;
+import com.geekplus.common.util.datetime.DateUtil;
 import com.geekplus.common.util.string.StringUtils;
-import com.geekplus.common.util.uuid.IdUtils;
+import com.geekplus.common.util.uuid.UUIDUtil;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -188,7 +188,7 @@ public class FileUploadUtils
     {
         String fileName = file.getOriginalFilename();
         String extension = getExtension(file);
-        fileName = DateUtils.datePath() + File.separator + IdUtils.fastUUID() + "." + extension;
+        fileName = DateUtil.datePath() + File.separator + UUIDUtil.getEncryptFileUUID() + "." + extension;
         return fileName;
     }
 
@@ -307,7 +307,7 @@ public class FileUploadUtils
         String fExtension="."+ MimeTypeEnum.getExtensionByMimeType(Base64Util.getFileMimeType(baseStr));
         // 图片名+图片后缀,prefix.suffix
         String fileName = DateTimeUtils.getCurrentTimeStr()+"-"+UUID.randomUUID().toString()+fExtension;
-        String imgFilePath = path.concat(File.separator+"chatData"+File.separator).concat(DateUtils.datePath()+File.separator).concat(fileName);
+        String imgFilePath = path.concat(File.separator+"chatData"+File.separator).concat(DateUtil.datePath()+File.separator).concat(fileName);
         if (baseStr == null)
             return "上传失败";
         //BASE64Decoder decoder = new BASE64Decoder();
@@ -332,7 +332,7 @@ public class FileUploadUtils
             out.close();
             //获取本地ip
             String hostAddress = InetAddress.getLocalHost().getHostAddress();
-            String urls = Constant.RESOURCE_PREFIX.concat(File.separator+"chatData"+File.separator).concat(DateUtils.datePath()+File.separator).concat(fileName);
+            String urls = Constant.RESOURCE_PREFIX.concat(File.separator+"chatData"+File.separator).concat(DateUtil.datePath()+File.separator).concat(fileName);
             return urls;
         } catch (Exception e) {
             return "上传失败";
