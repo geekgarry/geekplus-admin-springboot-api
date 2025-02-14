@@ -64,8 +64,8 @@ public class UserOnlineController extends BaseController {
             SysUser sysUser=sysUserService.sysUserLoginBy(userName);
             Map<String,Object> map=new HashMap<>();
             map.put("token",tokenId);
-            map.put("userName",userName);
-            map.put("nickName",sysUser.getNickName());
+            map.put("username",userName);
+            map.put("nickname",sysUser.getNickname());
             map.put("email",sysUser.getEmail());
             map.put("gender",sysUser.getGender());
             map.put("phoneNumber",sysUser.getPhoneNumber());

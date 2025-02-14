@@ -44,7 +44,7 @@ public class OnlineUserListener implements HttpSessionAttributeListener, HttpSes
             SysUser onlineUser = new SysUser();
             onlineUser.setCreateTime(new Date());
             //onlineUser.setUserId(user.getUserfullid());
-            onlineUser.setUserName(userName);
+            onlineUser.setUsername(userName);
             //onlineUser.setStatus(session);
 
             // 添加到在线用户列表
@@ -77,11 +77,11 @@ public class OnlineUserListener implements HttpSessionAttributeListener, HttpSes
             // 循环查找被替换用户在线信息
             for(int i=0;i<onlineUsers.size();i++){
                 SysUser onlineUserView = (SysUser) onlineUsers.get(i);
-                if(onlineUserView.getUserName().equals(userName)){
+                if(onlineUserView.getUsername().equals(userName)){
                     // 更新在线用户信息
                     onlineUserView.setCreateTime(new Date());
                     //onlineUserView.setUserId(newUser.getUserfullid());
-                    onlineUserView.setUserName(newUser);
+                    onlineUserView.setUsername(newUser);
                     break;
                 }
             }
@@ -106,8 +106,8 @@ public class OnlineUserListener implements HttpSessionAttributeListener, HttpSes
         HttpSession session = event.getSession();
         for(int i=0; i<onlineUsers.size();i++){
             SysUser onlineUserView = (SysUser) onlineUsers.get(i);
-            if(onlineUserView!=null && onlineUserView.getUserName()!=null && session!=null
-                    && onlineUserView.getUserName().equals(session.getId())){
+            if(onlineUserView!=null && onlineUserView.getUsername()!=null && session!=null
+                    && onlineUserView.getUsername().equals(session.getId())){
                 // 从在线用户列表移除用户
                 onlineUsers.remove(onlineUserView);
                 break;

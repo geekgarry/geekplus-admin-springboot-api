@@ -11,7 +11,7 @@ import java.io.OutputStream;
 /**
  * @ClassName MatrixToImageWriter
  * @Description 二位码生成
- * @Author Zheng
+ * @Author cpp
  * @Date 2017年10月31日 下午4:09:22
  */
 public class MatrixToImageWriter {

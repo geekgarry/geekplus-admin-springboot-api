@@ -4,12 +4,17 @@ import com.geekplus.common.annotation.Log;
 import com.geekplus.common.annotation.RepeatSubmit;
 import com.geekplus.common.constant.HttpStatusCode;
 import com.geekplus.common.core.controller.BaseController;
+import com.geekplus.common.domain.LoginUser;
 import com.geekplus.common.domain.Result;
 import com.geekplus.common.enums.BusinessType;
 import com.geekplus.common.enums.OperatorType;
 import com.geekplus.common.page.PageDataInfo;
+import com.geekplus.common.util.http.ServletUtil;
+import com.geekplus.webapp.common.service.SysUserTokenService;
+import com.geekplus.webapp.system.entity.SysUser;
 import com.geekplus.webapp.system.entity.SysUserRole;
 import com.geekplus.webapp.system.service.SysUserRoleService;
+import com.geekplus.webapp.system.service.SysUserService;
 import com.github.pagehelper.PageInfo;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,6 +30,10 @@ import java.util.List;
 public class SysUserRoleController extends BaseController {
     @Resource
     private SysUserRoleService sysUserRoleService;
+    @Resource
+    private SysUserService sysUserService;
+    @Resource
+    private SysUserTokenService sysUserTokenService;
 
     /**
      * 增加 系统用户角色关系表
@@ -33,7 +42,15 @@ public class SysUserRoleController extends BaseController {
     @PostMapping("/add")
     @RepeatSubmit
     public Result add(@RequestBody SysUserRole sysUserRole) {
-        return toResult(sysUserRoleService.insertSysUserRole(sysUserRole));
+        int count = sysUserRoleService.insertSysUserRole(sysUserRole);
+        if(count>0){
+            LoginUser loginUser = sysUserTokenService.getLoginUser(ServletUtil.getRequest());
+            SysUser sysUser = sysUserService.getSysUserInfoBy(sysUserTokenService.getSysUserName());
+            loginUser.setSysUser(sysUser);
+            return Result.success();
+        }else {
+            return Result.error();
+        }
     }
 
     /**
@@ -43,7 +60,15 @@ public class SysUserRoleController extends BaseController {
     @PostMapping("/batchAdd")
     @RepeatSubmit
     public Result batchAdd(@RequestBody List<SysUserRole> sysUserRole) {
-        return toResult(sysUserRoleService.batchInsertSysUserRoleList(sysUserRole));
+        int count = sysUserRoleService.batchInsertSysUserRoleList(sysUserRole);
+        if(count>0){
+            LoginUser loginUser = sysUserTokenService.getLoginUser(ServletUtil.getRequest());
+            SysUser sysUser = sysUserService.getSysUserInfoBy(sysUserTokenService.getSysUserName());
+            loginUser.setSysUser(sysUser);
+            return Result.success();
+        }else {
+            return Result.error();
+        }
     }
 
     /**
@@ -116,7 +141,14 @@ public class SysUserRoleController extends BaseController {
     @GetMapping("/deleteUserRole")
     public Result removeUserRole(SysUserRole sysUserRole) {
         int count=sysUserRoleService.deleteSysUserRole(sysUserRole);
-        return count>0? Result.success(): Result.error();
+        if(count>0){
+            LoginUser loginUser = sysUserTokenService.getLoginUser(ServletUtil.getRequest());
+            SysUser sysUser = sysUserService.getSysUserInfoBy(sysUserTokenService.getSysUserName());
+            loginUser.setSysUser(sysUser);
+            return Result.success();
+        }else {
+            return Result.error();
+        }
     }
 
     /**
@@ -126,6 +158,13 @@ public class SysUserRoleController extends BaseController {
     @PutMapping("/batchDeleteUserRole")
     public Result removeUserRoleList(@RequestBody List<SysUserRole> sysUserRoleList) {
         int count=sysUserRoleService.batchDeleteSysUserRole(sysUserRoleList);
-        return count>0? Result.success(): Result.error();
+        if(count>0){
+            LoginUser loginUser = sysUserTokenService.getLoginUser(ServletUtil.getRequest());
+            SysUser sysUser = sysUserService.getSysUserInfoBy(sysUserTokenService.getSysUserName());
+            loginUser.setSysUser(sysUser);
+            return Result.success();
+        }else {
+            return Result.error();
+        }
     }
 }

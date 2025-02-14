@@ -5,7 +5,7 @@ import java.sql.Timestamp;
 /**
  * @ClassName FileEntity
  * @Description 文件实体类
- * @Author Zheng
+ * @Author Garry
  * @Date 2018年4月2日 上午9:46:48
  */
 public class FileEntity {

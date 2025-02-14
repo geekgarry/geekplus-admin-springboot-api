@@ -188,7 +188,7 @@ public class FileUploadUtils
     {
         String fileName = file.getOriginalFilename();
         String extension = getExtension(file);
-        fileName = DateUtil.datePath() + File.separator + UUIDUtil.getEncryptFileUUID() + "." + extension;
+        fileName = DateUtil.datePath() + File.separator + UUIDUtil.getFileUUID() + "." + extension;
         return fileName;
     }
 

@@ -77,13 +77,13 @@ public interface SysMenuMapper {
     List<SysMenu> selectMenuPermsByRoles(List<SysRole> sysRoles);
 
     //根据用户名查询用户菜单权限permission列表
-    List<SysMenu> selectMenuPermsByUserName(String userName);
+    List<SysMenu> selectMenuPermsByUsername(String userName);
 
     //根据用户ID查询用户菜单权限permission列表
     List<SysMenu> selectMenuPermsByUserId(Long userId);
 
     //根据userName查询权限菜单
-    List<SysMenu> selectMenuTreeByUserName(String userName);
+    List<SysMenu> selectMenuTreeByUsername(String userName);
 
     //这个是根据userId查询该用户的权限菜单列表，跟上面的比起来是把所有步骤都写在一个sql语句中
     List<SysMenu> selectMenuTreeByUserId(Long userId);

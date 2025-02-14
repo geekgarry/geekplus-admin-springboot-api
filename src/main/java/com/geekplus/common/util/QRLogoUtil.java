@@ -1,5 +1,6 @@
 //package com.geekplus.common.util;
 //
+//import com.geekplus.common.util.encrypt.EncryptUtil;
 //import com.google.zxing.BarcodeFormat;
 //import com.google.zxing.EncodeHintType;
 //import com.google.zxing.MultiFormatWriter;
@@ -110,7 +111,7 @@
 //		sb.append(logoUrl);
 //		sb.append("_");
 //		sb.append(logoTxt);
-//		return StringUtil.MD5(sb.toString());
+//		return EncryptUtil.MD5(sb.toString());
 //	}
 //
 //	public static BufferedImage getImgFromUrl(String logoImgPath) {

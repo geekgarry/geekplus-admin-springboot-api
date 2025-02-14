@@ -16,7 +16,7 @@ import java.util.Date;
 /**
  * @ClassName: AliMsgUtil
  * @Description: 阿里云短信工具类
- * @author: WeiZheng
+ * @author: Garry
  * @date: 2018年9月27日 下午1:45:38
  */
 public class AliMsgUtil {

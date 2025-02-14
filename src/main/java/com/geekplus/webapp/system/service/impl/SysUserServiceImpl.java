@@ -96,7 +96,7 @@ public class SysUserServiceImpl implements SysUserService {
     @Transactional
     public boolean updateUserAvatar(String userName, String avatar) {
         SysUser sysUser=new SysUser();
-        sysUser.setUserName(userName);
+        sysUser.setUsername(userName);
         sysUser.setAvatar(avatar);
         return sysUserMapper.updateUserAvatar(sysUser) > 0;
     }
@@ -141,13 +141,13 @@ public class SysUserServiceImpl implements SysUserService {
     *通过username查询用户
      */
     @Override
-    public SysUser sysUserLoginBy(String userName) {
-        return sysUserMapper.sysUserLoginBy(userName);
+    public SysUser sysUserLoginBy(String username) {
+        return sysUserMapper.sysUserLoginBy(username);
     }
 
     @Override
-    public SysUser getSysUserInfoBy(String userName) {
-        return sysUserMapper.getSysUserInfoBy(userName);
+    public SysUser getSysUserInfoBy(String username) {
+        return sysUserMapper.getSysUserInfoBy(username);
     }
 
     @Override
@@ -157,11 +157,11 @@ public class SysUserServiceImpl implements SysUserService {
     }
 
     @Override
-    public int updateSysUserByUserName(String userName, String loginIp) {
+    public int updateSysUserByUsername(String userName, String loginIp) {
         SysUser sysUser=new SysUser();
         sysUser.setLoginTime(new Date());
-        sysUser.setUserName(userName);
+        sysUser.setUsername(userName);
         sysUser.setLoginIp(loginIp);
-        return sysUserMapper.updateSysUserByUserName(sysUser);
+        return sysUserMapper.updateSysUserByUsername(sysUser);
     }
 }

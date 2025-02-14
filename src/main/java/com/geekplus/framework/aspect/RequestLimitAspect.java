@@ -81,7 +81,7 @@ public class RequestLimitAspect {
         //判断用户是否为限制访问用户，在规定时间内最大请求数
         if(roleKey.containsAll(roleSet)) {
             if (principal1 == null) {
-                limitValue = principal1.getSysUser().getUserName();
+                limitValue = principal1.getSysUser().getUsername();
             } else {
                 limitValue = ip;
             }

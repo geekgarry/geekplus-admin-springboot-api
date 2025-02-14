@@ -2,7 +2,7 @@ package com.geekplus.common.util;
 
 /**
  * 经纬度计算
- * @author 团团
+ * @author cpp
  *
  */
 public class HarvenSinUtil {

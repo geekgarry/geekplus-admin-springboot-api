@@ -7,7 +7,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <resultMap type="ChatAILog" id="ChatAILogResult">
         <result property="id"    column="id"    />
         <result property="userId"    column="user_id"    />
-        <result property="userName"    column="user_name"    />
+        <result property="username"    column="username"    />
         <result property="userIp"    column="user_ip"    />
         <result property="userMac"    column="user_mac"    />
         <result property="askContent"    column="ask_content"    />
@@ -16,14 +16,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectChatAILogVo">
-        select id, user_id, user_name, user_ip, user_mac, ask_content, reply_content, create_time from chatAI_log
+        select id, user_id, username, user_ip, user_mac, ask_content, reply_content, create_time from chatAI_log
     </sql>
 
     <select id="selectChatAILogList" parameterType="ChatAILog" resultMap="ChatAILogResult">
         <include refid="selectChatAILogVo"/>
         <where>
             <if test="userId != null "> and user_id = #{userId}</if>
-            <if test="userName != null  and userName != ''"> and user_name like concat('%', #{userName}, '%')</if>
+            <if test="username != null  and username != ''"> and username like concat('%', #{username}, '%')</if>
             <if test="userIp != null  and userIp != ''"> and user_ip = #{userIp}</if>
             <if test="userMac != null  and userMac != ''"> and user_mac = #{userMac}</if>
             <if test="askContent != null  and askContent != ''"> and ask_content = #{askContent}</if>
@@ -41,7 +41,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         insert into chatAI_log
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="userId != null">user_id,</if>
-            <if test="userName != null">user_name,</if>
+            <if test="username != null">username,</if>
             <if test="userIp != null">user_ip,</if>
             <if test="userMac != null">user_mac,</if>
             <if test="askContent != null">ask_content,</if>
@@ -50,7 +50,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="userId != null">#{userId},</if>
-            <if test="userName != null">#{userName},</if>
+            <if test="username != null">#{username},</if>
             <if test="userIp != null">#{userIp},</if>
             <if test="userMac != null">#{userMac},</if>
             <if test="askContent != null">#{askContent},</if>
@@ -63,7 +63,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         update chatAI_log
         <trim prefix="SET" suffixOverrides=",">
             <if test="userId != null">user_id = #{userId},</if>
-            <if test="userName != null">user_name = #{userName},</if>
+            <if test="username != null">username = #{username},</if>
             <if test="userIp != null">user_ip = #{userIp},</if>
             <if test="userMac != null">user_mac = #{userMac},</if>
             <if test="askContent != null">ask_content = #{askContent},</if>

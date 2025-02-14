@@ -42,7 +42,7 @@ public class SysUserOnlineServiceImpl implements ISysUserOnlineService
     @Override
     public SysUserOnline selectOnlineByUserName(String userName, LoginUser user)
     {
-        if (StringUtils.equals(userName, user.getSysUser().getUserName()))
+        if (StringUtils.equals(userName, user.getSysUser().getUsername()))
         {
             return loginUserToUserOnline(user);
         }
@@ -60,7 +60,7 @@ public class SysUserOnlineServiceImpl implements ISysUserOnlineService
     @Override
     public SysUserOnline selectOnlineByInfo(String ipaddr, String userName, LoginUser user)
     {
-        if (StringUtils.equals(ipaddr, user.getLoginIp()) && StringUtils.equals(userName, user.getSysUser().getUserName()))
+        if (StringUtils.equals(ipaddr, user.getLoginIp()) && StringUtils.equals(userName, user.getSysUser().getUsername()))
         {
             return loginUserToUserOnline(user);
         }
@@ -94,7 +94,7 @@ public class SysUserOnlineServiceImpl implements ISysUserOnlineService
     {
         //UserAgent userAgent = UserAgent.parseUserAgentString(ServletUtil.getRequest().getHeader("User-Agent"));
         String ip=user.getLoginIp();
-        String address = IpAddressUtil.getRealAddressByIP(ip);
+        String address = user.getLoginLocation();
         //StringBuilder s = new StringBuilder();
         // 获取客户端操作系统
         //String os = userAgent.getOperatingSystem().getName();
@@ -106,7 +106,7 @@ public class SysUserOnlineServiceImpl implements ISysUserOnlineService
         }
         SysUserOnline sysUserOnline = new SysUserOnline();
         sysUserOnline.setTokenId(user.getTokenId());
-        sysUserOnline.setUserName(user.getSysUser().getUserName());
+        sysUserOnline.setUsername(user.getUsername());
         sysUserOnline.setIpaddr(ip);
         sysUserOnline.setLoginLocation(address);
         sysUserOnline.setBrowser(user.getBrowser());
@@ -114,7 +114,7 @@ public class SysUserOnlineServiceImpl implements ISysUserOnlineService
         sysUserOnline.setLoginTime(user.getLoginTime().getTime());
         if (StringUtils.isNotNull(user))
         {
-            sysUserOnline.setDeptName(user.getDeptName());
+            sysUserOnline.setDeptName(user.getSysUser().getSysDept().getDeptName());
         }
         return sysUserOnline;
     }

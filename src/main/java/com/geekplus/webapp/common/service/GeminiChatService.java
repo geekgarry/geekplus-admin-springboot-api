@@ -164,7 +164,7 @@ public class GeminiChatService {
         stringRedisTemplate.opsForList().rightPush(md5Content, JSONObject.toJSONString(msgMap1), JSONObject.toJSONString(msgMap2));
         //}
         stringRedisTemplate.expire(md5Content, 30, TimeUnit.HOURS);
-        chatAILog.setUserName(chatPrompt.getUsername());
+        chatAILog.setUsername(chatPrompt.getUsername());
         chatAILog.setUserIp(ip);
         chatAILog.setUserMac("2060-XX-XX");
         //Date logDate= DateTimeUtils.getCurrentDate(LocalDate.now());

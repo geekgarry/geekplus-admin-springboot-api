@@ -16,7 +16,7 @@ import java.net.URL;
 /**
  * @ClassName: PictureMerge
  * @Description: 图片合成
- * @author: WeiZheng
+ * @author: Garry
  * @date: 2018年8月30日 下午5:39:59
  */
 public class PictureMerge {
@@ -251,7 +251,7 @@ public class PictureMerge {
 	 * @param left
 	 * @param top
 	 * @return BufferedImage
-	 * @author WeiZheng
+	 * @author Garry
 	 * @date 2018年8月31日上午10:00:35
 	 */
 	public static BufferedImage drawExtraImgInImg(BufferedImage bimage, Image img, int left, int top) {
@@ -327,7 +327,7 @@ public class PictureMerge {
 	 * @param destImg
 	 * @param logoTxt
 	 *            void
-	 * @author WeiZheng
+	 * @author Garry
 	 * @date 2018年8月31日下午4:07:09
 	 */
 	private static void appendTxtInfoLogo(BufferedImage destImg, String logoTxt) {
@@ -352,7 +352,7 @@ public class PictureMerge {
 	 * @param destImg
 	 * @param productTitle
 	 *            void
-	 * @author WeiZheng
+	 * @author Garry
 	 * @date 2018年8月31日下午4:07:30
 	 */
 	private static void appendTxtInfoProduct(BufferedImage destImg, String productTitle) {
@@ -375,7 +375,7 @@ public class PictureMerge {
 	 * @param destImg
 	 * @param productPrice
 	 *            void
-	 * @author WeiZheng
+	 * @author Garry
 	 * @date 2018年8月31日下午4:08:01
 	 */
 	private static void appendTxtInfoPrice(BufferedImage destImg, String productPrice) {
@@ -396,7 +396,7 @@ public class PictureMerge {
 	* @param fileName
 	* @param relativePath
 	* @return Boolean
-	* @author WeiZheng
+	* @author Garry
 	* @date 2018年8月31日下午5:25:39
 	 */
     private static Boolean  isExistFile(String fileName,String relativePath){
@@ -413,7 +413,7 @@ public class PictureMerge {
     * @Description:
     * @param urlPath
     * @return String
-    * @author WeiZheng
+    * @author Garry
     * @date 2018年8月31日下午5:31:25
      */
     private static String getUrlFileName(String urlPath){
@@ -471,7 +471,7 @@ public class PictureMerge {
 	 * @Description:
 	 * @param destImg
 	 *            void
-	 * @author WeiZheng
+	 * @author Garry
 	 * @date 2018年8月31日下午4:08:19
 	 */
 	private static BufferedImage appendLogoImg(BufferedImage destImg, String logoImgPath) {
@@ -526,7 +526,7 @@ public class PictureMerge {
 	 * @Description:
 	 * @param destImg
 	 *            void
-	 * @author WeiZheng
+	 * @author Garry
 	 * @date 2018年8月31日下午4:08:35
 	 */
 	private static void appendProductImg(BufferedImage destImg, String productPath) {
@@ -594,7 +594,7 @@ public class PictureMerge {
 	 * @Description:
 	 * @param destImg
 	 *            void
-	 * @author WeiZheng
+	 * @author Garry
 	 * @date 2018年8月31日下午4:08:46
 	 */
 	private static void appendQRCode(BufferedImage destImg, String codeUrl) {
@@ -628,7 +628,7 @@ public class PictureMerge {
 	* @param logoImgPath
 	* @param productPath
 	* @return String
-	* @author WeiZheng
+	* @author Garry
 	* @date 2018年9月1日上午8:49:21
 	 */
     public static String  getShareImgName(String logoTxt,String productTitle,String productPrice,String codeUrl,String logoImgPath,String productPath){

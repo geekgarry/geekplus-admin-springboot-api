@@ -25,7 +25,7 @@ public class ChatAILog extends BaseEntity
 
     /** 用户名 */
     @Excel(name = "用户名")
-    private String userName;
+    private String username;
 
     /** 用户IP */
     @Excel(name = "用户IP")
@@ -61,14 +61,14 @@ public class ChatAILog extends BaseEntity
     {
         return userId;
     }
-    public void setUserName(String userName)
+    public void setUsername(String username)
     {
-        this.userName = userName;
+        this.username = username;
     }
 
-    public String getUserName()
+    public String getUsername()
     {
-        return userName;
+        return username;
     }
     public void setUserIp(String userIp)
     {
@@ -110,7 +110,7 @@ public class ChatAILog extends BaseEntity
         return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
             .append("id", getId())
             .append("userId", getUserId())
-            .append("userName", getUserName())
+            .append("userName", getUsername())
             .append("userIp", getUserIp())
             .append("userMac", getUserMac())
             .append("createTime", getCreateTime())

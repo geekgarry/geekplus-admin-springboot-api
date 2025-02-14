@@ -4,16 +4,22 @@ import com.geekplus.common.annotation.Log;
 import com.geekplus.common.annotation.RepeatSubmit;
 import com.geekplus.common.constant.HttpStatusCode;
 import com.geekplus.common.core.controller.BaseController;
+import com.geekplus.common.domain.LoginUser;
 import com.geekplus.common.domain.Result;
 import com.geekplus.common.enums.BusinessType;
 import com.geekplus.common.page.PageDataInfo;
+import com.geekplus.common.util.http.ServletUtil;
+import com.geekplus.webapp.common.service.SysUserTokenService;
 import com.geekplus.webapp.system.entity.SysRoleMenu;
+import com.geekplus.webapp.system.entity.SysUser;
 import com.geekplus.webapp.system.service.SysRoleMenuService;
+import com.geekplus.webapp.system.service.SysUserService;
 import com.github.pagehelper.PageInfo;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Set;
 
 /**
  *
@@ -24,6 +30,10 @@ import java.util.List;
 public class SysRoleMenuController extends BaseController {
     @Resource
     private SysRoleMenuService sysRoleMenuService;
+    @Resource
+    private SysUserService sysUserService;
+    @Resource
+    private SysUserTokenService sysUserTokenService;
 
     /**
      * 增加
@@ -32,7 +42,16 @@ public class SysRoleMenuController extends BaseController {
     @PostMapping("/add")
     @RepeatSubmit
     public Result add(@RequestBody SysRoleMenu sysRoleMenu) {
-        return toResult(sysRoleMenuService.insertSysRoleMenu(sysRoleMenu));
+        int count = sysRoleMenuService.insertSysRoleMenu(sysRoleMenu);
+        if(count>0){
+            LoginUser loginUser = sysUserTokenService.getLoginUser(ServletUtil.getRequest());
+            SysUser sysUser = loginUser.getSysUser();
+            Set sysUserPerms = sysUserService.getSysUserMenuPerms(sysUser.getUserId());
+            loginUser.setSysMenuList(sysUserPerms);
+            return Result.success();
+        }else {
+            return Result.error();
+        }
     }
 
     /**
@@ -42,7 +61,16 @@ public class SysRoleMenuController extends BaseController {
     @PostMapping("/batchAdd")
     @RepeatSubmit
     public Result batchAdd(@RequestBody List<SysRoleMenu> sysRoleMenu) {
-        return toResult(sysRoleMenuService.batchInsertSysRoleMenuList(sysRoleMenu));
+        int count = sysRoleMenuService.batchInsertSysRoleMenuList(sysRoleMenu);
+        if(count>0){
+            LoginUser loginUser = sysUserTokenService.getLoginUser(ServletUtil.getRequest());
+            SysUser sysUser = loginUser.getSysUser();
+            Set sysUserPerms = sysUserService.getSysUserMenuPerms(sysUser.getUserId());
+            loginUser.setSysMenuList(sysUserPerms);
+            return Result.success();
+        }else {
+            return Result.error();
+        }
     }
 
     /**
@@ -115,7 +143,15 @@ public class SysRoleMenuController extends BaseController {
     @GetMapping("/deleteRoleMenu")
     public Result removeRoleMenu(SysRoleMenu sysRoleMenu) {
         int count=sysRoleMenuService.deleteSysRoleMenu(sysRoleMenu);
-        return count>0? Result.success(): Result.error();
+        if(count>0){
+            LoginUser loginUser = sysUserTokenService.getLoginUser(ServletUtil.getRequest());
+            SysUser sysUser = loginUser.getSysUser();
+            Set sysUserPerms = sysUserService.getSysUserMenuPerms(sysUser.getUserId());
+            loginUser.setSysMenuList(sysUserPerms);
+            return Result.success();
+        }else {
+            return Result.error();
+        }
     }
 
     /**
@@ -125,6 +161,14 @@ public class SysRoleMenuController extends BaseController {
     @PutMapping("/batchDeleteRoleMenu")
     public Result removeRoleMenuList(@RequestBody List<SysRoleMenu> sysRoleMenuList) {
         int count=sysRoleMenuService.batchDeleteSysRoleMenu(sysRoleMenuList);
-        return count>0? Result.success(): Result.error();
+        if(count>0) {
+            LoginUser loginUser = sysUserTokenService.getLoginUser(ServletUtil.getRequest());
+            SysUser sysUser = loginUser.getSysUser();
+            Set sysUserPerms = sysUserService.getSysUserMenuPerms(sysUser.getUserId());
+            loginUser.setSysMenuList(sysUserPerms);
+            return Result.success();
+        }else {
+            return Result.error();
+        }
     }
 }

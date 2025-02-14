@@ -108,7 +108,7 @@ public class OperateLogAspect {
             if(sysUser==null){
                 sysOperLog.setOperName("游客");
             }else{
-                sysOperLog.setOperName(sysUser.getSysUser().getUserName());
+                sysOperLog.setOperName(sysUser.getSysUser().getUsername());
             }
             // 获取客户端操作系统
             String os = userAgent.getOperatingSystem().getName();

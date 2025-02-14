@@ -49,7 +49,7 @@ public interface SysUserMapper {
     */
     Integer updateSysUser(SysUser sysUser);
 
-    Integer updateSysUserByUserName(SysUser sysUser);
+    Integer updateSysUserByUsername(SysUser sysUser);
 
     /**
     * 批量修改魔偶几个字段

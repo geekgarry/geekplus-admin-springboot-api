@@ -94,5 +94,5 @@ public interface SysUserService {
 
     Set<String> getSysUserMenuPerms(Long userId);
 
-    public int updateSysUserByUserName(String userName, String loginIp);
+    public int updateSysUserByUsername(String userName, String loginIp);
 }

@@ -8,7 +8,7 @@ import java.net.URL;
 /**
  * @ClassName: FileUtils
  * @Description:
- * @author: WeiZheng
+ * @author: Garry
  * @date: 2018年8月30日 下午4:24:30
  */
 public class FileUtils {

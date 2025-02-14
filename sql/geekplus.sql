@@ -161,7 +161,7 @@ DROP TABLE IF EXISTS `sys_login_log`;
 CREATE TABLE `sys_login_log` (
   `log_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '登录日志ID',
   `log_user_id` bigint(20) DEFAULT NULL COMMENT '登录用户ID',
-  `log_user_name` varchar(40) DEFAULT NULL COMMENT '登录用户名',
+  `log_username` varchar(40) DEFAULT NULL COMMENT '登录用户名',
   `log_login_ip` varchar(100) DEFAULT NULL COMMENT '登录IP地址',
   `login_location` varchar(50) DEFAULT NULL COMMENT '登录的地点',
   `log_browser` varchar(100) DEFAULT NULL COMMENT '登录浏览器',
@@ -483,8 +483,8 @@ DROP TABLE IF EXISTS `sys_user`;
 CREATE TABLE `sys_user` (
   `user_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '用户ID',
   `dept_id` int(11) DEFAULT NULL COMMENT '部门组织ID',
-  `user_name` varchar(33) NOT NULL COMMENT '用户账户名',
-  `nick_name` varchar(33) NOT NULL COMMENT '用户昵称',
+  `username` varchar(33) NOT NULL COMMENT '用户账户名',
+  `nickname` varchar(33) NOT NULL COMMENT '用户昵称',
   `user_type` tinyint(2) DEFAULT NULL COMMENT '用户类型，是否为管理员',
   `email` varchar(50) DEFAULT NULL COMMENT '用户邮件',
   `phone_number` varchar(13) DEFAULT NULL COMMENT '手机号',
@@ -536,21 +536,5 @@ INSERT INTO `sys_user_role` VALUES (3, 3);
 INSERT INTO `sys_user_role` VALUES (3, 4);
 INSERT INTO `sys_user_role` VALUES (4, 4);
 COMMIT;
-
--- ----------------------------
--- Table structure for chatAI_log
--- ----------------------------
-DROP TABLE IF EXISTS `chatAI_log`;
-CREATE TABLE `chatAI_log` (
-  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键',
-  `user_id` int(18) DEFAULT NULL COMMENT '用户ID',
-  `user_name` varchar(30) DEFAULT NULL COMMENT '用户名',
-  `user_ip` varchar(40) DEFAULT NULL COMMENT '用户IP',
-  `user_mac` varchar(100) DEFAULT NULL COMMENT '用户网络Mac地址',
-  `ask_content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_croatian_ci COMMENT '询问内容',
-  `reply_content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_croatian_ci COMMENT '回复内容',
-  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=450 DEFAULT CHARSET=utf8 COMMENT='ChatAI聊天记录日志';
 
 SET FOREIGN_KEY_CHECKS = 1;

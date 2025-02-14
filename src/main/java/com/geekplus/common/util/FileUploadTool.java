@@ -17,7 +17,7 @@ import java.util.Iterator;
 /**
  * @ClassName FileUploadTool
  * @Description 文件上传工具类
- * @Author Zheng
+ * @Author cpp
  * @Date 2018年4月2日 上午9:42:31
  */
 @Component
@@ -82,7 +82,7 @@ public class FileUploadTool {
 			System.out.println("文件为空");
 		}
 		if (bflag) {
-			String newFileName = UUIDUtil.getEncryptFileUUID() + this.getFileExt(fileName);
+			String newFileName = UUIDUtil.getFileUUID() + this.getFileExt(fileName);
 			try {
 				ObjectStorageUtil.simpleUploadFile(multipartFile.getInputStream(), "/upload/" + newFileName,multipartFile.getSize());
 				entity.setSize(this.getSize(multipartFile.getSize()));

@@ -36,7 +36,7 @@ public class LogUtil
         StringBuilder s = new StringBuilder();
         s.append(getBlock(ip));
         s.append(address);
-        s.append(getBlock(loginBody.getUserName()));
+        s.append(getBlock(loginBody.getUsername()));
         s.append(getBlock(status));
         s.append(getBlock(msg));
         // 打印信息到日志
@@ -47,7 +47,7 @@ public class LogUtil
         String browser = userAgent.getBrowser().getName();
         // 封装对象
         SysLoginLog loginLog = new SysLoginLog();
-        loginLog.setLogUserName(loginBody.getUserName());
+        loginLog.setLogUsername(loginBody.getUsername());
         loginLog.setLogLoginIp(ip);
         loginLog.setLoginLocation(address);
         loginLog.setLogBrowser(browser);

@@ -20,19 +20,19 @@ public class LoginUser implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /**
-     * 部门名称 系统用户表
+     * 登录IP
      */
-    private String deptName;
+    //private String loginIp;
 
     /**
-     * 系统用户表 系统用户表
+     * 登录时间
      */
-    private String loginIp;
+    //private Date loginTime;
 
     /**
-     * 系统用户表 系统用户表
+     * 登录地址
      */
-    private Date loginTime;
+    private String loginLocation;
 
     private String tokenId;
 
@@ -60,28 +60,28 @@ public class LoginUser implements Serializable {
         this.sysMenuList = permissionsMenu;
     }
 
-    public String getDeptName() {
-        return deptName;
-    }
-
-    public void setDeptName(String deptName) {
-        this.deptName = deptName;
-    }
-
     public String getLoginIp() {
-        return loginIp;
+        return sysUser.getLoginIp();
     }
 
     public void setLoginIp(String loginIp) {
-        this.loginIp = loginIp;
+        this.sysUser.setLoginIp(loginIp);
+    }
+
+    public String getLoginLocation() {
+        return loginLocation;
+    }
+
+    public void setLoginLocation(String loginLocation) {
+        this.loginLocation = loginLocation;
     }
 
     public Date getLoginTime() {
-        return loginTime;
+        return sysUser.getLoginTime();
     }
 
     public void setLoginTime(Date loginTime) {
-        this.loginTime = loginTime;
+        this.sysUser.setLoginTime(loginTime);
     }
 
     public String getTokenId() {
@@ -122,5 +122,9 @@ public class LoginUser implements Serializable {
 
     public void setSysMenuList(Set<String> sysMenuList) {
         this.sysMenuList = sysMenuList;
+    }
+
+    public String getUsername() {
+        return sysUser.getUsername();
     }
 }

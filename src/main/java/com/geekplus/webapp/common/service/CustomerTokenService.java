@@ -49,12 +49,12 @@ public class CustomerTokenService {
      */
     public String createToken(Users customer)
     {
-        String tokenId = UUIDUtil.getMd5UUID(customer.getUserName());
+        String tokenId = UUIDUtil.getMd5UUID(customer.getUsername());
         customer.setTokenId(tokenId);
         //设置网络信息，包括登录ip和登录时间
         setUserInfoAgent(customer);
         //1.生成token
-        String token = UserJwtUtil.sign(customer.getUserName(), tokenId);
+        String token = UserJwtUtil.sign(customer.getUsername(), tokenId);
         // 设置token缓存有效时间
         setRedisKeyValue(customer, tokenId);
         return token;
@@ -68,13 +68,13 @@ public class CustomerTokenService {
      */
     public String refreshTokenId(Users customer, String tokenId){
         if(tokenId==null || "".equals(tokenId)){
-            tokenId=UUIDUtil.getMd5UUID(customer.getUserName());
+            tokenId=UUIDUtil.getMd5UUID(customer.getUsername());
         }
         customer.setTokenId(tokenId);
         //设置网络信息，包括登录ip和登录时间
         setUserInfoAgent(customer);
         //生成token
-        String token = UserJwtUtil.sign(customer.getUserName(), tokenId);
+        String token = UserJwtUtil.sign(customer.getUsername(), tokenId);
         //重新刷新redis缓存
         setRedisKeyValue(customer, tokenId);
         return token;
@@ -200,7 +200,7 @@ public class CustomerTokenService {
             return customer;
         }else {
             Users customerDto = new Users();
-            customerDto.setUserName(UserJwtUtil.getAccount(token));
+            customerDto.setUsername(UserJwtUtil.getAccount(token));
             Users customer = usersService.selectUsersForLogin(customerDto);
             String refreshToken = refreshTokenId(customer, UserJwtUtil.getTokenId(token));
             HttpServletResponse response = ServletUtil.getResponse();
@@ -256,19 +256,19 @@ public class CustomerTokenService {
             // 缓存中存在，验证失败（JwtUtil.verify在上一篇文章中已经介绍）
             if (!UserJwtUtil.verify(accessToken) && !UserJwtUtil.isExpire(cacheToken)) {
                 // 重新sign，得到新的token
-                newAccessToken = UserJwtUtil.sign(customer.getUserName(), UUIDUtil.getBase64UUID(customer.getUserName()));
+                newAccessToken = UserJwtUtil.sign(customer.getUsername(), UUIDUtil.getBase64UUID(customer.getUsername()));
                 // 写入到缓存中，key不变，将value换成新的token
                 // 设置超时时间【这里除以1000是因为设置时间单位为秒了】【一般续签的时间都会乘以2】
                 // 用户这次请求JWTToken值还在生命周期内，重新put新的生命周期时间（有效时间）
-                redisUtil.set(customer.getUserName() + ':' + redisTokenId, cacheToken, Constant.EXPIRE_TIME);
+                redisUtil.set(customer.getUsername() + ':' + redisTokenId, cacheToken, Constant.EXPIRE_TIME);
                 // 缓存中存在，验证成功
             } else if(UserJwtUtil.isExpire(cacheToken)) {
                 //这里要重新生成accessToken和refreshToken
-                String newTokenId = UUIDUtil.getBase64UUID(customer.getUserName());
-                newAccessToken = UserJwtUtil.sign(customer.getUserName(), newTokenId);
+                String newTokenId = UUIDUtil.getBase64UUID(customer.getUsername());
+                newAccessToken = UserJwtUtil.sign(customer.getUsername(), newTokenId);
                 //refreshToken为accessToken的时间的两倍。redis的存储时间也和refreshToken一样
                 //CustomerJwtUtil.sign(customer.getUserName(), UUIDUtil.getBase64UUID(customer.getUserName()));
-                redisUtil.set(customer.getUserName() + ':' + newTokenId, cacheToken, Constant.EXPIRE_TIME);
+                redisUtil.set(customer.getUsername() + ':' + newTokenId, cacheToken, Constant.EXPIRE_TIME);
             }
             return newAccessToken;
         }

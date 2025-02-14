@@ -29,7 +29,7 @@ public class SysLoginLog extends BaseEntity
     /**
      * 系统登录日志 系统登录日志
      */
-    private String logUserName;
+    private String logUsername;
 
     /**
      * 系统登录日志 系统登录日志
@@ -95,15 +95,15 @@ public class SysLoginLog extends BaseEntity
 	/**
 	 *获取登录用户名
 	 */
-	public String getLogUserName(){
-		return logUserName;
+	public String getLogUsername(){
+		return logUsername;
 	}
 
 	/**
 	 *设置登录用户名
 	 */
-	public void setLogUserName(String logUserName){
-		this.logUserName = logUserName;
+	public void setLogUsername(String logUsername){
+		this.logUsername = logUsername;
 	}
 	/**
 	 *获取登录IP地址
@@ -198,7 +198,7 @@ public class SysLoginLog extends BaseEntity
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
             .append("logId", getLogId())
             .append("logUserId", getLogUserId())
-            .append("logUserName", getLogUserName())
+            .append("logUserName", getLogUsername())
             .append("logLoginIp", getLogLoginIp())
             .append("logBrowser", getLogBrowser())
             .append("logSystem", getLogSystem())

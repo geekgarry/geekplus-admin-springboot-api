@@ -11,6 +11,7 @@ import com.geekplus.common.redis.RedisUtil;
 import com.geekplus.common.util.string.StringUtils;
 import com.geekplus.webapp.common.monitor.entity.SysUserOnline;
 import com.geekplus.webapp.common.monitor.service.ISysUserOnlineService;
+import com.geekplus.webapp.system.entity.SysUser;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.authz.annotation.RequiresRoles;
@@ -39,18 +40,18 @@ public class SysUserOnlineController extends BaseController {
     @RequiresRoles(value = {"admin","webManage","development"}, logical = Logical.OR)
     @RequiresPermissions("monitor:online:list")
     @GetMapping("/list")
-    public PageDataInfo list(String ipAddr, String userName)
+    public PageDataInfo list(String ipAddr, String username)
     {
         Collection<String> keys = redisUtil.keys(Constant.PRE_REDIS_USER_TOKEN + "*");
         List<SysUserOnline> userOnlineList = new ArrayList<SysUserOnline>();
         for (String key : keys)
         {
             LoginUser user = (LoginUser) redisUtil.get(key);
-            if (StringUtils.isNotEmpty(ipAddr) && StringUtils.isNotEmpty(userName))
+            if (StringUtils.isNotEmpty(ipAddr) && StringUtils.isNotEmpty(username))
             {
-                if (StringUtils.equals(ipAddr, user.getLoginIp()) && StringUtils.equals(userName, user.getSysUser().getUserName()))
+                if (StringUtils.equals(ipAddr, user.getLoginIp()) && StringUtils.equals(username, user.getSysUser().getUsername()))
                 {
-                    userOnlineList.add(userOnlineService.selectOnlineByInfo(ipAddr, userName, user));
+                    userOnlineList.add(userOnlineService.selectOnlineByInfo(ipAddr, username, user));
                 }
             }
             else if (StringUtils.isNotEmpty(ipAddr))
@@ -60,11 +61,11 @@ public class SysUserOnlineController extends BaseController {
                     userOnlineList.add(userOnlineService.selectOnlineByIpaddr(ipAddr, user));
                 }
             }
-            else if (StringUtils.isNotEmpty(userName) && StringUtils.isNotNull(user))
+            else if (StringUtils.isNotEmpty(username) && StringUtils.isNotNull(user))
             {
-                if (StringUtils.equals(userName, user.getSysUser().getUserName()))
+                if (StringUtils.equals(username, user.getSysUser().getUsername()))
                 {
-                    userOnlineList.add(userOnlineService.selectOnlineByUserName(userName, user));
+                    userOnlineList.add(userOnlineService.selectOnlineByUserName(username, user));
                 }
             }
             else

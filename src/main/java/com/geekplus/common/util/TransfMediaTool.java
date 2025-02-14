@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * @ClassName TransfMediaTool
  * @Description 格式转换工具类
- * @Author Zheng
+ * @Author cpp
  * @Date 2018年4月2日 上午9:44:59
  */
 public class TransfMediaTool {

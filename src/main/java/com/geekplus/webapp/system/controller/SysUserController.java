@@ -22,6 +22,7 @@ import com.geekplus.webapp.system.entity.SysUser;
 import com.geekplus.webapp.common.service.SysUserTokenService;
 import com.geekplus.webapp.system.service.SysMenuService;
 import com.geekplus.webapp.system.service.SysRoleService;
+import com.geekplus.webapp.system.service.SysUserRoleService;
 import com.geekplus.webapp.system.service.SysUserService;
 import com.github.pagehelper.PageInfo;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -44,9 +45,9 @@ public class SysUserController extends BaseController {
     @Resource
     private SysUserService sysUserService;
     @Resource
-    private SysMenuService sysMenuService;
-    @Resource
     private SysRoleService sysRoleService;
+    @Resource
+    private SysUserRoleService sysUserRoleService;
     @Resource
     private SysUserTokenService sysUserTokenService;
     @Resource
@@ -80,7 +81,11 @@ public class SysUserController extends BaseController {
     @Log(title = "删除用户",businessType = BusinessType.DELETE,operatorType = OperatorType.MANAGE)
     @GetMapping("/delete")
     public Result remove(@RequestParam Long userId) {
-        return toResult(sysUserService.deleteSysUserById(userId));
+        if(sysUserService.deleteSysUserById(userId)>0){
+            return toResult(sysUserRoleService.deleteSysUserRoleById(userId));
+        }else {
+            return Result.error("删除失败");
+        }
     }
 
     /**
@@ -90,7 +95,11 @@ public class SysUserController extends BaseController {
     @Log(title = "批量删除用户",businessType = BusinessType.DELETE,operatorType = OperatorType.MANAGE)
     @DeleteMapping("/{userIds}")
     public Result remove(@PathVariable Long[] userIds) {
-        return toResult(sysUserService.deleteSysUserByIds(userIds));
+        if(sysUserService.deleteSysUserByIds(userIds)>0){
+            return toResult(sysUserRoleService.deleteSysUserRoleByIds(userIds));
+        }else {
+            return Result.error("删除失败");
+        }
     }
 
     /**
@@ -199,14 +208,14 @@ public class SysUserController extends BaseController {
      */
     @Log(title = "用户头像", businessType = BusinessType.UPDATE)
     @PostMapping("/avatar")
-    public Result avatar(@RequestParam("avatarfile") MultipartFile file) throws IOException
+    public Result avatar(@RequestParam("avatarFile") MultipartFile file, @RequestParam(required = false) String fileFolder) throws IOException
     {
         if (!file.isEmpty())
         {
             LoginUser loginUser = sysUserTokenService.getLoginUser(ServletUtil.getRequest());
             SysUser sysUser = loginUser.getSysUser();
-            String avatar = FileUploadUtils.upload(WebAppConfig.getAvatarPath(), file);
-            if (sysUserService.updateUserAvatar(sysUser.getUserName(), avatar))
+            String avatar = FileUploadUtils.upload(WebAppConfig.getAvatarPath() + File.separator + fileFolder, file);
+            if (sysUserService.updateUserAvatar(sysUser.getUsername(), avatar))
             {
                 Result ajax = Result.success();
                 ajax.put("imgUrl", avatar);
@@ -224,9 +233,9 @@ public class SysUserController extends BaseController {
      * 在线浏览所有用户头像
      */
     @GetMapping("/getAvatarList")
-    public Result getAvatarList(String fileFolder)
+    public Result getAvatarList(@RequestParam(required = false) String fileFolder)
     {
-        File file=new File(WebAppConfig.getProfile()+ File.separator + fileFolder);
+        File file=new File(WebAppConfig.getProfile()+ File.separator + "avatar" + File.separator + fileFolder);
         List<String> list= new ArrayList<>();
         FileUtils.getDirectoryAllFile(file,list);
         return Result.success(list);

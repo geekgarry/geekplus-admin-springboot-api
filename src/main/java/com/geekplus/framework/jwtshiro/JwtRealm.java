@@ -64,7 +64,7 @@ public class JwtRealm extends AuthorizingRealm {
         Set<String> permSet = loginUser.getSysMenuList();
         simpleAuthorizationInfo.addRoles(roleSet);
         simpleAuthorizationInfo.addStringPermissions(permSet);
-        log.info("授权当前Subject用户为：{} 所属角色：{} ||| {}", sysUser.getUserName(), roleSet, permSet);
+        log.info("授权当前Subject用户为：{} 所属角色：{} ||| {}", sysUser.getUsername(), roleSet, permSet);
 //        userRolePermList.stream().forEach(rolePermMap -> {
 //        });
 //        numbersList.stream().distinct().collect(Collectors.toList());

@@ -8,8 +8,8 @@
     <resultMap id="BaseResultMap" type="com.geekplus.webapp.system.entity.SysUser">
             <result property="userId" column="user_id" jdbcType="INTEGER" />
             <result property="deptId" column="dept_id" jdbcType="INTEGER" />
-            <result property="userName" column="user_name" jdbcType="VARCHAR" />
-            <result property="nickName" column="nick_name" jdbcType="VARCHAR" />
+            <result property="username" column="username" jdbcType="VARCHAR" />
+            <result property="nickname" column="nickname" jdbcType="VARCHAR" />
             <result property="userType" column="user_type" jdbcType="VARCHAR" />
             <result property="email" column="email" jdbcType="VARCHAR" />
             <result property="phoneNumber" column="phone_number" jdbcType="VARCHAR" />
@@ -33,8 +33,8 @@
         <id column="user_id" jdbcType="BIGINT" property="userId" />
         <result column="dept_id" jdbcType="INTEGER" property="deptId" />
 <!--        <result column="dept_name" jdbcType="INTEGER" property="deptName" />-->
-        <result column="user_name" jdbcType="VARCHAR" property="userName" />
-        <result column="nick_name" jdbcType="VARCHAR" property="nickName" />
+        <result column="username" jdbcType="VARCHAR" property="username" />
+        <result column="nickname" jdbcType="VARCHAR" property="nickname" />
         <result column="user_type" jdbcType="VARCHAR" property="userType" />
         <result column="email" jdbcType="VARCHAR" property="email" />
         <result column="phone_number" jdbcType="VARCHAR" property="phoneNumber" />
@@ -51,8 +51,8 @@
     <!--这里是需要存在cache缓存中的数据-->
 <!--    <resultMap id="UserLoginInfoResultMap" type="com.geekplus.common.domain.LoginUser">-->
 <!--        <result column="dept_name" jdbcType="VARCHAR" property="deptName" />-->
-<!--        <result column="user_name" jdbcType="VARCHAR" property="userName" />-->
-<!--        <result column="nick_name" jdbcType="VARCHAR" property="nickName" />-->
+<!--        <result column="username" jdbcType="VARCHAR" property="username" />-->
+<!--        <result column="nickname" jdbcType="VARCHAR" property="nickname" />-->
 <!--        <result column="password" jdbcType="VARCHAR" property="password" />-->
 <!--        <result column="status" jdbcType="CHAR" property="status" />-->
 <!--        <result column="login_ip" jdbcType="VARCHAR" property="loginIp" />-->
@@ -93,19 +93,19 @@
     <!--基础查询语句-->
     <sql id="baseSelectVo">
         select
-        user_id,dept_id,user_name,nick_name,user_type,email,phone_number,gender,avatar,password,status,del_flag,login_ip,login_time,create_by,create_time,update_by,update_time,remark
+        user_id,dept_id,username,nickname,user_type,email,phone_number,gender,avatar,password,status,del_flag,login_ip,login_time,create_by,create_time,update_by,update_time,remark
          from sys_user
     </sql>
 
     <!--基础查询语句2,用作联合查询使用-->
     <sql id="selectSysUserVo">
         select
-            su.user_id,su.dept_id,su.user_name,su.nick_name,su.user_type,su.email,su.phone_number,su.gender,su.avatar,su.password,su.status,su.del_flag,su.login_ip,su.login_time,su.create_by,su.create_time,su.update_by,su.update_time,su.remark
+            su.user_id,su.dept_id,su.username,su.nickname,su.user_type,su.email,su.phone_number,su.gender,su.avatar,su.password,su.status,su.del_flag,su.login_ip,su.login_time,su.create_by,su.create_time,su.update_by,su.update_time,su.remark
          from sys_user su
     </sql>
 
     <sql id="selectSysUserRoleDept">
-        select su.user_id,su.dept_id,su.user_name,su.nick_name,su.user_type,su.email,su.phone_number,su.gender,su.avatar,
+        select su.user_id,su.dept_id,su.username,su.nickname,su.user_type,su.email,su.phone_number,su.gender,su.avatar,
         su.password,su.status,su.del_flag,su.login_ip,su.login_time,su.create_by,su.create_time,su.update_by,su.update_time,su.remark,
         sd.dept_id,sd.dept_name,sd.parent_id,sd.leader,sd.phone,sd.email,
         sr.role_id,sr.role_name,sr.role_key
@@ -125,11 +125,11 @@
                     <if test="deptId !=null">
                         AND dept_id = #{deptId}
                     </if>
-                    <if test="userName !=null and userName != ''">
-                        AND user_name = #{userName}
+                    <if test="username !=null and username != ''">
+                        AND username = #{username}
                     </if>
-                    <if test="nickName !=null">
-                        AND nick_name = #{nickName}
+                    <if test="nickname !=null">
+                        AND nickname = #{nickname}
                     </if>
                     <if test="userType !=null">
                         AND user_type = #{userType}
@@ -189,11 +189,11 @@
             <if test="deptId !=null">
                 AND dept_id = #{deptId}
             </if>
-            <if test="userName !=null and userName != ''">
-                AND user_name = #{userName}
+            <if test="username !=null and username != ''">
+                AND username = #{username}
             </if>
-            <if test="nickName !=null">
-                AND nick_name = #{nickName}
+            <if test="nickname !=null">
+                AND nickname = #{nickname}
             </if>
             <if test="userType !=null">
                 AND user_type = #{userType}
@@ -250,11 +250,11 @@
                     <if test="deptId !=null">
                         AND su.dept_id = #{deptId}
                     </if>
-                    <if test="userName !=null">
-                        AND su.user_name = #{userName}
+                    <if test="username !=null">
+                        AND su.username = #{username}
                     </if>
-                    <if test="nickName !=null">
-                        AND su.nick_name = #{nickName}
+                    <if test="nickname !=null">
+                        AND su.nickname = #{nickname}
                     </if>
                     <if test="userType !=null">
                         AND su.user_type = #{userType}
@@ -316,8 +316,8 @@
         insert into sys_user
         <trim prefix="(" suffix=")" suffixOverrides=",">
                         <if test="deptId != null ">dept_id,</if>
-                        <if test="userName != null  and userName != ''">user_name,</if>
-                        <if test="nickName != null  and nickName != ''">nick_name,</if>
+                        <if test="username != null  and username != ''">username,</if>
+                        <if test="nickname != null  and nickname != ''">nickname,</if>
                         <if test="userType != null  and userType != ''">user_type,</if>
                         <if test="email != null  and email != ''">email,</if>
                         <if test="phoneNumber != null  and phoneNumber != ''">phone_number,</if>
@@ -336,8 +336,8 @@
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
                         <if test="deptId != null ">#{deptId},</if>
-                        <if test="userName != null  and userName != ''">#{userName},</if>
-                        <if test="nickName != null  and nickName != ''">#{nickName},</if>
+                        <if test="username != null  and username != ''">#{username},</if>
+                        <if test="nickname != null  and nickname != ''">#{nickname},</if>
                         <if test="userType != null  and userType != ''">#{userType},</if>
                         <if test="email != null  and email != ''">#{email},</if>
                         <if test="phoneNumber != null  and phoneNumber != ''">#{phoneNumber},</if>
@@ -360,12 +360,12 @@
     <insert id="batchInsertSysUserList" parameterType="java.util.List">
         insert into sys_user
         (
-         dept_id,user_name,nick_name,user_type,email,phone_number,gender,avatar,password,status,del_flag,login_ip,login_time,create_by,create_time,update_by,update_time,remark
+         dept_id,username,nickname,user_type,email,phone_number,gender,avatar,password,status,del_flag,login_ip,login_time,create_by,create_time,update_by,update_time,remark
         )
          values
         <foreach collection="list" item="item" index="index" separator=",">
         (
-         #{item.deptId},#{item.userName},#{item.nickName},#{item.userType},#{item.email},#{item.phoneNumber},#{item.gender},#{item.avatar},#{item.password},#{item.status},#{item.delFlag},#{item.loginIp},#{item.loginTime},#{item.createBy},sysdate(),#{item.updateBy},#{item.updateTime},#{item.remark}
+         #{item.deptId},#{item.username},#{item.nickname},#{item.userType},#{item.email},#{item.phoneNumber},#{item.gender},#{item.avatar},#{item.password},#{item.status},#{item.delFlag},#{item.loginIp},#{item.loginTime},#{item.createBy},sysdate(),#{item.updateBy},#{item.updateTime},#{item.remark}
         )
         </foreach>
     </insert>
@@ -401,8 +401,8 @@
         update sys_user
         <trim prefix="SET" suffixOverrides=",">
                     <if test="deptId != null ">dept_id = #{deptId},</if>
-                    <if test="userName != null  and userName != ''">user_name = #{userName},</if>
-                    <if test="nickName != null  and nickName != ''">nick_name = #{nickName},</if>
+                    <if test="username != null  and username != ''">username = #{username},</if>
+                    <if test="nickname != null  and nickname != ''">nickname = #{nickname},</if>
                     <if test="userType != null  and userType != ''">user_type = #{userType},</if>
                     <if test="email != null  and email != ''">email = #{email},</if>
                     <if test="phoneNumber != null  and phoneNumber != ''">phone_number = #{phoneNumber},</if>
@@ -423,11 +423,11 @@
     </update>
 
     <!--更新操作SQL-->
-    <update id="updateSysUserByUserName" parameterType="SysUser">
+    <update id="updateSysUserByUsername" parameterType="SysUser">
         update sys_user
         <trim prefix="SET" suffixOverrides=",">
             <if test="deptId != null ">dept_id = #{deptId},</if>
-            <if test="nickName != null  and nickName != ''">nick_name = #{nickName},</if>
+            <if test="nickname != null  and nickname != ''">nickname = #{nickname},</if>
             <if test="userType != null  and userType != ''">user_type = #{userType},</if>
             <if test="email != null  and email != ''">email = #{email},</if>
             <if test="phoneNumber != null  and phoneNumber != ''">phone_number = #{phoneNumber},</if>
@@ -444,23 +444,23 @@
             <if test="remark != null  and remark != ''">remark = #{remark},</if>
             update_time = sysdate()
         </trim>
-        where user_name = #{userName}
+        where username = #{username}
     </update>
 
     <!--批量更新某个字段-->
     <update id="batchUpdateSysUserList" >
         update sys_user set
-            user_id='',dept_id='',user_name='',nick_name='',user_type='',email='',phone_number='',gender='',avatar='',password='',status='',del_flag='',login_ip='',login_time='',create_by='',create_time='',update_by='',update_time='',remark=''
+            user_id='',dept_id='',username='',nickname='',user_type='',email='',phone_number='',gender='',avatar='',password='',status='',del_flag='',login_ip='',login_time='',create_by='',create_time='',update_by='',update_time='',remark=''
          where user_id in
         <foreach collection="array" item="item"  open="(" close=")" separator=",">
             #{item}
         </foreach>
     </update>
 
-    <select id="getRoleMenuByUserName" resultType="Map" parameterType="SysUser" >
+    <select id="getRoleMenuByUsername" resultType="Map" parameterType="SysUser" >
     SELECT * from sys_user suser LEFT JOIN sys_user_role urole on suser.user_id=urole.user_id
     LEFT JOIN sys_role srole on srole.role_id=urole.role_id
-    where suser.user_name=#{userName}
+    where suser.username=#{username}
     </select>
 
     <!--用户实体信息下携带用户名查询用户信息-->
@@ -470,16 +470,16 @@
           This element is automatically generated by MyBatis Generator, do not modify.
           This element was generated on Mon Apr 25 23:09:21 CST 2022.
         -->
-    select su.user_id,su.dept_id,sd.dept_name,su.user_name,su.nick_name,su.user_type,su.email,su.phone_number,su.gender,su.avatar,
+    select su.user_id,su.dept_id,sd.dept_name,su.username,su.nickname,su.user_type,su.email,su.phone_number,su.gender,su.avatar,
         su.password,su.status,su.del_flag,su.login_ip,su.login_time,su.create_by,su.create_time,su.update_by,su.update_time,su.remark
         from sys_user su left join sys_dept sd on su.dept_id=sd.dept_id
-        where su.user_name = #{userName}
+        where su.username = #{username}
     </select>
 
     <!--用户实体信息下携带用户名查询用户信息-->
     <select id="getSysUserInfoBy" resultMap="BaseResultMap" parameterType="String">
         <include refid="selectSysUserRoleDept" />
-        where su.user_name = #{userName}
+        where su.username = #{username}
     </select>
 
     <!--用户实体信息下携带用户名查询用户信息-->
@@ -496,10 +496,10 @@
 
     <!--用户名查询用户信息-->
 <!--    <select id="sysUserLoginAllInfo" resultMap="UserLoginInfoResultMap" parameterType="String">-->
-<!--    select su.user_id,su.dept_id,sd.dept_name,su.user_name,su.nick_name,su.user_type,su.email,su.phone_number,su.gender,su.avatar,-->
+<!--    select su.user_id,su.dept_id,sd.dept_name,su.username,su.nickname,su.user_type,su.email,su.phone_number,su.gender,su.avatar,-->
 <!--        su.password,su.status,su.del_flag,su.login_ip,su.login_time,su.create_by,su.create_time,su.update_by,su.update_time,su.remark-->
 <!--        from sys_user su left join sys_dept sd on su.dept_id=sd.dept_id-->
-<!--    where su.user_name=#{userName}-->
+<!--    where su.username=#{username}-->
 <!--    </select>-->
 
     <select id="selectUserRoles" resultMap="roleResultMap" >
@@ -523,17 +523,17 @@
     </select>
 
     <update id="updateUserAvatar" parameterType="SysUser">
- 		update sys_user set avatar = #{avatar} where user_name = #{userName}
+ 		update sys_user set avatar = #{avatar} where username = #{username}
 	</update>
 
-<!--    <select id="getRolePermissionByUserName" resultType="map" parameterType="com.geekplus.webapp.system.entity.SysUser" >-->
+<!--    <select id="getRolePermissionByUsername" resultType="map" parameterType="com.geekplus.webapp.system.entity.SysUser" >-->
 <!--    SELECT srole.role_id as roleId,srole.role_name as roleName,srole.role_key as roleKey,sp.permission_name as permName,-->
 <!--    sp.permission_id as permId,sp.remark from sys_user suser-->
 <!--    LEFT JOIN sys_user_role urole on suser.user_id=urole.user_id-->
 <!--    LEFT JOIN sys_role srole on srole.role_id=urole.role_id-->
 <!--    LEFT JOIN sys_role_permission srp on srp.role_id=urole.role_id-->
 <!--    LEFT JOIN sys_permission sp on sp.permission_id=srp.permission_id-->
-<!--    where suser.user_name=#{userName}-->
+<!--    where suser.username=#{username}-->
 <!--    </select>-->
 
 </mapper>

@@ -87,8 +87,8 @@ public class SysUserLoginController extends BaseController {
         String token;
         //UsernamePasswordToken upToken=new UsernamePasswordToken(loginUser.getUserName(),loginUser.getPassword());
         if(validateCode==redisUtil.get(validateKey)||validateCode.equalsIgnoreCase(redisUtil.get(validateKey).toString())){
-            sysUserService.updateSysUserByUserName(loginBody.getUserName(), IPUtils.getIpAddr(ServletUtil.getRequest()));
-            SysUser sysUserInfo =sysUserService.getSysUserInfoBy(loginBody.getUserName());
+            sysUserService.updateSysUserByUsername(loginBody.getUsername(), IPUtils.getIpAddr(ServletUtil.getRequest()));
+            SysUser sysUserInfo =sysUserService.getSysUserInfoBy(loginBody.getUsername());
             //sysUserInfo =sysUserService.sysUserLoginBy(loginUser);
             if(sysUserInfo==null) {
                 //subject.logout();
@@ -146,16 +146,18 @@ public class SysUserLoginController extends BaseController {
         Map<String,Object> map=new HashMap<>();
         //log.info("=========================>"+sysUser.getUserId());
         //List<SysMenu> menuList=sysMenuService.getMenuTreeByUserName(userName);
-        List<SysMenu> allMenuList=sysMenuService.getMenuPermsByUserName(userName);
+        List<SysMenu> allMenuList=sysMenuService.getMenuPermsByUsername(userName);
         Set permsSet=allMenuList.stream().filter(sysMenu -> !StringUtils.isEmpty(sysMenu.getPerms())).map(SysMenu::getPerms).collect(Collectors.toSet());
         List<SysMenu> menuList= SysMenuUtil.getParentMenuList(allMenuList.stream().filter(sysMenu -> !sysMenu.getMenuType().equals("B")).collect(Collectors.toList()));
+        Set roleSet=sysUser.getSysRoleList().stream().filter(sysRole -> !StringUtils.isEmpty(sysRole.getRoleKey())).map(SysRole::getRoleKey).collect(Collectors.toSet());
         //List<SysMenu> menuList=sysMenuService.getMenuTreeByUserId(loginUser.getUserId());
-        map.put("userName", userName);
-        map.put("nickName", sysUser.getNickName());
+        map.put("username", userName);
+        map.put("nickname", sysUser.getNickname());
         map.put("userId", sysUser.getUserId());
         map.put("avatar", sysUser.getAvatar());
         map.put("menuList", menuList);
         map.put("permsSet",permsSet);
+        map.put("roles", roleSet);
         return Result.success(map);
     }
 
@@ -179,7 +181,7 @@ public class SysUserLoginController extends BaseController {
     @PostMapping("/getRoutesMenu")
     public Result getRoutesMenu() {
         String userName = tokenService.getSysUserName();
-        return Result.success(sysMenuService.getMenuTreeByUserName(userName));
+        return Result.success(sysMenuService.getMenuTreeByUsername(userName));
     }
 
     /**

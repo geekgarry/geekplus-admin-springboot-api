@@ -57,11 +57,11 @@ public class CustomerLoginController extends BaseController {
         }
         //2. 校验用户名或密码是否正确
         if (!customerUser.getPassword().equals(customerUserDto.getPassword())) {
-            log.info("密码不正确，customerAccount:{}", customerUser.getUserName());
+            log.info("密码不正确，customerAccount:{}", customerUser.getUsername());
             return Result.error("用户名或密码错误");
         }
         //用户登录信息
-        log.info("用户: {},登录成功！", customerUser.getNickName());
+        log.info("用户: {},登录成功！", customerUser.getNickname());
         //String username = customerUser.getUserName();
         String token = customerTokenService.createToken(customerUser);
         // 设置返回的cookie
@@ -83,7 +83,7 @@ public class CustomerLoginController extends BaseController {
             customerUserDto.setPassword(EncryptUtil.customerSHAEncryptPwd(customerUserDto.getPassword()));
         }
         Users userName = new Users();
-        userName.setUserName(customerUserDto.getUserName());
+        userName.setUsername(customerUserDto.getUsername());
         //1. 校验用户是否存在
         List<Users> usersList = usersService.selectUsersList(userName);
         if(!usersList.isEmpty() && usersList.size() > 0){

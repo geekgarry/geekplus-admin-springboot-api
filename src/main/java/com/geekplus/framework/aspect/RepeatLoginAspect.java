@@ -64,7 +64,7 @@ public class RepeatLoginAspect {
         LoginBody loginBody=(LoginBody)Arrays.asList(obj).get(0);
         //log.info("获取目标方法的参数信息："+ loginUser.getUserName());
         // 获取token当做key
-        String userName = loginBody.getUserName();//request.getHeader("token");
+        String userName = loginBody.getUsername();//request.getHeader("token");
         if (StringUtils.isBlank(userName)) {
             throw new BusinessException(ApiExceptionEnum.LOGIN_AUTH);
         }

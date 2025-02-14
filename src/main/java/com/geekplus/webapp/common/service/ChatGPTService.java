@@ -156,7 +156,7 @@ public class ChatGPTService {
                         mapMsg.put("msg_data",message);
                         //消息类型，1代表图片，0代表普通文本
                         mapMsg.put("msg_type","1");
-                        chatAILog.setUserName(fromUser);
+                        chatAILog.setUsername(fromUser);
                         chatAILog.setUserIp(ip);
                         chatAILog.setUserMac(mac);
                         Date date= DateTimeUtils.getCurrentDate(LocalDate.now());
@@ -203,7 +203,7 @@ public class ChatGPTService {
                         mapMsg.put("msg_data",message);
                         //消息类型，1代表图片，0代表普通文本
                         mapMsg.put("msg_type","1");
-                        chatAILog.setUserName(fromUser);
+                        chatAILog.setUsername(fromUser);
                         chatAILog.setUserIp(ip);
                         chatAILog.setUserMac(mac);
                         Date date= DateTimeUtils.getCurrentDate(LocalDate.now());
@@ -252,7 +252,7 @@ public class ChatGPTService {
             }
         }
         stringRedisTemplate.expire(md5Content, 8, TimeUnit.HOURS);
-        chatAILog.setUserName(fromUser);
+        chatAILog.setUsername(fromUser);
         chatAILog.setUserIp(ip);
         chatAILog.setUserMac(mac);
         Date date= DateTimeUtils.getCurrentDate(LocalDate.now());
@@ -296,7 +296,7 @@ public class ChatGPTService {
         JSONArray choices = jsonObject.getJSONArray("choices");
         String text = choices.getJSONObject(0).getString("text");
         ChatAILog chatAILog =new ChatAILog();
-        chatAILog.setUserName(chatUser);
+        chatAILog.setUsername(chatUser);
         chatAILog.setUserIp(ip);
         chatAILog.setUserMac(mac);
         Date date= DateTimeUtils.getCurrentDate(LocalDate.now());

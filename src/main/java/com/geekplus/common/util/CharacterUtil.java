@@ -9,7 +9,7 @@ import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombi
 /**
  * @ClassName: CharacterUtil
  * @Description: 字符工具类
- * @author: WeiZheng
+ * @author: Garry
  * @date: 2018年8月8日 下午2:17:06
  */
 public class CharacterUtil {

@@ -10,7 +10,7 @@ import java.util.Map;
 /**
  * @ClassName: AliExpressQryUtil
  * @Description: 阿里快递查询接口工具类
- * @author: WeiZheng
+ * @author: Garry
  * @date: 2018年9月27日 下午2:35:32
  */
 public class AliExpressQryUtil {

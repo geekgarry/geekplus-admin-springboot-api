@@ -35,13 +35,13 @@ public class SysUser extends BaseEntity
      * 系统用户表 系统用户表
      */
 	@Excel(name = "用户名")
-    private String userName;
+    private String username;
 
     /**
      * 系统用户表 系统用户表
      */
 	@Excel(name = "昵称")
-    private String nickName;
+    private String nickname;
 
     /**
      * 系统用户表 系统用户表
@@ -159,28 +159,28 @@ public class SysUser extends BaseEntity
 	/**
 	 *获取用户账户名
 	 */
-	public String getUserName(){
-		return userName;
+	public String getUsername(){
+		return username;
 	}
 
 	/**
 	 *设置用户账户名
 	 */
-	public void setUserName(String userName){
-		this.userName = userName;
+	public void setUsername(String username){
+		this.username = username;
 	}
 	/**
 	 *获取用户昵称
 	 */
-	public String getNickName(){
-		return nickName;
+	public String getNickname(){
+		return nickname;
 	}
 
 	/**
 	 *设置用户昵称
 	 */
-	public void setNickName(String nickName){
-		this.nickName = nickName;
+	public void setNickname(String nickname){
+		this.nickname = nickname;
 	}
 	/**
 	 *获取用户类型，是否为管理员
@@ -399,8 +399,8 @@ public class SysUser extends BaseEntity
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
             .append("userId", getUserId())
             .append("deptId", getDeptId())
-            .append("userName", getUserName())
-            .append("nickName", getNickName())
+            .append("userName", getUsername())
+            .append("nickName", getNickname())
             .append("userType", getUserType())
             .append("email", getEmail())
             .append("phoneNumber", getPhoneNumber())

@@ -57,7 +57,7 @@ public class LogFactory {
                 String browser = userAgent.getBrowser().getName();
                 // 封装对象
                 SysLoginLog logininfor = new SysLoginLog();
-                logininfor.setLogUserName(username);
+                logininfor.setLogUsername(username);
                 logininfor.setLogLoginIp(ip);
                 //logininfor.set(address);
                 logininfor.setLogBrowser(browser);

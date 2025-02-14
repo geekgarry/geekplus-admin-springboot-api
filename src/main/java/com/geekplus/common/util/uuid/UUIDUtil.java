@@ -93,7 +93,7 @@ public final class UUIDUtil implements java.io.Serializable, Comparable<UUIDUtil
         sb.append(target);
         sb.append(randomSimpleUUID());
         sb.append(new Date().getTime());
-        return SHAUtil.getSHA(sb.toString());
+        return EncryptUtil.base64Encode(sb.toString());
     }
 
     /**
@@ -116,12 +116,14 @@ public final class UUIDUtil implements java.io.Serializable, Comparable<UUIDUtil
      * 获得主键ֵ target+uuid+timestamp
      * @return 128 位加密
      */
-    public static String getEncryptFileUUID(){
+    public static String getFileUUID(){
         StringBuffer sb = new StringBuffer();
         sb.append(Constant.APP_MAIN_ID_KEY);
+        sb.append("-");
         sb.append(fastUUIDStr());
-        sb.append(new Date().toString());
-        return EncryptUtil.base64Encode(sb.toString());
+        sb.append("-");
+        sb.append(new Date().getTime());
+        return sb.toString();
     }
 
     /**

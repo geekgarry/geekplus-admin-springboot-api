@@ -20,7 +20,7 @@ import org.springframework.context.annotation.Configuration;
 public class HttpWsConfig {
 
     //@Value("${myhttp.port}")
-    private Integer myHttpPort=9002;
+    private Integer myHttpPort=4002;
 
     //SpringBoot 2.x版本(以及更高版本) 使用下面的代码
     @Bean

@@ -9,7 +9,7 @@ import java.util.Base64;
 
 /**
  * Base64工具转换成图片
- * @author WeiZheng
+ * @author Garry
  *
  */
 public class Base64ImageUtil {

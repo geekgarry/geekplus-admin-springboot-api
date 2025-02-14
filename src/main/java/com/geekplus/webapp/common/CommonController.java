@@ -154,7 +154,7 @@ public class CommonController
             //File dest = new File(uploadDir + "head_img" ,uuidFileName);
             //保存文件
             //file.transferTo(dest);
-            fileName = UUIDUtil.getEncryptFileUUID() + "." + extension;
+            fileName = UUIDUtil.getFileUUID() + "." + extension;
 
             // 上传并返回新文件名称
             //String fileName = FileUploadUtils.upload(filePath, file);

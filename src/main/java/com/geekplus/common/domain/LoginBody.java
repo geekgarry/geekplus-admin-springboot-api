@@ -9,7 +9,7 @@ public class LoginBody {
     /**
      * 用户名
      */
-    private String userName;
+    private String username;
 
     /**
      * 手机号
@@ -41,12 +41,12 @@ public class LoginBody {
      */
     private Boolean rememberMe;
 
-    public String getUserName() {
-        return userName;
+    public String getUsername() {
+        return username;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getPhoneNumber() {

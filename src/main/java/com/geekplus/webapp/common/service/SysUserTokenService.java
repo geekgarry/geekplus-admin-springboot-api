@@ -4,6 +4,8 @@ import com.geekplus.common.constant.Constant;
 import com.geekplus.common.domain.LoginUser;
 import com.geekplus.common.redis.RedisUtil;
 import com.geekplus.common.util.http.CookieUtil;
+import com.geekplus.common.util.http.IPUtils;
+import com.geekplus.common.util.http.IpAddressUtil;
 import com.geekplus.common.util.http.ServletUtil;
 import com.geekplus.common.util.string.StringUtils;
 import com.geekplus.common.util.uuid.UUIDUtil;
@@ -22,6 +24,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -63,11 +66,10 @@ public class SysUserTokenService {
      * @return
      */
     public String createToken(LoginUser loginUser){
-        SysUser sysUser = loginUser.getSysUser();
-        String tokenUuid= UUIDUtil.getShaUUID(sysUser.getUserName());
+        String tokenUuid= UUIDUtil.getShaUUID(loginUser.getUsername());
         loginUser.setTokenId(tokenUuid);
         String token = refreshToken(loginUser);
-        kickOutSameUser(sysUser.getUserName(), token);
+        kickOutSameUser(loginUser.getUsername(), token);
         return token;
     }
 
@@ -302,6 +304,9 @@ public class SysUserTokenService {
      */
     public void setUserAgent(LoginUser loginUser){
         UserAgent userAgent = UserAgent.parseUserAgentString(ServletUtil.getRequest().getHeader("User-Agent"));
+//        String ip = IPUtils.getIp(ServletUtil.getRequest());
+//        loginUser.setLoginIp(ip);
+        loginUser.setLoginLocation(IpAddressUtil.getRealAddressByIP(loginUser.getSysUser().getLoginIp()));
         // 获取客户端操作系统
         String os = userAgent.getOperatingSystem().getName();
         // 获取客户端浏览器

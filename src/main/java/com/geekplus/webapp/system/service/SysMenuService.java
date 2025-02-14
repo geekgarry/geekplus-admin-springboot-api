@@ -74,15 +74,15 @@ public interface SysMenuService {
 
     /**
      * @Author geekplus
-     * @Description //根据userName查询菜单权限
+     * @Description //根据username查询菜单权限
      */
-    List<SysMenu> getMenuTreeByUserName(String userName);
+    List<SysMenu> getMenuTreeByUsername(String username);
 
     /**
      * @Author geekplus
-     * @Description //根据userName查询菜单权限permission列表
+     * @Description //根据username查询菜单权限permission列表
      */
-    List<SysMenu> getMenuPermsByUserName(String userName);
+    List<SysMenu> getMenuPermsByUsername(String username);
 
     /**
       * @Author geekplus

@@ -47,7 +47,7 @@ public class SHAUtil {
     * @Description:
     * @param originalStr 欲加密的字符串
     * @return String return the encode string else return null if something is invalidate
-    * @author WeiZheng
+    * @author Garry
     * @date 2018年9月18日上午11:04:40
      */
     public static String getSHAStrBySaltAndNewMethod(String originalStr){

@@ -115,11 +115,11 @@ public class SysMenuServiceImpl implements SysMenuService {
 
     /**
      * @Author geekplus
-     * @Description //根据userName查询菜单权限permission列表
+     * @Description //根据username查询菜单权限permission列表
      */
     @Override
-    public List<SysMenu> getMenuTreeByUserName(String userName) {
-        return SysMenuUtil.getParentMenuList(sysMenuMapper.selectMenuTreeByUserName(userName));
+    public List<SysMenu> getMenuTreeByUsername(String username) {
+        return SysMenuUtil.getParentMenuList(sysMenuMapper.selectMenuTreeByUsername(username));
     }
 
     /**
@@ -127,8 +127,8 @@ public class SysMenuServiceImpl implements SysMenuService {
      * @Description //根据userId查询菜单权限permission列表
      */
     @Override
-    public List<SysMenu> getMenuPermsByUserName(String userName) {
-        return sysMenuMapper.selectMenuPermsByUserName(userName);
+    public List<SysMenu> getMenuPermsByUsername(String username) {
+        return sysMenuMapper.selectMenuPermsByUsername(username);
     }
 
     @Override

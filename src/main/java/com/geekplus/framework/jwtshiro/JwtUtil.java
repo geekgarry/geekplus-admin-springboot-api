@@ -50,7 +50,7 @@ public class JwtUtil {
             header.put("alg","HS256");
             //携带username，password信息，生成签名
             String token = Jet.builder()
-                    .claim("userName",sysUser.getSysUser().getUserName())
+                    .claim("userName",sysUser.getSysUser().getUsername())
                     .claim("tokenId",sysUser.getTokenId())
                     .issuedAt(new Date())
                     .expireAt(new Date(System.currentTimeMillis()+EXPIRE_TIME*1000))

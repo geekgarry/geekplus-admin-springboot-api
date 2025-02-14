@@ -8,7 +8,7 @@
     <resultMap id="BaseResultMap" type="com.geekplus.webapp.system.entity.SysLoginLog">
             <result property="logId" column="log_id" jdbcType="INTEGER" />
             <result property="logUserId" column="log_user_id" jdbcType="INTEGER" />
-            <result property="logUserName" column="log_user_name" jdbcType="VARCHAR" />
+            <result property="logUsername" column="log_username" jdbcType="VARCHAR" />
             <result property="logLoginIp" column="log_login_ip" jdbcType="VARCHAR" />
             <result property="loginLocation" column="login_location" jdbcType="VARCHAR" />
             <result property="logBrowser" column="log_browser" jdbcType="VARCHAR" />
@@ -22,14 +22,14 @@
     <!--基础查询语句-->
     <sql id="baseSelectVo">
         select
-        log_id,log_user_id,log_user_name,log_login_ip,login_location,log_browser,log_system,log_time,log_type,log_msg
+        log_id,log_user_id,log_username,log_login_ip,login_location,log_browser,log_system,log_time,log_type,log_msg
          from sys_login_log
     </sql>
 
     <!--基础查询语句2,用作联合查询使用-->
     <sql id="selectSysLoginLogVo">
         select
-            sll.log_id,sll.log_user_id,sll.log_user_name,sll.log_login_ip,sll.login_location,sll.log_browser,sll.log_system,sll.log_time,sll.log_type,sll.log_msg
+            sll.log_id,sll.log_user_id,sll.log_username,sll.log_login_ip,sll.login_location,sll.log_browser,sll.log_system,sll.log_time,sll.log_type,sll.log_msg
          from sys_login_log sll
     </sql>
 
@@ -43,8 +43,8 @@
                     <if test="logUserId !=null">
                         AND log_user_id = #{logUserId}
                     </if>
-                    <if test="logUserName !=null">
-                        AND log_user_name = #{logUserName}
+                    <if test="logUsername !=null">
+                        AND log_username = #{logUsername}
                     </if>
                     <if test="logLoginIp !=null">
                         AND log_login_ip = #{logLoginIp}
@@ -81,8 +81,8 @@
                     <if test="logUserId !=null">
                         AND sll.log_user_id = #{logUserId}
                     </if>
-                    <if test="logUserName !=null">
-                        AND sll.log_user_name = #{logUserName}
+                    <if test="logUsername !=null">
+                        AND sll.log_username = #{logUsername}
                     </if>
                     <if test="logLoginIp !=null">
                         AND sll.log_login_ip = #{logLoginIp}
@@ -121,7 +121,7 @@
         insert into sys_login_log
         <trim prefix="(" suffix=")" suffixOverrides=",">
                         <if test="logUserId != null ">log_user_id,</if>
-                        <if test="logUserName != null  and logUserName != ''">log_user_name,</if>
+                        <if test="logUsername != null  and logUsername != ''">log_username,</if>
                         <if test="logLoginIp != null  and logLoginIp != ''">log_login_ip,</if>
                         <if test="loginLocation != null  and loginLocation != ''">login_location,</if>
                         <if test="logBrowser != null  and logBrowser != ''">log_browser,</if>
@@ -132,7 +132,7 @@
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
                         <if test="logUserId != null ">#{logUserId},</if>
-                        <if test="logUserName != null  and logUserName != ''">#{logUserName},</if>
+                        <if test="logUsername != null  and logUsername != ''">#{logUsername},</if>
                         <if test="logLoginIp != null  and logLoginIp != ''">#{logLoginIp},</if>
                         <if test="loginLocation != null  and loginLocation != ''">#{loginLocation},</if>
                         <if test="logBrowser != null  and logBrowser != ''">#{logBrowser},</if>
@@ -147,12 +147,12 @@
     <insert id="batchInsertSysLoginLogList" parameterType="java.util.List">
         insert into sys_login_log
         (
-         log_user_id,log_user_name,log_login_ip,login_location,log_browser,log_system,log_time,log_type,log_msg
+         log_user_id,log_username,log_login_ip,login_location,log_browser,log_system,log_time,log_type,log_msg
         )
          values
         <foreach collection="list" item="item" index="index" separator=",">
         (
-         #{item.logUserId},#{item.logUserName},#{item.logLoginIp},#{item.loginLocation},#{item.logBrowser},#{item.logSystem},#{item.logTime},#{item.logType},#{item.logMsg}
+         #{item.logUserId},#{item.logUsername},#{item.logLoginIp},#{item.loginLocation},#{item.logBrowser},#{item.logSystem},#{item.logTime},#{item.logType},#{item.logMsg}
         )
         </foreach>
     </insert>
@@ -188,7 +188,7 @@
         update sys_login_log
         <trim prefix="SET" suffixOverrides=",">
                     <if test="logUserId != null ">log_user_id = #{logUserId},</if>
-                    <if test="logUserName != null  and logUserName != ''">log_user_name = #{logUserName},</if>
+                    <if test="logUsername != null  and logUsername != ''">log_username = #{logUsername},</if>
                     <if test="logLoginIp != null  and logLoginIp != ''">log_login_ip = #{logLoginIp},</if>
                     <if test="loginLocation != null  and loginLocation != ''">login_location = #{loginLocation},</if>
                     <if test="logBrowser != null  and logBrowser != ''">log_browser = #{logBrowser},</if>
@@ -203,7 +203,7 @@
     <!--批量更新某个字段-->
     <update id="batchUpdateSysLoginLogList" >
         update sys_login_log set
-            log_id='',log_user_id='',log_user_name='',log_login_ip='',login_location='',log_browser='',log_system='',log_time='',log_type='',log_msg=''
+            log_id='',log_user_id='',log_username='',log_login_ip='',login_location='',log_browser='',log_system='',log_time='',log_type='',log_msg=''
          where log_id in
         <foreach collection="array" item="item"  open="(" close=")" separator=",">
             #{item}
